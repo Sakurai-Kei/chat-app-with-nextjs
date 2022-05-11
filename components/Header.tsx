@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Header() {
   return (
     <header className="shadow-sm">
@@ -8,25 +10,22 @@ export default function Header() {
           </div>
 
           <nav className="hidden space-x-8 text-sm font-medium md:flex">
-            <a className="text-gray-500 hover:text-blue-500" href="">
-              About
-            </a>
+            <Link href={"/"}>
+              <a className="text-gray-500 hover:text-blue-500">Home</a>
+            </Link>
           </nav>
 
           <div className="items-center justify-end flex-1 hidden space-x-4 sm:flex">
-            <a
-              className="px-5 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg"
-              href=""
-            >
-              Log in
-            </a>
-
-            <a
-              className="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg"
-              href=""
-            >
-              Sign up
-            </a>
+            <Link href={"/log-in"}>
+              <a className="px-5 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg">
+                Log in
+              </a>
+            </Link>
+            <Link href={"/register"}>
+              <a className="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg">
+                Sign up
+              </a>
+            </Link>
           </div>
 
           <div className="lg:hidden">

@@ -1,7 +1,46 @@
+import Image from "next/image";
+import Link from "next/link";
+import { groups, users } from "../lib/mockData";
+
 export default function NavBar() {
+  const user = users[1];
+  user.contactList = [users[0]];
+  user.groups = [groups[0]];
+
   return (
     <div className="flex flex-col items-center flex-shrink-0 w-16 border-r border-gray-300 bg-gray-200 py-3">
-      <a
+      <div className="flex flex-col gap-4">
+        {user.contactList.map((contact) => {
+          return (
+            <div
+              className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
+              key={contact._id.toString()}
+            >
+              <Link href={"/app/user/" + contact._id.toString()}>
+                <Image
+                  src={"/vercel.svg"}
+                  alt={"vercel"}
+                  width={40}
+                  height={40}
+                />
+              </Link>
+            </div>
+          );
+        })}
+        {user.groups.map((group) => {
+          return (
+            <div
+              className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
+              key={group._id.toString()}
+            >
+              <Link href={"/app/group/" + group._id.toString()}>
+                <a></a>
+              </Link>
+            </div>
+          );
+        })}
+      </div>
+      {/* <a
         className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
         href="#"
       ></a>
@@ -18,7 +57,7 @@ export default function NavBar() {
       <a
         className="w-10 h-10 rounded-lg bg-gray-400 mt-4 hover:bg-gray-500"
         href="#"
-      ></a>
+      ></a> */}
       <a
         className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-gray-400"
         href="#"

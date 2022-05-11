@@ -1,35 +1,36 @@
 import { Types } from "mongoose";
 
-interface IMessage {
+export interface IMessage {
   content: string;
-  user: Types.ObjectId;
+  user: Types.ObjectId | number;
   timestamp: Date;
 }
 
 export interface IUser {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId | number;
   username: string;
   password: string;
   email: string;
   about: string;
-  groups: Types.DocumentArray<IGroup>;
+  groups: Types.DocumentArray<IGroup> | IGroup[];
+  contactList: Types.DocumentArray<IUser> | IUser[];
 }
 
 export interface IGroup {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId | number;
   name: string;
   about: string;
-  members: Types.DocumentArray<IUser>;
+  members: Types.DocumentArray<IUser> | IUser[];
 }
 
 export interface IRoomInstance {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId | number;
   members: Types.DocumentArray<IUser>;
   messages: IMessage[];
 }
 
 export interface IGroupInstance {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId | number;
   member: Types.ObjectId;
   messages: IMessage[];
 }

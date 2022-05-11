@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { connect } from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -36,7 +36,7 @@ async function dbConnect() {
       family: 4, // Use IPv4, skip trying IPv6
     };
     //@ts-expect-error
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = connect(MONGODB_URI, opts).then((mongoose) => {
       return mongoose;
     });
   }

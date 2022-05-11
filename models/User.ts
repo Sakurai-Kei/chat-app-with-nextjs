@@ -37,6 +37,12 @@ const userSchema = new Schema<IUser>(
         ref: "Group",
       },
     ],
+    contactList: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   options
 );
