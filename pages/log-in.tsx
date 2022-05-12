@@ -4,13 +4,14 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import LogInForm from "../components/LogInForm";
 import { FormEvent } from "react";
+import useUser from "../lib/useUser";
 
 export default function LogIn() {
   const router = useRouter();
-  // const { user, mutateUser } = useUser({
-  //   redirectTo: "/",
-  //   redirectIfFound: true,
-  // });
+  const { user, mutateUser } = useUser({
+    redirectTo: "/",
+    redirectIfFound: true,
+  });
 
   const [formData, setFormData] = useState({
     loginId: "",
@@ -44,7 +45,6 @@ export default function LogIn() {
 
     const response = await fetch(endpoint, options);
     if (response.status === 200) {
-      // await mutateUser();
       router.push("/");
     } else {
       const result = await response.json();

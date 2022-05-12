@@ -4,23 +4,21 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { FormEvent } from "react";
 import RegisterForm from "../components/RegisterForm";
+import useUser from "../lib/useUser";
 
 export default function Register() {
   const router = useRouter();
-  // const user = useUser({
-  //   redirectTo: "/",
-  //   redirectIfFound: true,
-  // });
+  const { user, mutateUser } = useUser({
+    redirectTo: "/",
+    redirectIfFound: true,
+  });
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     username: "",
     password: "",
     confirmPassword: "",
     email: "",
   });
   const [errors, setErrors] = useState({
-    alreadyExist: false,
     error: "",
   });
 
@@ -47,24 +45,7 @@ export default function Register() {
 
     const response = await fetch(endpoint, options);
     if (response.status === 200) {
-      const result = await response.json();
       router.push("/");
-    } else if (response.status === 400) {
-      const result = await response.json();
-      const { error } = result;
-
-      setErrors({
-        ...errors,
-        error,
-      });
-    } else if (response.status === 409) {
-      const result = await response.json();
-      const { error, alreadyExist } = result;
-
-      setErrors({
-        alreadyExist,
-        error,
-      });
     } else {
       const result = await response.json();
       setErrors({

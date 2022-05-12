@@ -26,6 +26,13 @@ const groupSchema = new Schema<IGroup>(
         ref: "User",
       },
     ],
+    messages: [
+      {
+        content: { type: String },
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+        timestamp: { type: Date },
+      },
+    ],
   },
   options
 );

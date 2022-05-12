@@ -19,7 +19,13 @@ const roomInstanceSchema = new Schema<IRoomInstance>(
         required: [true, "Room instance requires two users as members"],
       },
     ],
-    messages: [],
+    messages: [
+      {
+        content: { type: String },
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+        timestamp: { type: Date },
+      },
+    ],
   },
   options
 );

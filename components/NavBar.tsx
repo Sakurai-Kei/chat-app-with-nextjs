@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { groups, users } from "../lib/mockData";
+import useNavBar from "../lib/useNavBar";
+import useUser from "../lib/useUser";
 
 export default function NavBar() {
-  const user = users[1];
-  user.contactList = [users[0]];
-  user.groups = [groups[0]];
+  const { user, mutateUser } = useUser();
 
   return (
     <div className="flex flex-col items-center flex-shrink-0 w-16 border-r border-gray-300 bg-gray-200 py-3">
-      <div className="flex flex-col gap-4">
+      {/* <div className="flex flex-col gap-4">
         {user.contactList.map((contact) => {
           return (
             <div
@@ -44,7 +44,8 @@ export default function NavBar() {
             </div>
           );
         })}
-      </div>
+      </div> */}
+
       {/* <a
         className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
         href="#"

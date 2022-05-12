@@ -9,9 +9,15 @@ import { IronSessionOptions } from "iron-session";
 declare module "iron-session" {
   interface IronSessionData {
     user?: {
+      _id: string;
       username: string;
     };
   }
+}
+
+export interface UserCookie {
+  _id?: string;
+  username?: string;
 }
 
 export const sessionOptions: IronSessionOptions = {

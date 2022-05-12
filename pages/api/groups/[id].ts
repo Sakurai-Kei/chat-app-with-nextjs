@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   await dbConnect();
-  const id = req.query.id;
-  const group = await Group.findById(id).exec();
+  const _id = req.query.id;
+  const group = await Group.find({ members: _id }).exec();
   res.status(200).json(group);
 }

@@ -21,6 +21,7 @@ export interface IGroup {
   name: string;
   about: string;
   members: Types.DocumentArray<IUser> | IUser[];
+  messages: IMessage[];
 }
 
 export interface IRoomInstance {

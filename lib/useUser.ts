@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import Router from "next/router";
 import useSWR from "swr";
+import { IronSessionData } from "iron-session";
+import { UserCookie } from "./withSession";
 
 export default function useUser({
   redirectTo = "",
   redirectIfFound = false,
 } = {}) {
-  const { data: user, mutate: mutateUser } = useSWR("/api/user");
+  const { data: user, mutate: mutateUser } =
+    useSWR<UserCookie>("/api/auth-state");
 
   useEffect(() => {
     if (!redirectTo || !user) return;
