@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
 import useUser from "../lib/useUser";
 import { withSessionSsr } from "../lib/withSession";
+import useNavBar from "../lib/useNavBar";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req }) {
@@ -30,10 +31,12 @@ export default function App(props: any) {
     router.push("/log-in");
   }
   const { user, mutateUser } = useUser();
+  const { _id, username } = props.user;
+  const { navBar, mutateNavBar } = useNavBar(_id);
 
   return (
     <div className="flex sm:min-w-screen sm:min-h-screen md:w-screen md:h-screen text-gray-700">
-      <NavBar />
+      <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
     </div>
   );
 }
