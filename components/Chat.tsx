@@ -1,6 +1,10 @@
+import { useRouter } from "next/router";
 import { chatMessages } from "../lib/mockData";
+import { groups, users } from "../lib/mockData";
 
 export default function Chat() {
+  const group = groups[0];
+
   function handleChange() {}
 
   async function handleSubmit() {}
@@ -9,10 +13,8 @@ export default function Chat() {
     <div className="flex flex-col flex-grow">
       <div className="flex items-center flex-shrink-0 h-16 bg-white border-b border-gray-300 px-4">
         <div>
-          <h1 className="text-sm font-bold leading-none">#council-of-elrond</h1>
-          <span className="text-xs leading-none">
-            Let&apos;s sort this ring thing out hey!?!
-          </span>
+          <h1 className="text-sm font-bold leading-none">{group.name}</h1>
+          <span className="text-xs leading-none">{group.about}</span>
         </div>
       </div>
       <>

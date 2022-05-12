@@ -34,7 +34,12 @@ export default function NavBar() {
               key={group._id.toString()}
             >
               <Link href={"/app/group/" + group._id.toString()}>
-                <a></a>
+                <Image
+                  src={"/vercel.svg"}
+                  alt={"vercel"}
+                  width={40}
+                  height={40}
+                />
               </Link>
             </div>
           );

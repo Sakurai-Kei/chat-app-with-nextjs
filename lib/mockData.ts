@@ -1,4 +1,4 @@
-import { IGroup, IMessage, IUser } from "../interfaces/models";
+import { IGroup, IGroupInstance, IMessage, IUser } from "../interfaces/models";
 
 export const users: IUser[] = [
   {
@@ -46,5 +46,18 @@ export const groups: IGroup[] = [
     name: "Group two",
     about: "About group two",
     members: [],
+  },
+];
+
+export const groupInstances: IGroupInstance[] = [
+  {
+    _id: 123465789, // ID for document
+    member: 123456789, // ID for reference
+    messages: [],
+  },
+  {
+    _id: 987654321, // ID for document
+    member: 987654321, // ID for reference
+    messages: [],
   },
 ];

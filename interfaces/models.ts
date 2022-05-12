@@ -31,6 +31,6 @@ export interface IRoomInstance {
 
 export interface IGroupInstance {
   _id: Types.ObjectId | number;
-  member: Types.ObjectId;
+  member: Types.ObjectId | number;
   messages: IMessage[];
 }
