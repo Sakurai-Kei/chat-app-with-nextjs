@@ -1,14 +1,54 @@
 import { useRouter } from "next/router";
+import { FormEvent, FormEventHandler, useState } from "react";
 import { IMessage } from "../interfaces/models";
 import { chatMessages } from "../lib/mockData";
 import { groups, users } from "../lib/mockData";
 
 export default function Chat(props: any) {
-  const { group, mutateGroup } = props;
+  const { group, mutateGroup, userId } = props;
+  const [chatForm, setChatForm] = useState({
+    content: "",
+  });
 
-  function handleChange() {}
+  function chatFormChange(event: FormEvent<HTMLTextAreaElement>) {
+    const value = event.currentTarget.value;
+    setChatForm({
+      ...chatForm,
+      [event.currentTarget.name]: value,
+    });
+  }
 
-  async function handleSubmit() {}
+  async function chatFormSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    const data = {
+      content: chatForm.content,
+      groupId: group._id.toString(),
+      userId,
+    };
+
+    const JSONdata = JSON.stringify(data);
+    const endpoint = "/api/groups/instance/createMessage";
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSONdata,
+    };
+
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      setChatForm({
+        ...chatForm,
+        content: "",
+      });
+      mutateGroup();
+    } else {
+      const result = await response.json();
+      console.error(`Status Code: ${response.status}(${result.error})`);
+    }
+  }
 
   return (
     <div className="flex flex-col flex-grow">
@@ -26,7 +66,7 @@ export default function Chat(props: any) {
         {group &&
           group.messages.map((message: IMessage) => {
             return (
-              <>
+              <div key={message._id.toString()}>
                 <div className="flex px-4 py-3">
                   <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
                   <div className="ml-2">
@@ -47,13 +87,16 @@ export default function Chat(props: any) {
                     Today
                   </span>
                 </div>
-              </>
+              </div>
             );
           })}
       </>
 
       <div className="bg-white p-4">
-        <div className="flex items-center border-2 border-gray-300 rounded-sm p-1">
+        <form
+          onSubmit={chatFormSubmit}
+          className="flex items-center border-2 border-gray-300 rounded-sm p-1"
+        >
           <button className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200">
             <svg
               className="h-4 w-4"
@@ -71,7 +114,9 @@ export default function Chat(props: any) {
             </svg>
           </button>
           <textarea
-            onChange={handleChange}
+            onChange={chatFormChange}
+            name="content"
+            value={chatForm.content}
             className="flex-grow text-sm px-3 border-l border-gray-300 ml-1"
             placeholder="Message council-of-elrond"
           ></textarea>
@@ -122,7 +167,7 @@ export default function Chat(props: any) {
           </button>
           <button
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
-            onClick={handleSubmit}
+            type="submit"
           >
             <svg
               className="h-4 w-4 transform rotate-90"
@@ -133,7 +178,7 @@ export default function Chat(props: any) {
               <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
             </svg>
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
