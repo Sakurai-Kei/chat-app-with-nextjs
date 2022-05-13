@@ -20,7 +20,6 @@ export default function NavBar(props: any) {
     error: "",
   });
   const [showChatModal, setShowChatModal] = useState(false);
-  console.log(navBar);
 
   function groupFormChange(
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>

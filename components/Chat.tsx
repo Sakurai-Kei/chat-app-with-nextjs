@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
+import { IMessage } from "../interfaces/models";
 import { chatMessages } from "../lib/mockData";
 import { groups, users } from "../lib/mockData";
 
-export default function Chat() {
-  const group = groups[0];
+export default function Chat(props: any) {
+  const { group, mutateGroup } = props;
 
   function handleChange() {}
 
@@ -13,37 +14,42 @@ export default function Chat() {
     <div className="flex flex-col flex-grow">
       <div className="flex items-center flex-shrink-0 h-16 bg-white border-b border-gray-300 px-4">
         <div>
-          <h1 className="text-sm font-bold leading-none">{group.name}</h1>
-          <span className="text-xs leading-none">{group.about}</span>
+          {group && (
+            <>
+              <h1 className="text-sm font-bold leading-none">{group.name}</h1>
+              <span className="text-xs leading-none">{group.about}</span>
+            </>
+          )}
         </div>
       </div>
       <>
-        {chatMessages.map((message) => {
-          return (
-            <>
-              <div className="flex px-4 py-3">
-                <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
-                <div className="ml-2">
-                  <div className="-mt-1">
-                    <span className="text-sm font-semibold">
-                      {message.user.toString()}
-                    </span>
-                    <span className="ml-1 text-xs text-gray-500">
-                      {message.timestamp.toString()}
-                    </span>
+        {group &&
+          group.messages.map((message: IMessage) => {
+            return (
+              <>
+                <div className="flex px-4 py-3">
+                  <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
+                  <div className="ml-2">
+                    <div className="-mt-1">
+                      <span className="text-sm font-semibold">
+                        {message.user.toString()}
+                      </span>
+                      <span className="ml-1 text-xs text-gray-500">
+                        {message.timestamp.toString()}
+                      </span>
+                    </div>
+                    <p className="text-sm">{message.content}</p>
                   </div>
-                  <p className="text-sm">{message.content}</p>
                 </div>
-              </div>
-              <div className="flex flex-col items-center mt-2">
-                <hr className="w-full" />
-                <span className="flex items-center justify-center -mt-3 bg-white h-6 px-3 rounded-full border text-xs font-semibold mx-auto">
-                  Today
-                </span>
-              </div>
-            </>
-          );
-        })}
+                <div className="flex flex-col items-center mt-2">
+                  <hr className="w-full" />
+                  <span className="flex items-center justify-center -mt-3 bg-white h-6 px-3 rounded-full border text-xs font-semibold mx-auto">
+                    Today
+                  </span>
+                </div>
+              </>
+            );
+          })}
       </>
 
       <div className="bg-white p-4">

@@ -62,7 +62,7 @@ export default function ChatModal(props: ChatModalProps) {
           </div>
           <hr />
           <hr />
-          <div className="w-full flex gap-4 px-4 pb-4 ml-auto text-gray-500 md:w-1/3">
+          <div className="w-full flex gap-4 px-4 pb-4 ml-auto text-gray-500">
             <button
               onClick={chatModal}
               className="py-2 px-4  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "

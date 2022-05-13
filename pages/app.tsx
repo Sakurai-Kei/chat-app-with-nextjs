@@ -26,11 +26,6 @@ export const getServerSideProps = withSessionSsr(
 );
 
 export default function App(props: any) {
-  const router = useRouter();
-  if (!props.user) {
-    router.push("/log-in");
-  }
-  const { user, mutateUser } = useUser();
   const { _id, username } = props.user;
   const { navBar, mutateNavBar } = useNavBar(_id);
 
