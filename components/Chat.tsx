@@ -32,7 +32,7 @@ export default function Chat(props: any) {
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">
-                        {message.user.toString()}
+                        {message.user.username.toString()}
                       </span>
                       <span className="ml-1 text-xs text-gray-500">
                         {message.timestamp.toString()}

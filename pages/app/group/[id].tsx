@@ -40,7 +40,7 @@ export default function ChatRoom(props: any) {
     <div className="flex sm:min-w-screen sm:min-h-screen md:w-screen md:h-screen text-gray-700">
       <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
       <Chat group={group} mutateGroup={mutateGroup} />
-      <MemberList />
+      <MemberList group={group} mutateGroup={mutateGroup} />
     </div>
   );
 }

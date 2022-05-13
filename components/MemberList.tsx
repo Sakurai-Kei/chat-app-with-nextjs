@@ -1,4 +1,7 @@
-export default function MemberList() {
+import { IUser } from "../interfaces/models";
+
+export default function MemberList(props: any) {
+  const { group, mutateGroup } = props;
   return (
     <div className="border flex flex-col flex-shrink-0 w-1/4 max-w-xs border-l border-gray-300 bg-gray-100">
       <div className="flex items-center h-16 border-b border-gray-300 px-4">
@@ -26,42 +29,25 @@ export default function MemberList() {
         </button>
       </div>
       <div className="flex flex-col flex-grow overflow-auto">
-        <div className="flex px-4 py-4 border-b border-gray-300">
-          <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
-          <div className="ml-2">
-            <div className="-mt-1">
-              <span className="text-sm font-semibold">Username</span>
-            </div>
-            <p className="text-sm">User&apos;s bio</p>
-          </div>
-        </div>
-        <div className="flex px-4 py-3">
-          <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
-          <div className="ml-2">
-            <div className="-mt-1">
-              <span className="text-sm font-semibold">Legolas</span>
-            </div>
-            <p className="text-sm">User&apos;s bio</p>
-          </div>
-        </div>
-        <div className="flex px-4 py-3">
-          <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
-          <div className="ml-2">
-            <div className="-mt-1">
-              <span className="text-sm font-semibold">Aragorn</span>
-            </div>
-            <p className="text-sm">Havo dad Legolas.</p>
-          </div>
-        </div>
-        <div className="flex px-4 py-3">
-          <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
-          <div className="ml-2">
-            <div className="-mt-1">
-              <span className="text-sm font-semibold">Pippin</span>
-            </div>
-            <p className="text-sm">Is that elvish for second breakfast?</p>
-          </div>
-        </div>
+        {group &&
+          group.members.map((member: Partial<IUser>) => {
+            return (
+              <div
+                key={member._id!.toString()}
+                className="flex px-4 py-4 border-b border-gray-300"
+              >
+                <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
+                <div className="ml-2">
+                  <div className="-mt-1">
+                    <span className="text-sm font-semibold">
+                      {member.username}
+                    </span>
+                  </div>
+                  <p className="text-sm">{member.about}</p>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
