@@ -11,11 +11,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     !req.body ||
     req.session.user._id !== req.body.userId
   ) {
-    res
-      .status(400)
-      .json({
-        error: "Bad request, no/malformed auth and/or body attached to request",
-      });
+    res.status(400).json({
+      error: "Bad request, no/malformed auth and/or body attached to request",
+    });
   } else {
     const { content, groupId, userId } = req.body;
 

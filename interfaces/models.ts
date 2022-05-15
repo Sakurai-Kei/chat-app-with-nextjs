@@ -4,6 +4,7 @@ export interface IMessage {
   content: string;
   user: IUser;
   timestamp: Date;
+  _id: Types.ObjectId;
 }
 
 export interface IUser {

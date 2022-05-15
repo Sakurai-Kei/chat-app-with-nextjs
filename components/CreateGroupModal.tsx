@@ -9,7 +9,7 @@ interface ChatModalProps {
   ) => void;
 }
 
-export default function ChatModal(props: ChatModalProps) {
+export default function CreateGroupModal(props: ChatModalProps) {
   const { chatModal, groupFormChange, groupFormSubmit } = props;
   return (
     <section className="h-screen flex items-center bg-gray-100 bg-opacity-50">

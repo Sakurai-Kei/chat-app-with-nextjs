@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { FormEvent, FormEventHandler, useState } from "react";
+import Link from "next/link";
 import { IMessage } from "../interfaces/models";
 import { chatMessages } from "../lib/mockData";
 import { groups, users } from "../lib/mockData";
@@ -20,39 +21,60 @@ export default function Chat(props: any) {
 
   async function chatFormSubmit(event: FormEvent) {
     event.preventDefault();
-
-    const data = {
-      content: chatForm.content,
-      groupId: group._id.toString(),
-      userId,
-    };
-
-    const JSONdata = JSON.stringify(data);
-    const endpoint = "/api/groups/instance/createMessage";
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSONdata,
-    };
-
-    const response = await fetch(endpoint, options);
-    if (response.status === 200) {
-      setChatForm({
-        ...chatForm,
-        content: "",
-      });
-      mutateGroup();
+    if (chatForm.content.trim().length === 0) {
+      return;
     } else {
-      const result = await response.json();
-      console.error(`Status Code: ${response.status}(${result.error})`);
+      const data = {
+        content: chatForm.content,
+        groupId: group._id.toString(),
+        userId,
+      };
+
+      const JSONdata = JSON.stringify(data);
+      const endpoint = "/api/groups/instance/createMessage";
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSONdata,
+      };
+
+      const response = await fetch(endpoint, options);
+      if (response.status === 200) {
+        setChatForm({
+          ...chatForm,
+          content: "",
+        });
+        mutateGroup();
+      } else {
+        const result = await response.json();
+        console.error(`Status Code: ${response.status}(${result.error})`);
+      }
     }
   }
 
   return (
     <div className="flex flex-col flex-grow">
-      <div className="flex items-center flex-shrink-0 h-16 bg-white border-b border-gray-300 px-4">
+      <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-white border-b border-gray-300 px-4">
+        <div className="w-12 h-12 flex justify-center items-center hover:bg-slate-400 hover:rounded-md">
+          <Link href={"/app"}>
+            <a>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2 13L11.293 3.70697C11.6835 3.31659 12.3165 3.31659 12.707 3.70697L22 13H20V21C20 21.5523 19.5523 22 19 22H14V15H10V22H5C4.44772 22 4 21.5523 4 21V13H2Z"
+                  fill="#2E3A59"
+                ></path>
+              </svg>
+            </a>
+          </Link>
+        </div>
         <div>
           {group && (
             <>
@@ -62,7 +84,7 @@ export default function Chat(props: any) {
           )}
         </div>
       </div>
-      <>
+      <div className="overflow-y-scroll">
         {group &&
           group.messages.map((message: IMessage) => {
             return (
@@ -83,21 +105,27 @@ export default function Chat(props: any) {
                 </div>
                 <div className="flex flex-col items-center mt-2">
                   <hr className="w-full" />
-                  <span className="flex items-center justify-center -mt-3 bg-white h-6 px-3 rounded-full border text-xs font-semibold mx-auto">
-                    Today
-                  </span>
+                  {new Date(message.timestamp).getDate() !==
+                    new Date().getDate() && (
+                    <span className="flex items-center justify-center -mt-3 bg-white h-6 px-3 rounded-full border text-xs font-semibold mx-auto">
+                      Today
+                    </span>
+                  )}
                 </div>
               </div>
             );
           })}
-      </>
+      </div>
 
-      <div className="bg-white p-4">
+      <div className="bg-white p-4 mt-auto">
         <form
           onSubmit={chatFormSubmit}
           className="flex items-center border-2 border-gray-300 rounded-sm p-1"
         >
-          <button className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200">
+          <button
+            type="button"
+            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
+          >
             <svg
               className="h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
@@ -117,10 +145,12 @@ export default function Chat(props: any) {
             onChange={chatFormChange}
             name="content"
             value={chatForm.content}
-            className="flex-grow text-sm px-3 border-l border-gray-300 ml-1"
-            placeholder="Message council-of-elrond"
+            className="flex-grow align-middle resize-none text-sm px-3 border-l border-gray-300 ml-1"
           ></textarea>
-          <button className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200">
+          <button
+            type="button"
+            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
+          >
             <svg
               className="h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
@@ -134,10 +164,16 @@ export default function Chat(props: any) {
               />
             </svg>
           </button>
-          <button className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200">
+          <button
+            type="button"
+            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
+          >
             <span className="leading-none w-4 h-4 -mt-px">@</span>
           </button>
-          <button className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200">
+          <button
+            type="button"
+            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
+          >
             <svg
               className="h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +187,10 @@ export default function Chat(props: any) {
               />
             </svg>
           </button>
-          <button className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200">
+          <button
+            type="button"
+            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
+          >
             <svg
               className="h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"

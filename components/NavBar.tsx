@@ -4,7 +4,7 @@ import { useState } from "react";
 import { groups, users } from "../lib/mockData";
 import useNavBar from "../lib/useNavBar";
 import useUser from "../lib/useUser";
-import ChatModal from "./ChatModal";
+import CreateGroupModal from "./CreateGroupModal";
 import { FormEvent } from "react";
 import { IGroup, IRoomInstance } from "../interfaces/models";
 import { useRouter } from "next/router";
@@ -46,7 +46,8 @@ export default function NavBar(props: any) {
 
     const response = await fetch(endpoint, options);
     if (response.status === 200) {
-      console.log("Group Creation Success");
+      chatModal();
+      mutateNavBar.mutateGroups();
     } else {
       const result = await response.json();
       setErrors({
@@ -147,8 +148,8 @@ export default function NavBar(props: any) {
         </button>
       </div>
       {showChatModal && (
-        <div className="z-10 w-full flex flex-col">
-          <ChatModal
+        <div className="z-10 w-full absolute">
+          <CreateGroupModal
             chatModal={chatModal}
             groupFormChange={groupFormChange}
             groupFormSubmit={groupFormSubmit}

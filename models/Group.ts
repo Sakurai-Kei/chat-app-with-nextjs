@@ -28,7 +28,10 @@ const groupSchema = new Schema<IGroup>(
     ],
     messages: [
       {
-        content: { type: String },
+        content: {
+          type: String,
+          required: [true, "Message must have content"],
+        },
         user: { type: Schema.Types.ObjectId, ref: "User" },
         timestamp: { type: Date },
       },
