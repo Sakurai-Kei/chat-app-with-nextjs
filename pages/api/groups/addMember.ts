@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
+import dbConnect from "../../../lib/mongoDB";
 import { withSessionRoute } from "../../../lib/withSession";
 import Group from "../../../models/Group";
 import User from "../../../models/User";
@@ -11,6 +12,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     res.status(400).json({ error: "No request body and/or auth " });
     res.end();
   } else {
+    await dbConnect();
     const { memberId, groupId } = req.body;
     const user = await User.findOne({ username: memberId }).exec();
     const alreadyAdded = await Group.findOne({ members: user._id }).exec();

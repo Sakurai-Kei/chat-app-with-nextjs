@@ -1,10 +1,9 @@
+import { useRouter } from "next/router";
 import { withSessionSsr } from "../../../lib/withSession";
+import { useChatInstance } from "../../../lib/useChat";
 import useNavBar from "../../../lib/useNavBar";
 import NavBar from "../../../components/NavBar";
-import ChatGroup from "../../../components/ChatGroup";
-import MemberList from "../../../components/MemberList";
-import { useChatGroup } from "../../../lib/useChat";
-import { useRouter } from "next/router";
+import ChatInstance from "../../../components/ChatInstance";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
@@ -23,24 +22,27 @@ export const getServerSideProps = withSessionSsr(
     return {
       props: {
         user: req.session.user,
-        id,
+        instanceId: id,
       },
     };
   }
 );
 
-export default function GroupChatRoom(props: any) {
+export default function InstanceChatRoom(props: any) {
   const router = useRouter();
-  const { user, id } = props;
+  const { user, instanceId } = props;
   const { _id, username } = user;
   const { navBar, mutateNavBar } = useNavBar(_id);
-  const { group, mutateGroup } = useChatGroup(id);
+  const { instance, mutateInstance } = useChatInstance(instanceId);
 
   return (
     <div className="flex sm:min-w-screen sm:min-h-screen md:w-screen md:h-screen text-gray-700">
       <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
-      <ChatGroup userId={_id} group={group} mutateGroup={mutateGroup} />
-      <MemberList group={group} mutateGroup={mutateGroup} />
+      <ChatInstance
+        userId={_id}
+        instance={instance}
+        mutateInstance={mutateInstance}
+      />
     </div>
   );
 }

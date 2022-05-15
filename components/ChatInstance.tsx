@@ -5,8 +5,8 @@ import { IMessage } from "../interfaces/models";
 import { chatMessages } from "../lib/mockData";
 import { groups, users } from "../lib/mockData";
 
-export default function Chat(props: any) {
-  const { group, mutateGroup, userId } = props;
+export default function ChatInstance(props: any) {
+  const { userId, instance, mutateInstance } = props;
   const [chatForm, setChatForm] = useState({
     content: "",
   });
@@ -26,12 +26,12 @@ export default function Chat(props: any) {
     } else {
       const data = {
         content: chatForm.content,
-        groupId: group._id.toString(),
+        instanceId: instance._id.toString(),
         userId,
       };
 
       const JSONdata = JSON.stringify(data);
-      const endpoint = "/api/groups/instance/createMessage";
+      const endpoint = "/api/room-instances/instance/createMessage";
       const options = {
         method: "POST",
         headers: {
@@ -46,7 +46,7 @@ export default function Chat(props: any) {
           ...chatForm,
           content: "",
         });
-        mutateGroup();
+        mutateInstance();
       } else {
         const result = await response.json();
         console.error(`Status Code: ${response.status}(${result.error})`);
@@ -76,17 +76,20 @@ export default function Chat(props: any) {
           </Link>
         </div>
         <div>
-          {group && (
+          {instance && (
             <>
-              <h1 className="text-sm font-bold leading-none">{group.name}</h1>
-              <span className="text-xs leading-none">{group.about}</span>
+              <h1 className="text-sm font-bold leading-none">
+                {instance.members[0].username},{instance.members[1].username}
+              </h1>
+              <span className="text-xs leading-none">Private Instance</span>
             </>
           )}
         </div>
       </div>
       <div className="overflow-y-scroll">
-        {group &&
-          group.messages.map((message: IMessage) => {
+        {instance &&
+          instance.messages &&
+          instance.messages.map((message: IMessage) => {
             return (
               <div key={message._id.toString()}>
                 <div className="flex px-4 py-3">

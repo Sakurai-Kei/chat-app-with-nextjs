@@ -1,5 +1,5 @@
 import NavBar from "../../../components/NavBar";
-import Chat from "../../../components/Chat";
+import Chat from "../../../components/ChatGroup";
 import MemberList from "../../../components/MemberList";
 
 export default function ChatRoom() {

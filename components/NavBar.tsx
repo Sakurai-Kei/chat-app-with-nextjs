@@ -8,6 +8,7 @@ import CreateGroupModal from "./CreateGroupModal";
 import { FormEvent } from "react";
 import { IGroup, IRoomInstance } from "../interfaces/models";
 import { useRouter } from "next/router";
+import CreateInstanceModal from "./CreateInstanceModal";
 
 export default function NavBar(props: any) {
   const router = useRouter();
@@ -16,10 +17,15 @@ export default function NavBar(props: any) {
     name: "",
     about: "",
   });
+  const [instanceForm, setInstanceForm] = useState({
+    userId: _id,
+    targetMemberUsername: "",
+  });
   const [errors, setErrors] = useState({
     error: "",
   });
   const [showChatModal, setShowChatModal] = useState(false);
+  const [showInstanceModal, setShowInstanceModal] = useState(false);
 
   function groupFormChange(
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,6 +39,10 @@ export default function NavBar(props: any) {
 
   async function groupFormSubmit(event: FormEvent) {
     event.preventDefault();
+
+    if (groupForm.name.trim().length === 0) {
+      return;
+    }
 
     const JSONdata = JSON.stringify(groupForm);
     const endpoint = "/api/groups/createGroup";
@@ -56,11 +66,56 @@ export default function NavBar(props: any) {
     }
   }
 
+  function instanceFormChange(event: FormEvent<HTMLInputElement>) {
+    const value = event.currentTarget.value;
+    setInstanceForm({
+      ...instanceForm,
+      [event.currentTarget.name]: value,
+    });
+  }
+
+  async function instanceFormSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    if (instanceForm.targetMemberUsername.trim().length === 0) {
+      return;
+    }
+
+    const JSONdata = JSON.stringify(instanceForm);
+    const endpoint = "/api/room-instances/createInstance";
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSONdata,
+    };
+
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      instanceModal();
+      mutateNavBar.mutateRoomInstances();
+    } else {
+      const result = await response.json();
+      setErrors({
+        error: `Status Code: ${response.status}(${result.error})`,
+      });
+    }
+  }
+
   function chatModal() {
     if (!showChatModal) {
       setShowChatModal(true);
     } else {
       setShowChatModal(false);
+    }
+  }
+
+  function instanceModal() {
+    if (!showInstanceModal) {
+      setShowInstanceModal(true);
+    } else {
+      setShowInstanceModal(false);
     }
   }
 
@@ -77,7 +132,7 @@ export default function NavBar(props: any) {
                 >
                   <Image
                     onClick={() => {
-                      router.push("/app/user/" + instance._id.toString());
+                      router.push("/app/instance/" + instance._id.toString());
                     }}
                     src={"/vercel.svg"}
                     alt={"vercel"}
@@ -107,25 +162,6 @@ export default function NavBar(props: any) {
               );
             })}
         </div>
-
-        {/* <a
-        className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
-        href="#"
-      ></a>
-      <a
-        className="w-10 h-10 rounded-lg bg-gray-400 mt-4 shadow-outline border-4 border-gray-200"
-        href="#"
-      ></a>
-      <a
-        className="relative w-10 h-10 rounded-lg bg-gray-400 mt-4 hover:bg-gray-500"
-        href="#"
-      >
-        <span className="absolute w-3 h-3 rounded-full bg-blue-400 top-0 right-0 -mt-1 -mr-1"></span>
-      </a>
-      <a
-        className="w-10 h-10 rounded-lg bg-gray-400 mt-4 hover:bg-gray-500"
-        href="#"
-      ></a> */}
         <button
           className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-gray-400"
           onClick={chatModal}
@@ -146,6 +182,27 @@ export default function NavBar(props: any) {
             ></path>
           </svg>
         </button>
+        <button
+          onClick={instanceModal}
+          className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-gray-400"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 10H17V7H14V5H17V2H19V5H22V7H19V10Z"
+              fill="#2E3A59"
+            ></path>
+            <path
+              d="M21 12H19V15H8.334C7.90107 14.9988 7.47964 15.1393 7.134 15.4L5 17V5H12V3H5C3.89543 3 3 3.89543 3 5V21L7.8 17.4C8.14582 17.1396 8.56713 16.9992 9 17H19C20.1046 17 21 16.1046 21 15V12Z"
+              fill="#2E3A59"
+            ></path>
+          </svg>
+        </button>
       </div>
       {showChatModal && (
         <div className="z-10 w-full absolute">
@@ -153,6 +210,15 @@ export default function NavBar(props: any) {
             chatModal={chatModal}
             groupFormChange={groupFormChange}
             groupFormSubmit={groupFormSubmit}
+          />
+        </div>
+      )}
+      {showInstanceModal && (
+        <div className="z-10 w-full absolute">
+          <CreateInstanceModal
+            instanceModal={instanceModal}
+            instanceFormChange={instanceFormChange}
+            instanceFormSubmit={instanceFormSubmit}
           />
         </div>
       )}
