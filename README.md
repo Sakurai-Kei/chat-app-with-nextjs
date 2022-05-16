@@ -1,4 +1,3 @@
-
 <div id="top"></div>
 <!--
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
@@ -7,8 +6,6 @@
 *** Don't forget to give the project a star!
 *** Thanks again! Now go create something AMAZING! :D
 -->
-
-
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -24,8 +21,6 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url] -->
-
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -49,8 +44,6 @@
     <a href="https://github.com/github_username/repo_name/issues">Request Feature</a> -->
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -78,9 +71,8 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
@@ -99,23 +91,20 @@ More features to come!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 ### Built With
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Tailwind](https://tailwindcss.com/)
-* [Mongoose](https://mongoosejs.com/)
-* [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
-* [iron-session](https://github.com/vvo/iron-session)
-* [date-fns](https://date-fns.org/)
+- [Next.js](https://nextjs.org/)
+- [React.js](https://reactjs.org/)
+- [Tailwind](https://tailwindcss.com/)
+- [Mongoose](https://mongoosejs.com/)
+- [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
+- [iron-session](https://github.com/vvo/iron-session)
+- [date-fns](https://date-fns.org/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 If you would like to try to run this app on your own, follow the instructions below
@@ -123,8 +112,9 @@ If you would like to try to run this app on your own, follow the instructions be
 ### Prerequisites
 
 Things to have before cloning the repo
-* Make sure to have at least Node v 16.14.2
-* Set up a MongoDb Cluster
+
+- Make sure to have at least Node v 16.14.2
+- Set up a MongoDb Cluster
 
 ### Installation
 
@@ -143,12 +133,10 @@ Things to have before cloning the repo
    npm run dev
    ```
 
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 Placeholder
@@ -157,67 +145,61 @@ Placeholder
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- ROADMAP -->
+
 ## Roadmap
 
 - [ ] Deploy the app
 - [ ] Support for user profile(profile picture etc)
 - [ ] Chat Improvement
-    - [ ] Emoji Support
-    - [ ] Image Support
+  - [ ] Emoji Support
+  - [ ] Image Support
 - [ ] Cleaner UI
 - [ ] Cleaner Code
 
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 For now, the project is strictly for my educational purposes. However, if you want to fork the project and add your own features, feel free to do so.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- CONTACT -->
+
 ## Contact
 
-Luqmanul Hakim - [@twitter_handle](https://twitter.com/RaiserAshfell)) - luqmanulraiserhakim@gmail.com
+Luqmanul Hakim - [@RaiserAshfell](https://twitter.com/RaiserAshfell) - luqmanulraiserhakim@gmail.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/sakurai-kei/chat-app-with-nextjs)
+Project Link: [https://github.com/sakurai-kei/chat-app-with-nextjs](https://github.com/sakurai-kei/chat-app-with-nextjs)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- ACKNOWLEDGMENTS -->
+
 ## Acknowledgments
 
 Placeholder
+
 <!-- * []()
 * []()
 * []() -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
 [contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
