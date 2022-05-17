@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { ReactElement } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import IndexContent from "../components/IndexContent";
+import Layout from "../components/Layout";
 
-const Home: NextPage = () => {
+export default function Home() {
   return (
     <div className="flex flex-col">
       <Head>
@@ -12,11 +14,15 @@ const Home: NextPage = () => {
         <meta name="description" content="Home page for SK Chat-App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
       <IndexContent />
-      <Footer />
     </div>
   );
-};
+}
 
-export default Home;
+Home.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      <div>{page}</div>
+    </Layout>
+  );
+};

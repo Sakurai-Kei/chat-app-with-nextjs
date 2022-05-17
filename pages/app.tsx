@@ -30,7 +30,7 @@ export default function App(props: any) {
   const { navBar, mutateNavBar } = useNavBar(_id);
 
   return (
-    <div className="flex sm:min-w-screen sm:min-h-screen md:w-screen md:h-screen text-gray-700">
+    <div className="flex min-w-screen min-h-screen md:w-screen md:h-screen text-gray-700">
       <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
     </div>
   );

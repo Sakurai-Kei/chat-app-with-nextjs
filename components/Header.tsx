@@ -38,7 +38,7 @@ export default function Header() {
 
           <nav className="hidden space-x-8 text-sm font-medium md:flex">
             <Link href={"/"}>
-              <a className="text-white hover:text-yellow-300">Home</a>
+              <a className="text-white hover:text-blue-500">Home</a>
             </Link>
           </nav>
 

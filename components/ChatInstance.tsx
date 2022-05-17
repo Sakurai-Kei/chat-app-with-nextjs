@@ -55,7 +55,7 @@ export default function ChatInstance(props: any) {
   }
 
   return (
-    <div className="flex flex-col flex-grow">
+    <div className="flex flex-col flex-grow overflow-hidden">
       <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-white border-b border-gray-300 px-4">
         <div className="w-12 h-12 flex justify-center items-center hover:bg-slate-400 hover:rounded-md">
           <Link href={"/app"}>

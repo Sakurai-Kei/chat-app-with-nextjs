@@ -2,9 +2,11 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import Layout from "../components/Layout";
 import { FormEvent } from "react";
 import RegisterForm from "../components/RegisterForm";
 import useUser from "../lib/useUser";
+import { ReactElement } from "react";
 
 export default function Register() {
   const router = useRouter();
@@ -33,6 +35,16 @@ export default function Register() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
+    if (
+      !formData.username ||
+      !formData.password ||
+      !formData.confirmPassword ||
+      formData.password !== formData.confirmPassword ||
+      !formData.email
+    ) {
+      return;
+    }
+
     const JSONdata = JSON.stringify(formData);
     const endpoint = "/api/register";
     const options = {
@@ -56,15 +68,21 @@ export default function Register() {
   }
   return (
     <>
-      <Header />
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center bg-indigo-800">
         <RegisterForm
           errors={errors}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
         />
       </div>
-      <Footer />
     </>
   );
 }
+
+Register.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      <div>{page}</div>
+    </Layout>
+  );
+};

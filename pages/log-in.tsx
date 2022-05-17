@@ -5,6 +5,8 @@ import Header from "../components/Header";
 import LogInForm from "../components/LogInForm";
 import { FormEvent } from "react";
 import useUser from "../lib/useUser";
+import { ReactElement } from "react";
+import Layout from "../components/Layout";
 
 export default function LogIn() {
   const router = useRouter();
@@ -55,15 +57,21 @@ export default function LogIn() {
   }
   return (
     <>
-      <Header />
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center bg-indigo-800">
         <LogInForm
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           errors={errors}
         />
       </div>
-      <Footer />
     </>
   );
 }
+
+LogIn.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      <div>{page}</div>
+    </Layout>
+  );
+};

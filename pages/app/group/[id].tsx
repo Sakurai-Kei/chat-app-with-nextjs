@@ -37,7 +37,7 @@ export default function GroupChatRoom(props: any) {
   const { group, mutateGroup } = useChatGroup(id);
 
   return (
-    <div className="flex sm:min-w-screen sm:min-h-screen md:w-screen md:h-screen text-gray-700">
+    <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
       <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
       <ChatGroup userId={_id} group={group} mutateGroup={mutateGroup} />
       <MemberList group={group} mutateGroup={mutateGroup} />

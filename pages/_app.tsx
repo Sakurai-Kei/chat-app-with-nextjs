@@ -1,10 +1,15 @@
 import "../styles/globals.css";
-import type { AppProps } from "next/app";
 import { SWRConfig } from "swr";
 import fetchJson from "../lib/fetchJson";
+import { AppPropsWithLayout } from "../interfaces/Components";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return (
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout =
+    Component.getLayout ??
+    ((page) => {
+      return page;
+    });
+  return getLayout(
     <SWRConfig
       value={{
         fetcher: fetchJson,

@@ -4,11 +4,11 @@ import { RegisterFormProps } from "../interfaces/Components";
 export default function RegisterForm(props: RegisterFormProps) {
   const { errors, handleSubmit, handleChange } = props;
   return (
-    <div className="flex flex-col max-w-md m-4 px-4 py-8 bg-white rounded-lg shadow sm:px-6 md:px-8 lg:px-10">
-      <div className="self-center mb-2 text-xl font-light text-gray-800 sm:text-2xl">
+    <div className="flex flex-col max-w-md m-4 px-4 py-8 bg-slate-800 rounded-lg shadow sm:px-6 md:px-8 lg:px-10">
+      <div className="self-center mb-2 text-xl font-light text-white sm:text-2xl">
         Create a new account
       </div>
-      <span className="justify-center text-sm text-center text-gray-500 flex-items-center">
+      <span className="justify-center text-sm text-center text-gray-300 flex-items-center">
         Already have an account?
         <Link href={"/log-in"}>
           <a className="p-1 text-sm text-blue-500 underline hover:text-blue-700">

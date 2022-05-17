@@ -3,7 +3,7 @@ import { IUser } from "../interfaces/models";
 
 export default function MemberList(props: any) {
   const { group, mutateGroup } = props;
-  const [showMember, setShowMember] = useState(true);
+  const [showMember, setShowMember] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
   const [findUserId, setFindUserId] = useState({
     memberId: "",
@@ -101,7 +101,7 @@ export default function MemberList(props: any) {
     );
   } else {
     return (
-      <div className="border flex flex-col flex-shrink-0 w-1/4 max-w-xs border-l border-gray-300 bg-gray-100">
+      <div className="border flex flex-col flex-shrink-0 w-1/4 max-w-xs overflow-scroll border-l border-gray-300 bg-gray-100">
         <div className="flex items-center h-16 border-b border-gray-300 px-4">
           <div>
             <h2 className="text-sm font-semibold leading-none">
