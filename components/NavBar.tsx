@@ -132,7 +132,7 @@ export default function NavBar(props: any) {
     return (
       <button
         onClick={navBarComponent}
-        className="w-12 flex justify-center items-center rounded-md hover:bg-slate-400"
+        className="w-12 flex justify-center items-center rounded-r-md bg-slate-800 hover:bg-slate-700 hover:animate-bounceRight"
       >
         <svg
           width="24"
@@ -143,7 +143,7 @@ export default function NavBar(props: any) {
         >
           <path
             d="M8 5H21V7H8V5ZM3 4.5H6V7.5H3V4.5ZM3 10.5H6V13.5H3V10.5ZM3 16.5H6V19.5H3V16.5ZM8 11H21V13H8V11ZM8 17H21V19H8V17Z"
-            fill="#2E3A59"
+            fill="white"
           ></path>
         </svg>
       </button>
@@ -151,10 +151,10 @@ export default function NavBar(props: any) {
   } else {
     return (
       <>
-        <div className="flex flex-col items-center flex-shrink-0 w-16 border-r border-gray-300 bg-gray-200 py-3">
+        <div className="flex flex-col items-center flex-shrink-0 w-16 border-r border-gray-300 bg-slate-600 py-3">
           <button
             onClick={navBarComponent}
-            className="w-12 mb-4 flex justify-center items-center rounded-md hover:bg-slate-400"
+            className="w-12 mb-4 flex justify-center items-center rounded-md hover:bg-indigo-400"
           >
             <svg
               width="24"
@@ -165,7 +165,7 @@ export default function NavBar(props: any) {
             >
               <path
                 d="M8 5H21V7H8V5ZM3 4.5H6V7.5H3V4.5ZM3 10.5H6V13.5H3V10.5ZM3 16.5H6V19.5H3V16.5ZM8 11H21V13H8V11ZM8 17H21V19H8V17Z"
-                fill="#2E3A59"
+                fill="white"
               ></path>
             </svg>
           </button>
@@ -210,14 +210,14 @@ export default function NavBar(props: any) {
               })}
           </div>
           <button
-            className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-gray-400"
+            className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-indigo-400"
             onClick={chatModal}
             disabled={showChatModal}
           >
             <svg
               className="w-6 h-6 fill-current"
               fill="none"
-              stroke="currentColor"
+              stroke="white"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -231,7 +231,7 @@ export default function NavBar(props: any) {
           </button>
           <button
             onClick={instanceModal}
-            className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-gray-400"
+            className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-indigo-400"
           >
             <svg
               width="24"
@@ -242,11 +242,11 @@ export default function NavBar(props: any) {
             >
               <path
                 d="M19 10H17V7H14V5H17V2H19V5H22V7H19V10Z"
-                fill="#2E3A59"
+                fill="white"
               ></path>
               <path
                 d="M21 12H19V15H8.334C7.90107 14.9988 7.47964 15.1393 7.134 15.4L5 17V5H12V3H5C3.89543 3 3 3.89543 3 5V21L7.8 17.4C8.14582 17.1396 8.56713 16.9992 9 17H19C20.1046 17 21 16.1046 21 15V12Z"
-                fill="#2E3A59"
+                fill="white"
               ></path>
             </svg>
           </button>

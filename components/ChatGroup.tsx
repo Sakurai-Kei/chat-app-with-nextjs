@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { FormEvent, FormEventHandler, useState } from "react";
 import Link from "next/link";
+import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
 import { chatMessages } from "../lib/mockData";
 import { groups, users } from "../lib/mockData";
@@ -56,7 +57,7 @@ export default function ChatGroup(props: any) {
 
   return (
     <div className="flex flex-col flex-grow overflow-hidden">
-      <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-white border-b border-gray-300 px-4">
+      <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-slate-800 border-b border-gray-300 px-4">
         <div className="w-12 h-12 flex justify-center items-center hover:bg-slate-400 hover:rounded-md">
           <Link href={"/app"}>
             <a>
@@ -69,7 +70,7 @@ export default function ChatGroup(props: any) {
               >
                 <path
                   d="M2 13L11.293 3.70697C11.6835 3.31659 12.3165 3.31659 12.707 3.70697L22 13H20V21C20 21.5523 19.5523 22 19 22H14V15H10V22H5C4.44772 22 4 21.5523 4 21V13H2Z"
-                  fill="#2E3A59"
+                  fill="white"
                 ></path>
               </svg>
             </a>
@@ -78,8 +79,12 @@ export default function ChatGroup(props: any) {
         <div>
           {group && (
             <>
-              <h1 className="text-sm font-bold leading-none">{group.name}</h1>
-              <span className="text-xs leading-none">{group.about}</span>
+              <h1 className="text-sm font-bold leading-none text-white">
+                {group.name}
+              </h1>
+              <span className="text-xs leading-none text-gray-300">
+                {group.about}
+              </span>
             </>
           )}
         </div>
@@ -88,16 +93,16 @@ export default function ChatGroup(props: any) {
         {group &&
           group.messages.map((message: IMessage) => {
             return (
-              <div key={message._id.toString()}>
+              <div className="bg-slate-300" key={message._id.toString()}>
                 <div className="flex px-4 py-3">
-                  <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
+                  <div className="h-10 w-10 rounded flex-shrink-0 bg-slate-500"></div>
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">
                         {message.user.username.toString()}
                       </span>
                       <span className="ml-1 text-xs text-gray-500">
-                        {message.timestamp.toString()}
+                        {format(new Date(message.timestamp), "KK.mm a, PPP")}
                       </span>
                     </div>
                     <p className="text-sm">{message.content}</p>
@@ -105,22 +110,33 @@ export default function ChatGroup(props: any) {
                 </div>
                 <div className="flex flex-col items-center mt-2">
                   <hr className="w-full" />
-                  {new Date(message.timestamp).getDate() !==
-                    new Date().getDate() && (
-                    <span className="flex items-center justify-center -mt-3 bg-white h-6 px-3 rounded-full border text-xs font-semibold mx-auto">
-                      Today
-                    </span>
-                  )}
                 </div>
               </div>
             );
           })}
+        {!group && (
+          <div className="w-full flex justify-center">
+            <svg
+              className="animate-spin"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11.995 4.00001C7.8362 3.99432 4.36664 7.17599 4.01299 11.3197C3.65933 15.4634 6.53955 19.187 10.6391 19.8862C14.7387 20.5853 18.6903 18.0267 19.73 14H17.649C16.6318 16.8771 13.617 18.5324 10.6434 17.8465C7.66989 17.1605 5.68488 14.3519 6.03079 11.3199C6.3767 8.28792 8.94332 5.99856 11.995 6.00001C13.5845 6.00234 15.1064 6.64379 16.218 7.78002L13 11H20V4.00001L17.649 6.35002C16.1527 4.84464 14.1175 3.99873 11.995 4.00001Z"
+                fill="#2E3A59"
+              ></path>
+            </svg>
+          </div>
+        )}
       </div>
 
-      <div className="bg-white p-4 mt-auto">
+      <div className="bg-slate-800 p-4 mt-auto">
         <form
           onSubmit={chatFormSubmit}
-          className="flex items-center border-2 border-gray-300 rounded-sm p-1"
+          className="flex items-center border-2 border-gray-300 bg-slate-500 rounded-sm px-1"
         >
           <button
             type="button"

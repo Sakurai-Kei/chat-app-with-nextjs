@@ -3,6 +3,7 @@ import NavBar from "../components/NavBar";
 import useUser from "../lib/useUser";
 import { withSessionSsr } from "../lib/withSession";
 import useNavBar from "../lib/useNavBar";
+import AppHome from "../components/AppHome";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req }) {
@@ -32,6 +33,7 @@ export default function App(props: any) {
   return (
     <div className="flex min-w-screen min-h-screen md:w-screen md:h-screen text-gray-700">
       <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
+      <AppHome />
     </div>
   );
 }

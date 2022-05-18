@@ -26,18 +26,17 @@ export default function CreateInstanceModal(props: InstanceModalProps) {
             className="px-4 py-2 text-gray-700 bg-white border rounded-md sm:mx-2 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
             placeholder="Username"
           />
-
-          <button
-            onClick={instanceFormSubmit}
-            className="px-4 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-blue-700 rounded-md sm:mx-2 hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-          >
-            Find
-          </button>
           <button
             onClick={instanceModal}
             className="px-4 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-red-700 rounded-md sm:mx-2 hover:bg-red-600 focus:outline-none focus:bg-red-600"
           >
             Close
+          </button>
+          <button
+            onClick={instanceFormSubmit}
+            className="px-4 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-blue-700 rounded-md sm:mx-2 hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          >
+            Find
           </button>
         </form>
       </div>

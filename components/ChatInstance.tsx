@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { FormEvent, FormEventHandler, useState } from "react";
 import Link from "next/link";
+import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
 import { chatMessages } from "../lib/mockData";
 import { groups, users } from "../lib/mockData";
@@ -100,7 +101,7 @@ export default function ChatInstance(props: any) {
                         {message.user.username.toString()}
                       </span>
                       <span className="ml-1 text-xs text-gray-500">
-                        {message.timestamp.toString()}
+                        {format(new Date(message.timestamp), "KK.mm a, PPP")}
                       </span>
                     </div>
                     <p className="text-sm">{message.content}</p>
@@ -108,12 +109,6 @@ export default function ChatInstance(props: any) {
                 </div>
                 <div className="flex flex-col items-center mt-2">
                   <hr className="w-full" />
-                  {new Date(message.timestamp).getDate() !==
-                    new Date().getDate() && (
-                    <span className="flex items-center justify-center -mt-3 bg-white h-6 px-3 rounded-full border text-xs font-semibold mx-auto">
-                      Today
-                    </span>
-                  )}
                 </div>
               </div>
             );
