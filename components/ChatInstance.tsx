@@ -1,12 +1,10 @@
-import { useRouter } from "next/router";
-import { FormEvent, FormEventHandler, useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
 import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
-import { chatMessages } from "../lib/mockData";
-import { groups, users } from "../lib/mockData";
+import { ChatInstanceProps } from "../interfaces/Components";
 
-export default function ChatInstance(props: any) {
+export default function ChatInstance(props: ChatInstanceProps) {
   const { userId, instance, mutateInstance } = props;
   const [chatForm, setChatForm] = useState({
     content: "",
@@ -56,8 +54,8 @@ export default function ChatInstance(props: any) {
   }
 
   return (
-    <div className="flex flex-col flex-grow overflow-hidden">
-      <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-white border-b border-gray-300 px-4">
+    <div className="flex flex-col flex-grow overflow-hidden bg-slate-300">
+      <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-slate-800 text-white border-b border-gray-300 px-4">
         <div className="w-12 h-12 flex justify-center items-center hover:bg-slate-400 hover:rounded-md">
           <Link href={"/app"}>
             <a>
@@ -70,7 +68,7 @@ export default function ChatInstance(props: any) {
               >
                 <path
                   d="M2 13L11.293 3.70697C11.6835 3.31659 12.3165 3.31659 12.707 3.70697L22 13H20V21C20 21.5523 19.5523 22 19 22H14V15H10V22H5C4.44772 22 4 21.5523 4 21V13H2Z"
-                  fill="#2E3A59"
+                  fill="white"
                 ></path>
               </svg>
             </a>
@@ -82,7 +80,9 @@ export default function ChatInstance(props: any) {
               <h1 className="text-sm font-bold leading-none">
                 {instance.members[0].username},{instance.members[1].username}
               </h1>
-              <span className="text-xs leading-none">Private Instance</span>
+              <span className="text-xs leading-none text-gray-300">
+                Private Instance
+              </span>
             </>
           )}
         </div>
@@ -92,9 +92,9 @@ export default function ChatInstance(props: any) {
           instance.messages &&
           instance.messages.map((message: IMessage) => {
             return (
-              <div key={message._id.toString()}>
+              <div className="bg-slate-300" key={message._id.toString()}>
                 <div className="flex px-4 py-3">
-                  <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
+                  <div className="h-10 w-10 rounded flex-shrink-0 bg-slate-500"></div>
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">
@@ -115,10 +115,10 @@ export default function ChatInstance(props: any) {
           })}
       </div>
 
-      <div className="bg-white p-4 mt-auto">
+      <div className="bg-slate-800 p-4 mt-auto">
         <form
           onSubmit={chatFormSubmit}
-          className="flex items-center border-2 border-gray-300 rounded-sm p-1"
+          className="flex items-center border-2 border-gray-300 bg-slate-500 rounded-sm px-1"
         >
           <button
             type="button"

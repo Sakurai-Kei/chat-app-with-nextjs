@@ -4,6 +4,7 @@ import useUser from "../lib/useUser";
 import { withSessionSsr } from "../lib/withSession";
 import useNavBar from "../lib/useNavBar";
 import AppHome from "../components/AppHome";
+import { IronSessionData } from "iron-session";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req }) {
@@ -26,8 +27,8 @@ export const getServerSideProps = withSessionSsr(
   }
 );
 
-export default function App(props: any) {
-  const { _id, username } = props.user;
+export default function App(props: IronSessionData) {
+  const { _id, username } = props.user!;
   const { navBar, mutateNavBar } = useNavBar(_id);
 
   return (

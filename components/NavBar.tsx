@@ -9,8 +9,9 @@ import { FormEvent } from "react";
 import { IGroup, IRoomInstance } from "../interfaces/models";
 import { useRouter } from "next/router";
 import CreateInstanceModal from "./CreateInstanceModal";
+import { NavBarProps } from "../interfaces/Components";
 
-export default function NavBar(props: any) {
+export default function NavBar(props: NavBarProps) {
   const router = useRouter();
   const { _id, navBar, mutateNavBar } = props;
   const [groupForm, setGroupForm] = useState({

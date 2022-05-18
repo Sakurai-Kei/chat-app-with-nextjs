@@ -1,10 +1,5 @@
 import { FormEvent } from "react";
-
-interface InstanceModalProps {
-  instanceModal: () => void;
-  instanceFormSubmit: (event: FormEvent) => Promise<void>;
-  instanceFormChange: (event: FormEvent<HTMLInputElement>) => void;
-}
+import { InstanceModalProps } from "../interfaces/Components";
 
 export default function CreateInstanceModal(props: InstanceModalProps) {
   const { instanceModal, instanceFormSubmit, instanceFormChange } = props;

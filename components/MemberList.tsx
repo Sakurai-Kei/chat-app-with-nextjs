@@ -1,7 +1,8 @@
 import { FormEvent, useState } from "react";
+import { MemberListProps } from "../interfaces/Components";
 import { IUser } from "../interfaces/models";
 
-export default function MemberList(props: any) {
+export default function MemberList(props: MemberListProps) {
   const { group, mutateGroup } = props;
   const [showMember, setShowMember] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
@@ -190,7 +191,7 @@ export default function MemberList(props: any) {
                   key={member._id!.toString()}
                   className="flex px-4 py-4 border-b border-gray-300"
                 >
-                  <div className="h-10 w-10 rounded flex-shrink-0 bg-gray-300"></div>
+                  <div className="h-10 w-10 rounded flex-shrink-0 bg-slate-500"></div>
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">

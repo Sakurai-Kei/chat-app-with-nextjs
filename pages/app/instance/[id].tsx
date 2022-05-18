@@ -4,6 +4,7 @@ import { useChatInstance } from "../../../lib/useChat";
 import useNavBar from "../../../lib/useNavBar";
 import NavBar from "../../../components/NavBar";
 import ChatInstance from "../../../components/ChatInstance";
+import { InstanceChatRoomPage } from "../../../interfaces/pages";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
@@ -28,10 +29,10 @@ export const getServerSideProps = withSessionSsr(
   }
 );
 
-export default function InstanceChatRoom(props: any) {
+export default function InstanceChatRoom(props: InstanceChatRoomPage) {
   const router = useRouter();
   const { user, instanceId } = props;
-  const { _id, username } = user;
+  const { _id, username } = user!;
   const { navBar, mutateNavBar } = useNavBar(_id);
   const { instance, mutateInstance } = useChatInstance(instanceId);
 

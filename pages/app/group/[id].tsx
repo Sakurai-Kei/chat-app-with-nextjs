@@ -5,6 +5,7 @@ import ChatGroup from "../../../components/ChatGroup";
 import MemberList from "../../../components/MemberList";
 import { useChatGroup } from "../../../lib/useChat";
 import { useRouter } from "next/router";
+import { GroupChatRoomPage } from "../../../interfaces/pages";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
@@ -29,10 +30,10 @@ export const getServerSideProps = withSessionSsr(
   }
 );
 
-export default function GroupChatRoom(props: any) {
+export default function GroupChatRoom(props: GroupChatRoomPage) {
   const router = useRouter();
   const { user, id } = props;
-  const { _id, username } = user;
+  const { _id, username } = user!;
   const { navBar, mutateNavBar } = useNavBar(_id);
   const { group, mutateGroup } = useChatGroup(id);
 

@@ -1,13 +1,6 @@
 import { FormEvent } from "react";
+import { ChatModalProps } from "../interfaces/Components";
 import { IGroup } from "../interfaces/models";
-
-interface ChatModalProps {
-  chatModal: () => void;
-  groupFormSubmit: (event: FormEvent) => Promise<void>;
-  groupFormChange: (
-    event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-}
 
 export default function CreateGroupModal(props: ChatModalProps) {
   const { chatModal, groupFormChange, groupFormSubmit } = props;

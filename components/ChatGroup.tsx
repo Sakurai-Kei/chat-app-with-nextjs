@@ -5,8 +5,9 @@ import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
 import { chatMessages } from "../lib/mockData";
 import { groups, users } from "../lib/mockData";
+import { ChatGroupProps } from "../interfaces/Components";
 
-export default function ChatGroup(props: any) {
+export default function ChatGroup(props: ChatGroupProps) {
   const { group, mutateGroup, userId } = props;
   const [chatForm, setChatForm] = useState({
     content: "",
