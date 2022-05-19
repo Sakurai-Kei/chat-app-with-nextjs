@@ -21,6 +21,10 @@ export interface LayoutProps {
   children: React.ReactNode;
 }
 
+export interface ErrorAlertProps {
+  errors: Errors;
+}
+
 export interface NavBarProps {
   _id: string;
   navBar: {
@@ -68,12 +72,14 @@ export interface MemberListProps {
 
 export interface RegisterFormProps {
   errors: Errors;
+  isProcessing: boolean;
   handleSubmit: (event: FormEvent) => Promise<void>;
   handleChange: (event: FormEvent<HTMLInputElement>) => void;
 }
 
 export interface LogInFormProps {
   errors: Errors;
+  isProcessing: boolean;
   handleSubmit: (event: FormEvent) => Promise<void>;
   handleChange: (event: FormEvent<HTMLInputElement>) => void;
 }

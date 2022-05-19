@@ -7,6 +7,7 @@ import { FormEvent } from "react";
 import RegisterForm from "../components/RegisterForm";
 import useUser from "../lib/useUser";
 import { ReactElement } from "react";
+import ErrorAlert from "../components/ErrorAlert";
 
 export default function Register() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function Register() {
     confirmPassword: "",
     email: "",
   });
+  const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState({
     error: "",
   });
@@ -34,14 +36,26 @@ export default function Register() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-
+    setIsProcessing(true);
     if (
       !formData.username ||
       !formData.password ||
       !formData.confirmPassword ||
-      formData.password !== formData.confirmPassword ||
       !formData.email
     ) {
+      setIsProcessing(false);
+      setErrors({
+        ...errors,
+        error: "Please fill in all fields",
+      });
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setIsProcessing(false);
+      setErrors({
+        ...errors,
+        error: "Password does not match",
+      });
       return;
     }
 
@@ -56,6 +70,7 @@ export default function Register() {
     };
 
     const response = await fetch(endpoint, options);
+    setIsProcessing(false);
     if (response.status === 200) {
       router.push("/");
     } else {
@@ -71,6 +86,7 @@ export default function Register() {
       <div className="w-full flex justify-center bg-indigo-800">
         <RegisterForm
           errors={errors}
+          isProcessing={isProcessing}
           handleSubmit={handleSubmit}
           handleChange={handleChange}
         />

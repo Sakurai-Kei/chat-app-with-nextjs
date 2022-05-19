@@ -20,6 +20,8 @@ export default function LogIn() {
     password: "",
   });
 
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const [errors, setErrors] = useState({
     error: "",
   });
@@ -35,6 +37,17 @@ export default function LogIn() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
+    setIsProcessing(true);
+
+    if (!formData.loginId || !formData.password) {
+      setErrors({
+        ...errors,
+        error: "Please fill in both fields",
+      });
+      setIsProcessing(false);
+      return;
+    }
+
     const JSONdata = JSON.stringify(formData);
     const endpoint = "/api/log-in";
     const options = {
@@ -46,6 +59,7 @@ export default function LogIn() {
     };
 
     const response = await fetch(endpoint, options);
+    setIsProcessing(false);
     if (response.status === 200) {
       router.push("/");
     } else {
@@ -62,6 +76,7 @@ export default function LogIn() {
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           errors={errors}
+          isProcessing={isProcessing}
         />
       </div>
     </>

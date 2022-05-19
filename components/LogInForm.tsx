@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { LogInFormProps } from "../interfaces/Components";
+import ErrorAlert from "./ErrorAlert";
+import ProcessingForm from "./ProcessingForm";
 
 export default function LogInForm(props: LogInFormProps) {
-  const { handleSubmit, errors, handleChange } = props;
+  const { handleSubmit, errors, isProcessing, handleChange } = props;
   return (
     <div className="flex flex-col w-full max-w-md m-4 px-4 py-8 bg-slate-800 rounded-lg shadow sm:px-6 md:px-8 lg:px-10">
       <div className="self-center mb-6 text-xl font-light text-white sm:text-2xl">
         Login To Your Account
       </div>
+      {errors.error && <ErrorAlert errors={errors} />}
+      {isProcessing && <ProcessingForm />}
       <div className="mt-8">
         <form
           method="post"
@@ -15,19 +19,6 @@ export default function LogInForm(props: LogInFormProps) {
           autoComplete="off"
           onSubmit={handleSubmit}
         >
-          {errors.error && (
-            <div className="w-full text-white bg-red-500">
-              <div className="container flex items-center justify-between mb-4 px-6 py-4 mx-auto">
-                <div className="flex">
-                  <svg viewBox="0 0 40 40" className="w-6 h-6 fill-current">
-                    <path d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z"></path>
-                  </svg>
-
-                  <p className="mx-3">{errors.error}</p>
-                </div>
-              </div>
-            </div>
-          )}
           <div className="flex flex-col mb-2">
             <div className="flex relative ">
               <span className="rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">

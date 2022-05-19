@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { RegisterFormProps } from "../interfaces/Components";
+import ErrorAlert from "./ErrorAlert";
+import ProcessingForm from "./ProcessingForm";
 
 export default function RegisterForm(props: RegisterFormProps) {
-  const { errors, handleSubmit, handleChange } = props;
+  const { errors, isProcessing, handleSubmit, handleChange } = props;
   return (
     <div className="flex flex-col max-w-md m-4 px-4 py-8 bg-slate-800 rounded-lg shadow sm:px-6 md:px-8 lg:px-10">
       <div className="self-center mb-2 text-xl font-light text-white sm:text-2xl">
@@ -16,9 +18,8 @@ export default function RegisterForm(props: RegisterFormProps) {
           </a>
         </Link>
       </span>
-      {errors.error && (
-        <div className="text-red-500 mt-2 text-xl">{errors.error}</div>
-      )}
+      {errors.error && <ErrorAlert errors={errors} />}
+      {isProcessing && <ProcessingForm />}
 
       <div className="p-6 mt-8">
         <form method="post" action="/api/sign-up" onSubmit={handleSubmit}>
