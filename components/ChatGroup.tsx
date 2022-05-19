@@ -1,17 +1,19 @@
-import { useRouter } from "next/router";
-import { FormEvent, FormEventHandler, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
-import { chatMessages } from "../lib/mockData";
-import { groups, users } from "../lib/mockData";
 import { ChatGroupProps } from "../interfaces/Components";
 
 export default function ChatGroup(props: ChatGroupProps) {
   const { group, mutateGroup, userId } = props;
+  const messageEndRef = useRef<HTMLDivElement>(null);
   const [chatForm, setChatForm] = useState({
     content: "",
   });
+
+  function scrollToBottom() {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
 
   function chatFormChange(event: FormEvent<HTMLTextAreaElement>) {
     const value = event.currentTarget.value;
@@ -25,36 +27,39 @@ export default function ChatGroup(props: ChatGroupProps) {
     event.preventDefault();
     if (chatForm.content.trim().length === 0) {
       return;
+    }
+    const data = {
+      content: chatForm.content,
+      groupId: group._id.toString(),
+      userId,
+    };
+
+    const JSONdata = JSON.stringify(data);
+    const endpoint = "/api/groups/instance/createMessage";
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSONdata,
+    };
+
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      setChatForm({
+        ...chatForm,
+        content: "",
+      });
+      mutateGroup();
     } else {
-      const data = {
-        content: chatForm.content,
-        groupId: group._id.toString(),
-        userId,
-      };
-
-      const JSONdata = JSON.stringify(data);
-      const endpoint = "/api/groups/instance/createMessage";
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSONdata,
-      };
-
-      const response = await fetch(endpoint, options);
-      if (response.status === 200) {
-        setChatForm({
-          ...chatForm,
-          content: "",
-        });
-        mutateGroup();
-      } else {
-        const result = await response.json();
-        console.error(`Status Code: ${response.status}(${result.error})`);
-      }
+      const result = await response.json();
+      console.error(`Status Code: ${response.status}(${result.error})`);
     }
   }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [group]);
 
   return (
     <div className="flex flex-col flex-grow overflow-hidden">
@@ -92,6 +97,7 @@ export default function ChatGroup(props: ChatGroupProps) {
       </div>
       <div className="overflow-y-scroll">
         {group &&
+          group.messages &&
           group.messages.map((message: IMessage) => {
             return (
               <div className="bg-slate-300" key={message._id.toString()}>
@@ -116,7 +122,7 @@ export default function ChatGroup(props: ChatGroupProps) {
             );
           })}
         {!group && (
-          <div className="w-full flex justify-center">
+          <div className="w-full flex justify-center items-center">
             <svg
               className="animate-spin"
               width="24"
@@ -132,6 +138,7 @@ export default function ChatGroup(props: ChatGroupProps) {
             </svg>
           </div>
         )}
+        <div ref={messageEndRef}></div>
       </div>
 
       <div className="bg-slate-800 p-4 mt-auto">

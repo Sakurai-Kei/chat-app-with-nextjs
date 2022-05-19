@@ -7,4 +7,4 @@ import { IronSessionData } from "iron-session";
 
 export type InstanceChatRoomPage = IronSessionData & { instanceId: string };
 
-export type GroupChatRoomPage = IronSessionData & { id: string };
+export type GroupChatRoomPage = IronSessionData & { groupId: string };

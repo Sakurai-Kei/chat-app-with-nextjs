@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
@@ -6,9 +6,14 @@ import { ChatInstanceProps } from "../interfaces/Components";
 
 export default function ChatInstance(props: ChatInstanceProps) {
   const { userId, instance, mutateInstance } = props;
+  const messageEndRef = useRef<HTMLDivElement>(null);
   const [chatForm, setChatForm] = useState({
     content: "",
   });
+
+  function scrollToBottom() {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
 
   function chatFormChange(event: FormEvent<HTMLTextAreaElement>) {
     const value = event.currentTarget.value;
@@ -22,36 +27,39 @@ export default function ChatInstance(props: ChatInstanceProps) {
     event.preventDefault();
     if (chatForm.content.trim().length === 0) {
       return;
+    }
+    const data = {
+      content: chatForm.content,
+      instanceId: instance._id.toString(),
+      userId,
+    };
+
+    const JSONdata = JSON.stringify(data);
+    const endpoint = "/api/room-instances/instance/createMessage";
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSONdata,
+    };
+
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      setChatForm({
+        ...chatForm,
+        content: "",
+      });
+      mutateInstance();
     } else {
-      const data = {
-        content: chatForm.content,
-        instanceId: instance._id.toString(),
-        userId,
-      };
-
-      const JSONdata = JSON.stringify(data);
-      const endpoint = "/api/room-instances/instance/createMessage";
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSONdata,
-      };
-
-      const response = await fetch(endpoint, options);
-      if (response.status === 200) {
-        setChatForm({
-          ...chatForm,
-          content: "",
-        });
-        mutateInstance();
-      } else {
-        const result = await response.json();
-        console.error(`Status Code: ${response.status}(${result.error})`);
-      }
+      const result = await response.json();
+      console.error(`Status Code: ${response.status}(${result.error})`);
     }
   }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [instance]);
 
   return (
     <div className="flex flex-col flex-grow overflow-hidden bg-slate-300">
@@ -113,6 +121,24 @@ export default function ChatInstance(props: ChatInstanceProps) {
               </div>
             );
           })}
+        {!instance && (
+          <div className="w-full flex justify-center items-center">
+            <svg
+              className="animate-spin"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11.995 4.00001C7.8362 3.99432 4.36664 7.17599 4.01299 11.3197C3.65933 15.4634 6.53955 19.187 10.6391 19.8862C14.7387 20.5853 18.6903 18.0267 19.73 14H17.649C16.6318 16.8771 13.617 18.5324 10.6434 17.8465C7.66989 17.1605 5.68488 14.3519 6.03079 11.3199C6.3767 8.28792 8.94332 5.99856 11.995 6.00001C13.5845 6.00234 15.1064 6.64379 16.218 7.78002L13 11H20V4.00001L17.649 6.35002C16.1527 4.84464 14.1175 3.99873 11.995 4.00001Z"
+                fill="#2E3A59"
+              ></path>
+            </svg>
+          </div>
+        )}
+        <div ref={messageEndRef}></div>
       </div>
 
       <div className="bg-slate-800 p-4 mt-auto">

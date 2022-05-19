@@ -10,19 +10,19 @@ export default function CreateGroupModal(props: ChatModalProps) {
         onSubmit={groupFormSubmit}
         className="container max-w-2xl mx-auto shadow-md md:w-3/4"
       >
-        <div className="p-4 bg-gray-100 border-t-2 border-indigo-400 rounded-lg bg-opacity-5">
+        <div className="p-4 bg-slate-800 border-t-2 border-indigo-400 rounded-lg text-white">
           <div className="max-w-sm mx-auto md:w-full md:mx-0">
             <div className="flex w-full items-center space-x-4">
-              <a href="#" className="block relative">
-                <div>Placeholder</div>
-              </a>
-              <h1 className="text-gray-600">Create your chat group</h1>
+              <div className="block relative">
+                <div>Group Creation Form</div>
+              </div>
+              <h1 className="text-gray-300">Create your chat group</h1>
             </div>
           </div>
         </div>
-        <div className="space-y-6 bg-white">
+        <div className="space-y-6 bg-slate-300">
           <div className="items-center w-full p-4 space-y-4 text-gray-500 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-1/3">Group Name</h2>
+            <h2 className="max-w-sm mx-auto md:w-1/3 text-black">Group Name</h2>
             <div className="max-w-sm mx-auto md:w-2/3">
               <div className=" relative ">
                 <input
@@ -37,7 +37,7 @@ export default function CreateGroupModal(props: ChatModalProps) {
           </div>
           <hr />
           <div className="items-center w-full p-4 space-y-4 text-gray-500 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-1/3">About</h2>
+            <h2 className="max-w-sm mx-auto md:w-1/3 text-black">About</h2>
             <div className="max-w-sm mx-auto space-y-5 md:w-2/3">
               <div>
                 <div className=" relative ">
@@ -53,9 +53,7 @@ export default function CreateGroupModal(props: ChatModalProps) {
               <div></div>
             </div>
           </div>
-          <hr />
-          <hr />
-          <div className="w-full flex gap-4 px-4 pb-4 ml-auto text-gray-500">
+          <div className="w-full flex gap-4 px-4 py-4 ml-auto bg-slate-700">
             <button
               onClick={chatModal}
               className="py-2 px-4  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "

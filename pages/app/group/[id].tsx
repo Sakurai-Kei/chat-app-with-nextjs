@@ -24,7 +24,7 @@ export const getServerSideProps = withSessionSsr(
     return {
       props: {
         user: req.session.user,
-        id,
+        groupId: id,
       },
     };
   }
@@ -32,10 +32,10 @@ export const getServerSideProps = withSessionSsr(
 
 export default function GroupChatRoom(props: GroupChatRoomPage) {
   const router = useRouter();
-  const { user, id } = props;
+  const { user, groupId } = props;
   const { _id, username } = user!;
   const { navBar, mutateNavBar } = useNavBar(_id);
-  const { group, mutateGroup } = useChatGroup(id);
+  const { group, mutateGroup } = useChatGroup(groupId);
 
   return (
     <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
