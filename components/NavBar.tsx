@@ -1,9 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
-import { groups, users } from "../lib/mockData";
-import useNavBar from "../lib/useNavBar";
-import useUser from "../lib/useUser";
 import CreateGroupModal from "./CreateGroupModal";
 import { FormEvent } from "react";
 import { IGroup, IRoomInstance } from "../interfaces/models";
