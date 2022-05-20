@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { withSessionSsr } from "../../../lib/withSession";
 import { useChatInstance } from "../../../lib/useChat";
 import useNavBar from "../../../lib/useNavBar";
@@ -37,13 +38,18 @@ export default function InstanceChatRoom(props: InstanceChatRoomPage) {
   const { instance, mutateInstance } = useChatInstance(instanceId);
 
   return (
-    <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
-      <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
-      <ChatInstance
-        userId={_id}
-        instance={instance}
-        mutateInstance={mutateInstance}
-      />
-    </div>
+    <>
+      <Head>
+        <title>Private Instance</title>
+      </Head>
+      <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
+        <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
+        <ChatInstance
+          userId={_id}
+          instance={instance}
+          mutateInstance={mutateInstance}
+        />
+      </div>
+    </>
   );
 }

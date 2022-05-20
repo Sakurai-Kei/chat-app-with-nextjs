@@ -23,7 +23,7 @@ export default function Footer() {
         </ul>
         <div className="pt-8 flex max-w-xs mx-auto items-center justify-between">
           <a
-            href="#"
+            href="https://twitter.com/RaiserAshfell"
             className="text-gray-400 hover:text-gray-500 dark:hover:text-white transition-colors duration-200"
           >
             <svg
@@ -38,7 +38,7 @@ export default function Footer() {
             </svg>
           </a>
           <a
-            href="#"
+            href="https://github.com/Sakurai-Kei"
             className="text-gray-400 hover:text-gray-500 dark:hover:text-white transition-colors duration-200"
           >
             <svg

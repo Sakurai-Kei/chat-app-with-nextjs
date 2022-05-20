@@ -1,4 +1,5 @@
 import { withSessionSsr } from "../../../lib/withSession";
+import Head from "next/head";
 import useNavBar from "../../../lib/useNavBar";
 import NavBar from "../../../components/NavBar";
 import ChatGroup from "../../../components/ChatGroup";
@@ -38,10 +39,15 @@ export default function GroupChatRoom(props: GroupChatRoomPage) {
   const { group, mutateGroup } = useChatGroup(groupId);
 
   return (
-    <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
-      <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
-      <ChatGroup userId={_id} group={group} mutateGroup={mutateGroup} />
-      <MemberList group={group} mutateGroup={mutateGroup} />
-    </div>
+    <>
+      <Head>
+        <title>Group Instance</title>
+      </Head>
+      <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
+        <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
+        <ChatGroup userId={_id} group={group} mutateGroup={mutateGroup} />
+        <MemberList group={group} mutateGroup={mutateGroup} />
+      </div>
+    </>
   );
 }

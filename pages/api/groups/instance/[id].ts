@@ -9,7 +9,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
   try {
     const _id = req.query.id;
-    const group = await Group.findById(_id)
+    const group = await Group.findById(_id, { messages: { $slice: -15 } })
       .populate({
         path: "messages",
         populate: {

@@ -8,7 +8,9 @@ export default async function handler(
 ) {
   await dbConnect();
   const _id = req.query.id;
-  const roomInstance = await RoomInstance.findById(_id)
+  const roomInstance = await RoomInstance.findById(_id, {
+    messages: { $slice: -15 },
+  })
     .populate({
       path: "messages",
       populate: {

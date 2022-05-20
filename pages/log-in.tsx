@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import Head from "next/head";
 import LogInForm from "../components/LogInForm";
 import { FormEvent } from "react";
 import useUser from "../lib/useUser";
@@ -71,6 +70,13 @@ export default function LogIn() {
   }
   return (
     <>
+      <Head>
+        <title>Log In</title>
+        <meta
+          name="description"
+          content="Log In to access SKCA chat features"
+        />
+      </Head>
       <div className="w-full flex justify-center bg-indigo-800">
         <LogInForm
           handleSubmit={handleSubmit}

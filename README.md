@@ -62,7 +62,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -75,8 +74,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-Placeholder image above
+[![The Home Page][product-screenshot]](https://github.com/Sakurai-Kei/chat-app-with-nextjs/blob/main/public/web-example.png)
 
 A full-stack app made with NextJs. The app features group creation and private chat instances with other user. As this is a prototype app, the app does not check if
 the provided email is legit. This app does hash user's password with bcryptjs to improve account security. Auth state across the app is possible using iron-session.
@@ -97,6 +95,7 @@ More features to come!
 - [React.js](https://reactjs.org/)
 - [Tailwind](https://tailwindcss.com/)
 - [Mongoose](https://mongoosejs.com/)
+- [SWR](https://swr.vercel.app/)
 - [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
 - [iron-session](https://github.com/vvo/iron-session)
 - [date-fns](https://date-fns.org/)
@@ -113,7 +112,7 @@ If you would like to try to run this app on your own, follow the instructions be
 
 Things to have before cloning the repo
 
-- Make sure to have at least Node v 16.14.2
+- Make sure to have at least Node v 16.14.2 or later
 - Set up a MongoDb Cluster
 
 ### Installation
@@ -135,21 +134,11 @@ Things to have before cloning the repo
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Placeholder
-
-<!-- _For more examples, please refer to the [Documentation](https://example.com)_ -->
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 <!-- ROADMAP -->
 
 ## Roadmap
 
-- [ ] Deploy the app
+- [✔️] Deploy the app
 - [ ] Support for user profile(profile picture etc)
 - [ ] Chat Improvement
   - [ ] Emoji Support
@@ -189,7 +178,9 @@ Project Link: [https://github.com/sakurai-kei/chat-app-with-nextjs](https://gith
 
 ## Acknowledgments
 
-Placeholder
+This project is possible thanks to the good documentation provived by all the packages that I use. Without them, making this project would be a lot harder.
+Next, I would like to extend my gratitude to Meraki UI, tail-kit, and Lofi UI for their UI templates. It helped boost productivity by reducing the time I needed to design a component from scratch
+Finally, I extend my gratitude to Heroicons and coolicons. The svg icons available in this project are from this two sources
 
 <!-- * []()
 * []()

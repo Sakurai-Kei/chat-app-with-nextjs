@@ -1,13 +1,11 @@
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { useState } from "react";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import Layout from "../components/Layout";
 import { FormEvent } from "react";
 import RegisterForm from "../components/RegisterForm";
 import useUser from "../lib/useUser";
 import { ReactElement } from "react";
-import ErrorAlert from "../components/ErrorAlert";
 
 export default function Register() {
   const router = useRouter();
@@ -83,6 +81,10 @@ export default function Register() {
   }
   return (
     <>
+      <Head>
+        <title>Register</title>
+        <meta name="description" content="Make an account with SKCA" />
+      </Head>
       <div className="w-full flex justify-center bg-indigo-800">
         <RegisterForm
           errors={errors}
