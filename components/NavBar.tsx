@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import CreateGroupModal from "./CreateGroupModal";
 import { FormEvent } from "react";
 import { IGroup, IRoomInstance } from "../interfaces/models";
@@ -10,6 +10,8 @@ import { NavBarProps } from "../interfaces/Components";
 export default function NavBar(props: NavBarProps) {
   const router = useRouter();
   const { _id, navBar, mutateNavBar } = props;
+  const openNavBar = useRef<HTMLDivElement>(null);
+  const closeNavBar = useRef<HTMLDivElement>(null);
   const [groupForm, setGroupForm] = useState({
     name: "",
     about: "",
@@ -127,146 +129,162 @@ export default function NavBar(props: NavBarProps) {
 
   if (!showNavBarComponent) {
     return (
-      <button
-        onClick={navBarComponent}
-        className="w-12 flex justify-center items-center rounded-r-md bg-slate-800 hover:bg-slate-700 hover:animate-bounceRight"
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+      <div ref={closeNavBar} className="flex transition ease-in-out">
+        <button
+          onClick={() => {
+            closeNavBar.current!.className =
+              "flex transition ease-in-out -translate-x-full";
+            setTimeout(() => {
+              navBarComponent();
+            }, 200);
+          }}
+          className="flex-grow w-12 flex justify-center items-center bg-slate-800 hover:bg-slate-700 hover:animate-bounceRight"
         >
-          <path
-            d="M8 5H21V7H8V5ZM3 4.5H6V7.5H3V4.5ZM3 10.5H6V13.5H3V10.5ZM3 16.5H6V19.5H3V16.5ZM8 11H21V13H8V11ZM8 17H21V19H8V17Z"
-            fill="white"
-          ></path>
-        </svg>
-      </button>
-    );
-  } else {
-    return (
-      <>
-        <div className="flex flex-col items-center flex-shrink-0 w-16 border-r border-gray-300 bg-slate-600 py-3">
-          <button
-            onClick={navBarComponent}
-            className="w-12 mb-4 flex justify-center items-center rounded-md hover:bg-indigo-400"
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8 5H21V7H8V5ZM3 4.5H6V7.5H3V4.5ZM3 10.5H6V13.5H3V10.5ZM3 16.5H6V19.5H3V16.5ZM8 11H21V13H8V11ZM8 17H21V19H8V17Z"
-                fill="white"
-              ></path>
-            </svg>
-          </button>
-          <div className="flex flex-col gap-4">
-            {navBar.roomInstances &&
-              navBar.roomInstances.map((instance: IRoomInstance) => {
-                return (
-                  <div
-                    className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
-                    key={instance._id.toString()}
-                  >
-                    <Image
-                      onClick={() => {
-                        router.push("/app/instance/" + instance._id.toString());
-                      }}
-                      src={"/vercel.svg"}
-                      alt={"vercel"}
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                );
-              })}
-            {navBar.groups &&
-              navBar.groups.map((group: IGroup) => {
-                return (
-                  <div
-                    className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
-                    key={group._id.toString()}
-                  >
-                    <Image
-                      onClick={() => {
-                        router.push("/app/group/" + group._id.toString());
-                      }}
-                      src={"/vercel.svg"}
-                      alt={"vercel"}
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                );
-              })}
-          </div>
-          <button
-            className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-indigo-400"
-            onClick={chatModal}
-            disabled={showChatModal}
-          >
-            <svg
-              className="w-6 h-6 fill-current"
-              fill="none"
-              stroke="white"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              ></path>
-            </svg>
-          </button>
-          <button
-            onClick={instanceModal}
-            className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-indigo-400"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M19 10H17V7H14V5H17V2H19V5H22V7H19V10Z"
-                fill="white"
-              ></path>
-              <path
-                d="M21 12H19V15H8.334C7.90107 14.9988 7.47964 15.1393 7.134 15.4L5 17V5H12V3H5C3.89543 3 3 3.89543 3 5V21L7.8 17.4C8.14582 17.1396 8.56713 16.9992 9 17H19C20.1046 17 21 16.1046 21 15V12Z"
-                fill="white"
-              ></path>
-            </svg>
-          </button>
-        </div>
-        {showChatModal && (
-          <div className="z-10 w-full absolute">
-            <CreateGroupModal
-              chatModal={chatModal}
-              groupFormChange={groupFormChange}
-              groupFormSubmit={groupFormSubmit}
-            />
-          </div>
-        )}
-        {showInstanceModal && (
-          <div className="z-10 w-full absolute">
-            <CreateInstanceModal
-              instanceModal={instanceModal}
-              instanceFormChange={instanceFormChange}
-              instanceFormSubmit={instanceFormSubmit}
-            />
-          </div>
-        )}
-      </>
+            <path
+              d="M8 5H21V7H8V5ZM3 4.5H6V7.5H3V4.5ZM3 10.5H6V13.5H3V10.5ZM3 16.5H6V19.5H3V16.5ZM8 11H21V13H8V11ZM8 17H21V19H8V17Z"
+              fill="white"
+            ></path>
+          </svg>
+        </button>
+      </div>
     );
   }
+  return (
+    <>
+      <div
+        ref={openNavBar}
+        className="transition ease-in-out flex flex-col items-center flex-shrink-0 w-16 bg-slate-800 py-3"
+      >
+        <button
+          onClick={() => {
+            openNavBar.current!.className =
+              "transition ease-in-out flex flex-col items-center flex-shrink-0 w-16 bg-slate-800 py-3 -translate-x-full";
+            setTimeout(() => {
+              navBarComponent();
+            }, 200);
+          }}
+          className="w-12 mb-4 flex justify-center items-center rounded-md hover:bg-indigo-400"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8 5H21V7H8V5ZM3 4.5H6V7.5H3V4.5ZM3 10.5H6V13.5H3V10.5ZM3 16.5H6V19.5H3V16.5ZM8 11H21V13H8V11ZM8 17H21V19H8V17Z"
+              fill="white"
+            ></path>
+          </svg>
+        </button>
+        <div className="flex flex-col gap-4">
+          {navBar.roomInstances &&
+            navBar.roomInstances.map((instance: IRoomInstance) => {
+              return (
+                <div
+                  className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
+                  key={instance._id.toString()}
+                >
+                  <Image
+                    onClick={() => {
+                      router.push("/app/instance/" + instance._id.toString());
+                    }}
+                    src={"/vercel.svg"}
+                    alt={"vercel"}
+                    width={40}
+                    height={40}
+                  />
+                </div>
+              );
+            })}
+          {navBar.groups &&
+            navBar.groups.map((group: IGroup) => {
+              return (
+                <div
+                  className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
+                  key={group._id.toString()}
+                >
+                  <Image
+                    onClick={() => {
+                      router.push("/app/group/" + group._id.toString());
+                    }}
+                    src={"/vercel.svg"}
+                    alt={"vercel"}
+                    width={40}
+                    height={40}
+                  />
+                </div>
+              );
+            })}
+        </div>
+        <button
+          className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-indigo-400"
+          onClick={chatModal}
+          disabled={showChatModal}
+        >
+          <svg
+            className="w-6 h-6 fill-current"
+            fill="none"
+            stroke="white"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            ></path>
+          </svg>
+        </button>
+        <button
+          onClick={instanceModal}
+          className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-indigo-400"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 10H17V7H14V5H17V2H19V5H22V7H19V10Z"
+              fill="white"
+            ></path>
+            <path
+              d="M21 12H19V15H8.334C7.90107 14.9988 7.47964 15.1393 7.134 15.4L5 17V5H12V3H5C3.89543 3 3 3.89543 3 5V21L7.8 17.4C8.14582 17.1396 8.56713 16.9992 9 17H19C20.1046 17 21 16.1046 21 15V12Z"
+              fill="white"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      {showChatModal && (
+        <div className="z-10 w-full absolute">
+          <CreateGroupModal
+            chatModal={chatModal}
+            groupFormChange={groupFormChange}
+            groupFormSubmit={groupFormSubmit}
+          />
+        </div>
+      )}
+      {showInstanceModal && (
+        <div className="z-10 w-full absolute">
+          <CreateInstanceModal
+            instanceModal={instanceModal}
+            instanceFormChange={instanceFormChange}
+            instanceFormSubmit={instanceFormSubmit}
+          />
+        </div>
+      )}
+    </>
+  );
 }

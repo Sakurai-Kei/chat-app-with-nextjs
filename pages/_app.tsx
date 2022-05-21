@@ -14,17 +14,17 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <SWRConfig
       value={{
         fetcher: fetchJson,
-        refreshInterval: 1000,
+        // refreshInterval: 1000,
         onError: (err) => {
           console.error(err);
         },
       }}
     >
       <Head>
-        <meta name="application-name" content={"SKCA PWA"} />
+        <meta name="application-name" content={"SKCA"} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content={"SKCA PWA"} />
+        <meta name="apple-mobile-web-app-title" content={"SKCA"} />
         <meta
           name="description"
           content={"Delivering the mobile experience to your desktop"}
