@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React, { Dispatch, FormEvent, SetStateAction } from "react";
 import type { ReactElement, ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
@@ -43,6 +43,21 @@ export interface ChatInstanceProps {
   userId: string;
   instance: IRoomInstance;
   mutateInstance: KeyedMutator<IRoomInstance>;
+}
+
+export interface EmojiProps {
+  chatForm: {
+    content: string;
+  };
+  setChatForm: Dispatch<SetStateAction<{ content: string }>>;
+}
+
+export interface EmojiObject {
+  activeSkinTone: string;
+  emoji: string;
+  names: string[];
+  originalUnified: string;
+  unified: string;
 }
 
 export interface ChatGroupProps {

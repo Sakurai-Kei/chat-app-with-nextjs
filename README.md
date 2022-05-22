@@ -99,6 +99,7 @@ More features to come!
 - [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
 - [iron-session](https://github.com/vvo/iron-session)
 - [date-fns](https://date-fns.org/)
+- [emoji-picker-react](https://github.com/ealush/emoji-picker-react)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -141,7 +142,7 @@ Things to have before cloning the repo
 - [✔️] Deploy the app
 - [ ] Support for user profile(profile picture etc)
 - [ ] Chat Improvement
-  - [ ] Emoji Support
+  - [✔️] Emoji Support
   - [ ] Image Support
 - [ ] Cleaner UI
 - [ ] Cleaner Code

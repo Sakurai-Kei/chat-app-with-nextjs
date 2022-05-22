@@ -3,6 +3,9 @@ import Link from "next/link";
 import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
 import { ChatGroupProps } from "../interfaces/Components";
+import dynamic from "next/dynamic";
+
+const DynamicComponent = dynamic(() => import("./Emoji"), { ssr: false });
 
 export default function ChatGroup(props: ChatGroupProps) {
   const { group, mutateGroup, userId } = props;
@@ -10,9 +13,21 @@ export default function ChatGroup(props: ChatGroupProps) {
   const [chatForm, setChatForm] = useState({
     content: "",
   });
+  const [emojiModal, setEmojiModal] = useState(false);
 
   function scrollToBottom() {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function showEmojiModal() {
+    if (emojiModal) {
+      setEmojiModal(false);
+      return;
+    }
+    setEmojiModal(true);
+    setTimeout(() => {
+      scrollToBottom();
+    }, 100);
   }
 
   function chatFormChange(event: FormEvent<HTMLTextAreaElement>) {
@@ -60,6 +75,12 @@ export default function ChatGroup(props: ChatGroupProps) {
   useEffect(() => {
     scrollToBottom();
   }, [group]);
+
+  useEffect(() => {
+    if (emojiModal) {
+      setEmojiModal(false);
+    }
+  }, [chatForm]);
 
   return (
     <div className="flex flex-col flex-grow overflow-hidden">
@@ -194,23 +215,34 @@ export default function ChatGroup(props: ChatGroupProps) {
           >
             <span className="leading-none w-4 h-4 -mt-px">@</span>
           </button>
-          <button
-            type="button"
-            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
-          >
-            <svg
-              className="h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+          <div className="flex flex-col">
+            <div className="absolute ml-20 md:mr-20 -translate-x-full -translate-y-full">
+              {emojiModal && (
+                <DynamicComponent
+                  chatForm={chatForm}
+                  setChatForm={setChatForm}
+                />
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={showEmojiModal}
+              className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
             >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
+              <svg
+                className="h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
           <button
             type="button"
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"

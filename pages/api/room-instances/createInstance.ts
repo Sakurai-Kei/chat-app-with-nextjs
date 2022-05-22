@@ -7,7 +7,6 @@ import User from "../../../models/User";
 export default withSessionRoute(handler);
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log(req.body);
   const { userId, targetMemberUsername } = req.body;
   const targetUser = await User.findOne({
     username: targetMemberUsername,
