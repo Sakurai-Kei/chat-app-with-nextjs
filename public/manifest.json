@@ -1,23 +1,23 @@
 {
-    "name": "SKCA",
-    "short_name": "SKCA",
-    "description": "A Chat App made with NextJs",
-    "display": "fullscreen",
-    "orientation": "portrait",
-    "theme_color": "#FFFFFF",
-    "background_color": "#FFFFFF",
-    "start_url": "/app",
-    "icons": [
-      {
-        "src": "/icons/android-chrome-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "any maskable"
-      },
-      {
-        "src": "/icons/icon-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
+  "name": "SKCA",
+  "short_name": "SKCA",
+  "description": "A Chat App made with NextJs",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "start_url": "/app",
+  "icons": [
+    {
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

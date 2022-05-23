@@ -266,6 +266,17 @@ export default function NavBar(props: NavBarProps) {
             ></path>
           </svg>
         </button>
+        <div className="mt-auto w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500">
+          <Image
+            onClick={() => {
+              router.push("/app/user/" + navBar.user?.username);
+            }}
+            src={"/vercel.svg"}
+            alt={"vercel"}
+            width={40}
+            height={40}
+          />
+        </div>
       </div>
       {showChatModal && (
         <div className="z-10 w-full absolute">
