@@ -97,7 +97,7 @@ export default function Header() {
               </button>
             </div>
             {show && !user && (
-              <div className="sm:hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+              <div className="sm:hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                 <div
                   className="py-1 "
                   role="menu"
@@ -106,7 +106,7 @@ export default function Header() {
                 >
                   <Link href={"/"}>
                     <a
-                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                     >
                       <span className="flex flex-col">
@@ -116,7 +116,7 @@ export default function Header() {
                   </Link>
                   <Link href={"/log-in"}>
                     <a
-                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                     >
                       <span className="flex flex-col">
@@ -126,7 +126,7 @@ export default function Header() {
                   </Link>
                   <Link href={"/register"}>
                     <a
-                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                     >
                       <span className="flex flex-col">
@@ -138,7 +138,7 @@ export default function Header() {
               </div>
             )}
             {show && user && (
-              <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+              <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                 <div
                   className="py-1 "
                   role="menu"
@@ -147,7 +147,7 @@ export default function Header() {
                 >
                   <Link href={"/"}>
                     <a
-                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                     >
                       <span className="flex flex-col">
@@ -157,7 +157,7 @@ export default function Header() {
                   </Link>
                   <Link href={"/app"}>
                     <a
-                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                     >
                       <span className="flex flex-col">
@@ -167,7 +167,7 @@ export default function Header() {
                   </Link>
                   <Link href={"/api/log-out"}>
                     <a
-                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       role="menuitem"
                     >
                       <span className="flex flex-col">

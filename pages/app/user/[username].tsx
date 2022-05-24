@@ -48,7 +48,11 @@ export default function ProfilePage(props: IronSessionData) {
       </Head>
       <div className="flex w-screen h-screen bg-slate-300">
         <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
-        <Profile user={navBar.user} groups={navBar.groups} />
+        <Profile
+          user={navBar.user}
+          mutateUser={mutateNavBar.mutateUser}
+          groups={navBar.groups}
+        />
       </div>
     </>
   );

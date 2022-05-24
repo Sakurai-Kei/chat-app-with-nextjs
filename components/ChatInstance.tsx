@@ -77,9 +77,7 @@ export default function ChatInstance(props: ChatInstanceProps) {
   }, [instance]);
 
   useEffect(() => {
-    if (emojiModal) {
-      setEmojiModal(false);
-    }
+    setEmojiModal(false);
   }, [chatForm]);
 
   return (

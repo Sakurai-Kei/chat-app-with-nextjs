@@ -6,6 +6,8 @@ import useNavBar from "../../../lib/useNavBar";
 import NavBar from "../../../components/NavBar";
 import ChatInstance from "../../../components/ChatInstance";
 import { InstanceChatRoomPage } from "../../../interfaces/pages";
+import { useEffect } from "react";
+import { IUser } from "../../../interfaces/models";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
@@ -40,7 +42,16 @@ export default function InstanceChatRoom(props: InstanceChatRoomPage) {
   return (
     <>
       <Head>
-        <title>Private Instance</title>
+        {instance && instance.members && (
+          <title>
+            Private Instance:{" "}
+            {
+              instance.members.filter(
+                (member: Partial<IUser>) => member.username !== user?.username
+              )[0].username
+            }
+          </title>
+        )}
       </Head>
       <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
         <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />

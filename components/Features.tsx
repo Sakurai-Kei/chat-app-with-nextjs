@@ -1,7 +1,7 @@
 export default function Features() {
   return (
     <div className="sm:flex flex-wrap justify-center items-center bg-indigo-900 pb-10 text-center gap-8">
-      <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 py-4 bg-indigo-500 mt-6  shadow-lg rounded-lg dark:bg-gray-800">
+      <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 py-4 bg-indigo-500 mt-6  shadow-lg rounded-lg">
         <div className="flex-shrink-0">
           <div className="flex items-center mx-auto justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
             <svg
@@ -22,15 +22,15 @@ export default function Features() {
             </svg>
           </div>
         </div>
-        <h3 className="text-2xl sm:text-xl text-white font-semibold dark:text-white py-4">
+        <h3 className="text-2xl sm:text-xl text-white font-semibold py-4">
           Powered by Tailwind
         </h3>
-        <p className="text-md  text-white dark:text-gray-300 py-4">
+        <p className="text-md  text-white py-4">
           Tailwind powers all the beautiful UI you see in the web app,
           enrinching user&apos;s experience on both desktop and mobile view
         </p>
       </div>
-      <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 py-4 mt-6 sm:mt-16 md:mt-20 lg:mt-24 bg-indigo-500 shadow-lg rounded-lg dark:bg-gray-800">
+      <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-4 py-4 mt-6 sm:mt-16 md:mt-20 lg:mt-24 bg-indigo-500 shadow-lg rounded-lg">
         <div className="flex-shrink-0">
           <div className="flex items-center mx-auto justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
             <svg
@@ -47,16 +47,16 @@ export default function Features() {
             </svg>
           </div>
         </div>
-        <h3 className="text-2xl sm:text-xl text-white font-semibold dark:text-white py-4">
+        <h3 className="text-2xl sm:text-xl text-white font-semibold">
           Responsive Web App
         </h3>
-        <p className="text-md text-white dark:text-gray-300 py-4">
+        <p className="text-md text-white py-4">
           The web app is made with NextJs, which allows the multiple page web
           app to behave like a single page web app, ensuring that user&apos;s
           experience feels like they are in native application
         </p>
       </div>
-      <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 mt-6  px-4 py-4 bg-indigo-500 shadow-lg rounded-lg dark:bg-gray-800">
+      <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 mt-6  px-4 py-4 bg-indigo-500 shadow-lg rounded-lg">
         <div className="flex-shrink-0">
           <div className="flex items-center mx-auto justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
             <svg
@@ -80,10 +80,10 @@ export default function Features() {
             </svg>
           </div>
         </div>
-        <h3 className="text-2xl sm:text-xl text-white font-semibold dark:text-white py-4">
+        <h3 className="text-2xl sm:text-xl text-white font-semibold py-4">
           Open Source
         </h3>
-        <p className="text-md  text-white dark:text-gray-300 py-4">
+        <p className="text-md  text-white py-4">
           The prototype of this web app is available for viewing on my Github,{" "}
           <a
             className="text-yellow-500 hover:text-yellow-600"

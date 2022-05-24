@@ -77,9 +77,7 @@ export default function ChatGroup(props: ChatGroupProps) {
   }, [group]);
 
   useEffect(() => {
-    if (emojiModal) {
-      setEmojiModal(false);
-    }
+    setEmojiModal(false);
   }, [chatForm]);
 
   return (

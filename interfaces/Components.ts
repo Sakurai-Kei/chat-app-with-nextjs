@@ -1,5 +1,10 @@
-import React, { Dispatch, FormEvent, SetStateAction } from "react";
-import type { ReactElement, ReactNode } from "react";
+import React, {
+  ChangeEventHandler,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+} from "react";
+import type { ReactElement, ReactNode, SyntheticEvent } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { IGroup, IRoomInstance, IUser } from "./models";
@@ -43,6 +48,14 @@ export interface ChatInstanceProps {
   userId: string;
   instance: IRoomInstance;
   mutateInstance: KeyedMutator<IRoomInstance>;
+}
+
+export interface DeleteModalProps {
+  deleteModal: () => void;
+  userFormChange: (event: FormEvent<HTMLInputElement>) => void;
+  deleteAccountSubmit: (
+    event: SyntheticEvent<HTMLButtonElement>
+  ) => Promise<void>;
 }
 
 export interface EmojiProps {

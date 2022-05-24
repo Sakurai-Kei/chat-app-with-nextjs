@@ -1,6 +1,6 @@
 export default function ProcessingForm() {
   return (
-    <div className="flex w-full mt-8 max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div className="flex w-full mt-8 max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md">
       <div className="flex items-center justify-center w-12 bg-indigo-500">
         <svg
           className="animate-ping w-6 h-6"
@@ -20,10 +20,8 @@ export default function ProcessingForm() {
 
       <div className="px-4 py-2 -mx-3">
         <div className="mx-3">
-          <span className="font-semibold text-blue-500 dark:text-blue-400">
-            Processing
-          </span>
-          <p className="text-sm text-gray-600 dark:text-gray-200">
+          <span className="font-semibold text-blue-500">Processing</span>
+          <p className="text-sm text-gray-600">
             Please wait while we process your request
           </p>
         </div>

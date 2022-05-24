@@ -3,7 +3,7 @@ import { ErrorAlertProps } from "../interfaces/Components";
 export default function ErrorAlert(props: ErrorAlertProps) {
   const { errors } = props;
   return (
-    <div className="flex w-full mt-4 max-w-xs mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div className="flex w-full mt-4 max-w-xs mx-auto overflow-hidden bg-white rounded-lg shadow-md">
       <div className="flex items-center justify-center w-12 bg-red-500">
         <svg
           className="animate-ping w-6 h-6 text-white fill-current"
@@ -16,12 +16,8 @@ export default function ErrorAlert(props: ErrorAlertProps) {
 
       <div className="px-4 py-2 -mx-3">
         <div className="mx-3">
-          <span className="font-semibold text-red-500 dark:text-red-400">
-            Error
-          </span>
-          <p className="text-sm text-gray-600 dark:text-gray-200">
-            {errors.error}
-          </p>
+          <span className="font-semibold text-red-500">Error</span>
+          <p className="text-sm text-gray-600">{errors.error}</p>
         </div>
       </div>
     </div>

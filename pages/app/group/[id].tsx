@@ -41,7 +41,7 @@ export default function GroupChatRoom(props: GroupChatRoomPage) {
   return (
     <>
       <Head>
-        <title>Group Instance</title>
+        {group && group.name && <title>Group Instance: {group.name}</title>}
       </Head>
       <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
         <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
