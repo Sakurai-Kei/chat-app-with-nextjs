@@ -18,6 +18,7 @@ export default function Profile(props: {
   const [userForm, setUserForm] = useState({
     username: user?.username,
     about: user?.about,
+    imgsrc: user?.imgsrc,
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState({
@@ -132,6 +133,7 @@ export default function Profile(props: {
       setUserForm({
         username: user.username,
         about: user.about,
+        imgsrc: user.imgsrc,
       });
       setErrors({
         error: "",
@@ -140,7 +142,7 @@ export default function Profile(props: {
   }, [user, editProfile]);
 
   return (
-    <div className="flex flex-col overflow-hidden">
+    <div className="w-full flex flex-col overflow-hidden">
       <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-slate-800 border-b border-gray-300 px-4">
         <div className="w-12 h-12 flex justify-center items-center hover:bg-slate-400 hover:rounded-md">
           <Link href={"/app"}>
@@ -193,7 +195,23 @@ export default function Profile(props: {
               </div>
 
               <div className="flex-shrink-0 hidden ml-3 sm:block">
-                <div className="w-16 h-16 rounded-lg shadow-sm bg-slate-600" />
+                <div className="w-16 h-16 rounded-lg shadow-sm">
+                  {user && user.imgsrc && (
+                    <div className="w-20 h-20 rounded-lg shadow-sm">
+                      <Image
+                        src={user.imgsrc}
+                        alt={user.username}
+                        width={100}
+                        height={100}
+                        layout="responsive"
+                        className="rounded-lg"
+                      />
+                    </div>
+                  )}
+                  {(!user || !user.imgsrc) && (
+                    <div className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600" />
+                  )}
+                </div>
               </div>
             </div>
 
@@ -230,8 +248,29 @@ export default function Profile(props: {
                 </h5>
               </div>
 
-              <div className="flex-shrink-0 hidden ml-3 sm:block">
-                <div className="w-16 h-16 rounded-lg shadow-sm bg-slate-600" />
+              <div className="flex-shrink-0 flex flex-col items-end ml-3 gap-2">
+                {user && user.imgsrc && (
+                  <div className="w-20 h-20 rounded-lg shadow-sm">
+                    <Image
+                      src={user.imgsrc}
+                      alt={user.username}
+                      width={100}
+                      height={100}
+                      layout="responsive"
+                    />
+                  </div>
+                )}
+                {(!user || !user.imgsrc) && (
+                  <div className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600" />
+                )}
+                <input
+                  onChange={userFormChange}
+                  type="string"
+                  name="imgsrc"
+                  value={userForm.imgsrc}
+                  placeholder="Image Link"
+                  className="rounded-md shadow-md pl-1"
+                />
               </div>
             </div>
 
@@ -281,13 +320,25 @@ export default function Profile(props: {
                       <div className="flex-col  flex justify-center items-center">
                         <div className="flex-shrink-0">
                           <div className="block relative">
-                            <div className="w-16 h-16 bg-slate-600 rounded-lg shadow-md">
-                              <Image
-                                src={"/vercel.svg"}
-                                alt={"vercel"}
-                                width={64}
-                                height={64}
-                              />
+                            <div className="w-20 h-20 rounded-lg shadow-md">
+                              {group.imgsrc && (
+                                <Image
+                                  onClick={() => {
+                                    router.push(
+                                      "/app/group/" + group._id.toString()
+                                    );
+                                  }}
+                                  src={group.imgsrc}
+                                  alt={group.name}
+                                  width={80}
+                                  height={80}
+                                  layout="responsive"
+                                  className="rounded-lg hover:opacity-50"
+                                />
+                              )}
+                              {!group.imgsrc && (
+                                <div className="w-20 h-20 bg-slate-600 rounded-lg shadow-md"></div>
+                              )}
                             </div>
                           </div>
                         </div>

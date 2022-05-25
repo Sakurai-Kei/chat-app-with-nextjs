@@ -32,10 +32,12 @@ const groupSchema = new Schema<IGroup>(
           type: String,
           required: [true, "Message must have content"],
         },
+        isImage: { type: Boolean },
         user: { type: Schema.Types.ObjectId, ref: "User" },
         timestamp: { type: Date },
       },
     ],
+    imgsrc: { type: String },
   },
   options
 );

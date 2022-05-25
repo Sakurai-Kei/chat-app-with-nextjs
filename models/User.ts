@@ -29,18 +29,9 @@ const userSchema = new Schema<IUser>(
     about: {
       type: String,
     },
-    groups: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Group",
-      },
-    ],
-    contactList: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    imgsrc: {
+      type: String,
+    },
   },
   options
 );

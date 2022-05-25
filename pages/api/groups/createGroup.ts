@@ -9,7 +9,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     res
       .status(400)
       .json({ error: "Please either log-in and/or fill the form" });
-    res.end();
+    return;
   }
   try {
     const { name, about } = req.body;
@@ -20,8 +20,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       about,
       members: user!._id,
       messages: [],
+      imgsrc: "",
     });
     await group.save();
     res.status(200).end();
+    return;
   } catch (error) {}
 }

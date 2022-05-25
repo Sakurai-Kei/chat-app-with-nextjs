@@ -50,6 +50,14 @@ export interface ChatInstanceProps {
   mutateInstance: KeyedMutator<IRoomInstance>;
 }
 
+export interface GroupSettingsModalProps {
+  group: Partial<IGroup>;
+  showGroupSettingsModal: () => void;
+  groupForm: Partial<IGroup>;
+  groupFormChange: (event: FormEvent<HTMLInputElement>) => void;
+  groupFormSubmit: (event: FormEvent) => Promise<void>;
+}
+
 export interface DeleteModalProps {
   deleteModal: () => void;
   userFormChange: (event: FormEvent<HTMLInputElement>) => void;

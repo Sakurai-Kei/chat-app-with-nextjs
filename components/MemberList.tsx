@@ -1,9 +1,12 @@
 import { FormEvent, useRef, useState } from "react";
+import Image from "next/image";
 import { MemberListProps } from "../interfaces/Components";
 import { IUser } from "../interfaces/models";
+import { useRouter } from "next/router";
 
 export default function MemberList(props: MemberListProps) {
   const { group, mutateGroup } = props;
+  const router = useRouter();
   const closeMemberList = useRef<HTMLDivElement>(null);
   const openMemberList = useRef<HTMLDivElement>(null);
   const [showMember, setShowMember] = useState(false);
@@ -210,7 +213,24 @@ export default function MemberList(props: MemberListProps) {
                   key={member._id!.toString()}
                   className="flex px-4 py-4 border-b border-gray-300"
                 >
-                  <div className="h-10 w-10 rounded flex-shrink-0 bg-slate-500"></div>
+                  <div className="h-10 w-10 md:h-20 md:w-20 rounded flex-shrink-0">
+                    {member.imgsrc && (
+                      <Image
+                        onClick={() => {
+                          router.push("/app/user/" + member.username);
+                        }}
+                        src={member.imgsrc}
+                        alt={member.username}
+                        width={100}
+                        height={100}
+                        layout="responsive"
+                        className="rounded-lg hover:opacity-70"
+                      />
+                    )}
+                    {!member.imgsrc && (
+                      <div className="animate-pulse w-10 h-10 md:w-20 md:h-20 flex-shrink-0 bg-slate-500 rounded-lg"></div>
+                    )}
+                  </div>
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">

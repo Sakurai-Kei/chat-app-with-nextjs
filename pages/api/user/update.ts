@@ -16,15 +16,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     res.status(400).json({
       error: "Bad request, no/malformed auth and/or body attached to request",
     });
-    res.end();
     return;
   }
   await dbConnect();
 
-  const { username, about } = req.body;
+  const { username, about, imgsrc } = req.body;
 
   try {
-    const user = await User.findOneAndUpdate({ username }, { about }).exec();
+    await User.findOneAndUpdate({ username }, { about, imgsrc }).exec();
     res.status(200).end();
     return;
   } catch (error) {

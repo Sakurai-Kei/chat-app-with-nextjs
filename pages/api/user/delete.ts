@@ -18,14 +18,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     res.status(400).json({
       error: "Bad request, no/malformed auth and/or body attached to request",
     });
-    res.end();
     return;
   }
   if (req.body.username !== req.session.user.username) {
     res.status(409).json({
       error: "Please retype your username correctly",
     });
-    res.end();
     return;
   }
   await dbConnect();

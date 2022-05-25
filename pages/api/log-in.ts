@@ -20,14 +20,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     if (!user) {
       res.status(404).json({ error: "No such account found" });
-      res.end();
+      return;
     }
     const samePassword = await bcrypt.compare(password, user.password);
     if (!samePassword) {
       res
         .status(409)
         .json({ error: "Username/Email and password combination is wrong" });
-      res.end();
+      return;
     }
     const userCookie = {
       _id: user._id.toString(),

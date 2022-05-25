@@ -12,6 +12,10 @@ const nextConfig = withPWA({
   },
   reactStrictMode: true,
   swcMinify: true,
+  images: {
+    domains: ['i.imgur.com'],
+    formats: ['image/avif', 'image/webp']
+  },
 })
 
   

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import CreateGroupModal from "./CreateGroupModal";
 import { FormEvent } from "react";
-import { IGroup, IRoomInstance } from "../interfaces/models";
+import { IGroup, IRoomInstance, IUser } from "../interfaces/models";
 import { useRouter } from "next/router";
 import CreateInstanceModal from "./CreateInstanceModal";
 import { NavBarProps } from "../interfaces/Components";
@@ -190,38 +190,84 @@ export default function NavBar(props: NavBarProps) {
             navBar.roomInstances.map((instance: IRoomInstance) => {
               return (
                 <div
-                  className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
+                  className="w-10 h-10 rounded-lg"
                   key={instance._id.toString()}
                 >
-                  <Image
-                    onClick={() => {
-                      router.push("/app/instance/" + instance._id.toString());
-                    }}
-                    src={"/vercel.svg"}
-                    alt={"vercel"}
-                    width={40}
-                    height={40}
-                  />
+                  {instance &&
+                    instance.members &&
+                    instance.members.filter(
+                      (otherUser) =>
+                        otherUser.username !== navBar.user?.username
+                    )[0].imgsrc && (
+                      <Image
+                        onClick={() => {
+                          router.push(
+                            "/app/instance/" + instance._id.toString()
+                          );
+                        }}
+                        src={
+                          instance.members.filter(
+                            (otherUser) =>
+                              otherUser.username !== navBar.user?.username
+                          )[0].imgsrc
+                        }
+                        alt={
+                          (
+                            instance.members.filter(
+                              (otherUser) =>
+                                otherUser.username !== navBar.user?.username
+                            ) as unknown as IUser
+                          ).username
+                        }
+                        width={40}
+                        height={40}
+                        layout="responsive"
+                        className="rounded lg hover:opacity-50"
+                      />
+                    )}
+                  {!instance.members.filter(
+                    (otherUser) => otherUser.username !== navBar.user?.username
+                  )[0].imgsrc && (
+                    <div
+                      onClick={() => {
+                        router.push("/app/instance/" + instance._id.toString());
+                      }}
+                      className="animate-pulse w-10 h-10 rounded-lg bg-slate-500 hover:bg-slate-600"
+                    ></div>
+                  )}
                 </div>
               );
             })}
           {navBar.groups &&
             navBar.groups.map((group: IGroup) => {
               return (
-                <div
-                  className="w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
-                  key={group._id.toString()}
-                >
-                  <Image
-                    onClick={() => {
-                      router.push("/app/group/" + group._id.toString());
-                    }}
-                    src={"/vercel.svg"}
-                    alt={"vercel"}
-                    width={40}
-                    height={40}
-                  />
-                </div>
+                <>
+                  {group.imgsrc && (
+                    <div
+                      className="w-10 h-10 rounded-lg"
+                      key={group._id.toString()}
+                    >
+                      <Image
+                        onClick={() => {
+                          router.push("/app/group/" + group._id.toString());
+                        }}
+                        src={group.imgsrc}
+                        alt={group.name}
+                        width={40}
+                        height={40}
+                        className="rounded-lg hover:opacity-50"
+                      />
+                    </div>
+                  )}
+                  {!group.imgsrc && (
+                    <div
+                      onClick={() => {
+                        router.push("/app/group/" + group._id.toString());
+                      }}
+                      className="animate-pulse w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
+                    ></div>
+                  )}
+                </>
               );
             })}
         </div>
@@ -267,15 +313,27 @@ export default function NavBar(props: NavBarProps) {
           </svg>
         </button>
         <div className="mt-auto w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500">
-          <Image
-            onClick={() => {
-              router.push("/app/user/" + navBar.user?.username);
-            }}
-            src={"/vercel.svg"}
-            alt={"vercel"}
-            width={40}
-            height={40}
-          />
+          {navBar.user && navBar.user.imgsrc && (
+            <Image
+              onClick={() => {
+                router.push("/app/user/" + navBar.user?.username);
+              }}
+              src={navBar.user?.imgsrc}
+              alt={navBar.user?.username}
+              width={40}
+              height={40}
+              layout="responsive"
+              className="rounded-lg hover:opacity-50"
+            />
+          )}
+          {(!navBar.user || !navBar.user.imgsrc) && (
+            <div
+              onClick={() => {
+                router.push("/app/user/" + navBar.user?.username);
+              }}
+              className="animate-pulse w-10 h-10 rounded-lg shadow-sm bg-slate-600"
+            />
+          )}
         </div>
       </div>
       {showChatModal && (

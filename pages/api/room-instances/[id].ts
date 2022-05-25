@@ -8,6 +8,8 @@ export default async function handler(
 ) {
   await dbConnect();
   const _id = req.query.id;
-  const roomInstance = await RoomInstance.find({ members: _id }).exec();
+  const roomInstance = await RoomInstance.find({ members: _id })
+    .populate({ path: "members", select: "-password -email" })
+    .exec();
   res.status(200).json(roomInstance);
 }

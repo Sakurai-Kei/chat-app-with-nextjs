@@ -19,15 +19,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   });
   if (!targetUser) {
     res.status(404).json({ error: "No user found" });
-    res.end();
-  } else if (instanceExist) {
-    res.redirect("/app/instance/" + instanceExist._id.toString());
-  } else {
-    const roomInstance = new RoomInstance({
-      members: [new Types.ObjectId(userId), targetUser._id],
-      messages: [],
-    });
-    await roomInstance.save();
-    res.status(200).end();
+    return;
   }
+  if (userId === targetUser._id.toString()) {
+    res
+      .status(409)
+      .json({ error: "You cannot add yourself to a private instance" });
+    return;
+  }
+  if (instanceExist) {
+    res.redirect("/app/instance/" + instanceExist._id.toString());
+    return;
+  }
+  const roomInstance = new RoomInstance({
+    members: [new Types.ObjectId(userId), targetUser._id],
+    messages: [],
+  });
+  await roomInstance.save();
+  res.status(200).end();
+  return;
 }

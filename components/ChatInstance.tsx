@@ -1,14 +1,20 @@
 import { FormEvent, useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
 import { ChatInstanceProps } from "../interfaces/Components";
+import { useRouter } from "next/router";
 
-const DynamicComponent = dynamic(() => import("./Emoji"), { ssr: false });
+const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
+  ssr: false,
+});
+const DynamicComponentVideoPlayer = dynamic(() => import("./VideoPlayer"));
 
 export default function ChatInstance(props: ChatInstanceProps) {
   const { userId, instance, mutateInstance } = props;
+  const router = useRouter();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const [chatForm, setChatForm] = useState({
     content: "",
@@ -43,11 +49,18 @@ export default function ChatInstance(props: ChatInstanceProps) {
     if (chatForm.content.trim().length === 0) {
       return;
     }
-    const data = {
+    let data = {
       content: chatForm.content,
+      isImage: false,
       instanceId: instance._id.toString(),
       userId,
     };
+    if (chatForm.content.match("https://")) {
+      data = {
+        ...data,
+        isImage: true,
+      };
+    }
 
     const JSONdata = JSON.stringify(data);
     const endpoint = "/api/room-instances/instance/createMessage";
@@ -121,7 +134,24 @@ export default function ChatInstance(props: ChatInstanceProps) {
             return (
               <div className="bg-slate-300" key={message._id.toString()}>
                 <div className="flex px-4 py-3">
-                  <div className="h-10 w-10 rounded flex-shrink-0 bg-slate-500"></div>
+                  <div className="h-10 w-10 md:h-20 md:w-20 rounded flex-shrink-0">
+                    {message.user.imgsrc && (
+                      <Image
+                        onClick={() => {
+                          router.push("/app/user/" + message.user.username);
+                        }}
+                        src={message.user.imgsrc}
+                        alt={message.user.username}
+                        width={100}
+                        height={100}
+                        layout="responsive"
+                        className="rounded-lg hover:opacity-70"
+                      />
+                    )}
+                    {!message.user.imgsrc && (
+                      <div className="animate-pulse w-10 h-10 md:w-20 md:h-20 flex-shrink-0 bg-slate-500 rounded-lg"></div>
+                    )}
+                  </div>
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">
@@ -131,7 +161,30 @@ export default function ChatInstance(props: ChatInstanceProps) {
                         {format(new Date(message.timestamp), "KK.mm a, PPP")}
                       </span>
                     </div>
-                    <p className="text-sm">{message.content}</p>
+                    {!message.isImage && (
+                      <p className="text-sm">{message.content}</p>
+                    )}
+                    {message.isImage && message.content.match(".mp4") && (
+                      <DynamicComponentVideoPlayer
+                        sources={[
+                          {
+                            src: message.content,
+                            type: "video/mp4",
+                          },
+                        ]}
+                      />
+                    )}
+                    {message.isImage && !message.content.match(".mp4") && (
+                      <Image
+                        quality={100}
+                        priority={true}
+                        src={message.content}
+                        width={480}
+                        height={480}
+                        layout="responsive"
+                        alt={"shared by " + message.user.username.toString()}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col items-center mt-2">
@@ -216,7 +269,7 @@ export default function ChatInstance(props: ChatInstanceProps) {
           <div className="flex flex-col">
             <div className="absolute ml-20 md:mr-20 -translate-x-full -translate-y-full">
               {emojiModal && (
-                <DynamicComponent
+                <DynamicComponentEmojiModal
                   chatForm={chatForm}
                   setChatForm={setChatForm}
                 />

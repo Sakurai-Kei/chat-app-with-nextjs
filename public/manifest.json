@@ -4,8 +4,8 @@
   "description": "A Chat App made with NextJs",
   "display": "fullscreen",
   "orientation": "portrait",
-  "theme_color": "#FFFFFF",
-  "background_color": "#FFFFFF",
+  "theme_color": "#1e293b",
+  "background_color": "#1e293b",
   "start_url": "/app",
   "icons": [
     {
