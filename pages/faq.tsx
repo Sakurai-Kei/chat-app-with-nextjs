@@ -6,7 +6,6 @@ import Layout from "../components/Layout";
 export default function FAQ() {
   return (
     <>
-      {" "}
       <Head>
         <title>FAQ</title>
         <meta

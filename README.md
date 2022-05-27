@@ -100,6 +100,7 @@ More features to come!
 - [iron-session](https://github.com/vvo/iron-session)
 - [date-fns](https://date-fns.org/)
 - [emoji-picker-react](https://github.com/ealush/emoji-picker-react)
+- [videojs](https://videojs.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -126,7 +127,11 @@ Things to have before cloning the repo
    ```sh
    npm install
    ```
-3. Find a file named `next.config-backup.js`. Rename this file into `next.config.js`. Open this file and add in all necessary env variable
+3. Create a file named `.env.local`. In this file, copy and paste below with your own variable
+   ```sh
+  MONGODB_URI="YOUR_MONGODB_URI"
+  COOKIE_SECRET="SECRET_STRING_FOR_COOKIE_ENCRYPTION"
+   ```
 
 4. Run the app in dev environment with
    ```sh
@@ -140,10 +145,10 @@ Things to have before cloning the repo
 ## Roadmap
 
 - [✔️] Deploy the app
-- [ ] Support for user profile(profile picture etc)
-- [ ] Chat Improvement
+- [✔️] Support for user profile(profile picture etc)
+- [✔️] Chat Improvement
   - [✔️] Emoji Support
-  - [ ] Image Support
+  - [✔️] Image Support
 - [ ] Cleaner UI
 - [ ] Cleaner Code
 
@@ -179,8 +184,8 @@ Project Link: [https://github.com/sakurai-kei/chat-app-with-nextjs](https://gith
 
 ## Acknowledgments
 
-This project is possible thanks to the good documentation provived by all the packages that I use. Without them, making this project would be a lot harder.
-Next, I would like to extend my gratitude to Meraki UI, tail-kit, and Lofi UI for their UI templates. It helped boost productivity by reducing the time I needed to design a component from scratch
+This project is possible thanks to the good documentation provived by all the packages that I use. Without them, making this project would be a lot harder.\
+Next, I would like to extend my gratitude to Meraki UI, tail-kit, and Lofi UI for their UI templates. It helped boost productivity by reducing the time I needed to design a component from scratch\
 Finally, I extend my gratitude to Heroicons and coolicons. The svg icons available in this project are from this two sources
 
 <!-- * []()

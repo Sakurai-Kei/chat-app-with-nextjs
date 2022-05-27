@@ -187,14 +187,14 @@ export default function Profile(props: {
         )}
         {!editProfile && (
           <div className="w-96 h-fit flex flex-col justify-center items-center m-16 overflow-hidden border border-gray-900 shadow-md rounded-lg">
-            <div className="p-4 sm:flex sm:w-full sm:justify-around">
+            <div className="p-4 flex w-full justify-around">
               <div>
                 <h5 className="text-xl font-bold text-gray-900">
                   {user?.username}
                 </h5>
               </div>
 
-              <div className="flex-shrink-0 hidden ml-3 sm:block">
+              <div className="flex-shrink-0 flex ml-3">
                 <div className="w-16 h-16 rounded-lg shadow-sm">
                   {user && user.imgsrc && (
                     <div className="w-20 h-20 rounded-lg shadow-sm">
@@ -241,7 +241,7 @@ export default function Profile(props: {
             onSubmit={userFormSubmit}
             className="w-96 h-fit flex flex-col justify-center items-center m-16 border border-gray-900 shadow-md rounded-lg"
           >
-            <div className="p-4 sm:flex sm:w-full sm:justify-around">
+            <div className="p-4 flex w-full justify-around">
               <div>
                 <h5 className="w-full text-xl font-bold text-gray-900">
                   {user?.username}

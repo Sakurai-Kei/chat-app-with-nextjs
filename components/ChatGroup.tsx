@@ -45,6 +45,12 @@ export default function ChatGroup(props: ChatGroupProps) {
   function showGroupSettingsModal() {
     if (groupSettingsModal) {
       setGroupSettingsModal(false);
+      setGroupForm({
+        _id: group._id.toString(),
+        name: group.name,
+        about: group.about,
+        imgsrc: group.imgsrc,
+      });
       return;
     }
     setGroupSettingsModal(true);
@@ -141,7 +147,7 @@ export default function ChatGroup(props: ChatGroupProps) {
   }, [chatForm]);
 
   useEffect(() => {
-    if (group && group.name && group.about) {
+    if (group && group.name && group.about && !groupForm._id) {
       setGroupForm({
         _id: group._id.toString(),
         name: group.name,
@@ -149,7 +155,7 @@ export default function ChatGroup(props: ChatGroupProps) {
         imgsrc: group.imgsrc,
       });
     }
-  }, [group, groupSettingsModal]);
+  }, [group, groupSettingsModal, groupForm]);
 
   return (
     <div className="flex flex-col flex-grow overflow-hidden">

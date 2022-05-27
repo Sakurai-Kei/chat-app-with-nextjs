@@ -1,7 +1,7 @@
 import Image from "next/image";
 import backImg from "../public/404-background.svg";
 
-export default function OfflinePage() {
+export default function Custom404() {
   return (
     <div className="bg-indigo-900 relative overflow-hidden h-screen">
       <Image
