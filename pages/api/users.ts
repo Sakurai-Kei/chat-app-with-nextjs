@@ -7,6 +7,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   await dbConnect();
-  const users = await User.find().select("-password -email").exec();
+  const users = await User.find().lean().select("-password -email").exec();
   res.status(200).json(users);
 }

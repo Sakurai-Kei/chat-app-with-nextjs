@@ -11,6 +11,7 @@ export default async function handler(
   const roomInstance = await RoomInstance.findById(_id, {
     messages: { $slice: -15 },
   })
+    .lean()
     .populate({
       path: "messages",
       populate: {

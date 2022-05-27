@@ -10,6 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const _id = req.query.id;
     const group = await Group.findById(_id, { messages: { $slice: -15 } })
+      .lean()
       .populate({
         path: "messages",
         populate: {
