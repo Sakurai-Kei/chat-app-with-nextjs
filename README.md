@@ -127,11 +127,13 @@ Things to have before cloning the repo
    ```sh
    npm install
    ```
-3. Create a file named `.env.local`. In this file, copy and paste below with your own variable
-   ```sh
+3. Create a file named `.env.local`. In this file, copy and paste below with your own variable\
+   `
   MONGODB_URI="YOUR_MONGODB_URI"
+   `\
+   `
   COOKIE_SECRET="SECRET_STRING_FOR_COOKIE_ENCRYPTION"
-   ```
+   `
 
 4. Run the app in dev environment with
    ```sh
@@ -166,7 +168,7 @@ For now, the project is strictly for my educational purposes. However, if you wa
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the GPL License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
