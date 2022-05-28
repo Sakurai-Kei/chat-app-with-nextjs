@@ -2,6 +2,7 @@ import React, {
   ChangeEventHandler,
   Dispatch,
   FormEvent,
+  RefObject,
   SetStateAction,
 } from "react";
 import type { ReactElement, ReactNode, SyntheticEvent } from "react";
@@ -54,6 +55,7 @@ export interface GroupSettingsModalProps {
   group: Partial<IGroup>;
   showGroupSettingsModal: () => void;
   groupForm: Partial<IGroup>;
+  mutateGroup: KeyedMutator<IGroup>;
   groupFormChange: (event: FormEvent<HTMLInputElement>) => void;
   groupFormSubmit: (event: FormEvent) => Promise<void>;
 }
@@ -71,6 +73,13 @@ export interface EmojiProps {
     content: string;
   };
   setChatForm: Dispatch<SetStateAction<{ content: string }>>;
+}
+
+export interface UploadImageProps {
+  stagedImage: File | undefined;
+  stagedImageChange: (event: FormEvent<HTMLInputElement>) => void;
+  stagedImageUpload: (event: FormEvent) => Promise<void>;
+  inputImageRef: RefObject<HTMLInputElement>;
 }
 
 export interface EmojiObject {

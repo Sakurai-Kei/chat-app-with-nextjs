@@ -7,6 +7,8 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import GroupSettingModal from "./GroupSettingsModal";
+import UploadImage from "./UploadImage";
+import S3Image from "./S3Image";
 
 const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
   ssr: false,
@@ -18,17 +20,20 @@ export default function ChatGroup(props: ChatGroupProps) {
   const router = useRouter();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const groupSettingsRef = useRef<HTMLDivElement>(null);
+  const uploadImageRef = useRef<HTMLDivElement>(null);
+  const inputImageRef = useRef<HTMLInputElement>(null);
   const [chatForm, setChatForm] = useState({
     content: "",
   });
+  const [stagedImage, setStagedImage] = useState<File>();
   const [groupForm, setGroupForm] = useState({
     _id: "",
     name: "",
     about: "",
-    imgsrc: "",
   });
   const [emojiModal, setEmojiModal] = useState(false);
   const [groupSettingsModal, setGroupSettingsModal] = useState(false);
+  const [uploadImageModal, setUploadImageModal] = useState(false);
 
   function scrollToBottom() {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -49,14 +54,23 @@ export default function ChatGroup(props: ChatGroupProps) {
         _id: group._id.toString(),
         name: group.name,
         about: group.about,
-        imgsrc: group.imgsrc,
       });
       return;
     }
     setGroupSettingsModal(true);
   }
 
-  function chatFormChange(event: FormEvent<HTMLTextAreaElement>) {
+  function showUploadImageModal() {
+    if (uploadImageModal) {
+      setUploadImageModal(false);
+      return;
+    }
+    setUploadImageModal(true);
+  }
+
+  function chatFormChange(
+    event: FormEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) {
     const value = event.currentTarget.value;
     setChatForm({
       ...chatForm,
@@ -70,6 +84,17 @@ export default function ChatGroup(props: ChatGroupProps) {
       ...groupForm,
       [event.currentTarget.name]: value,
     });
+  }
+
+  function stagedImageChange(event: FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    //@ts-expect-error
+    if (!inputImageRef.current || !inputImageRef.current.files[0]) {
+      return;
+    }
+    //@ts-expect-error
+    const value = inputImageRef.current.files[0];
+    setStagedImage(value);
   }
 
   async function chatFormSubmit(event: FormEvent) {
@@ -138,6 +163,30 @@ export default function ChatGroup(props: ChatGroupProps) {
     }
   }
 
+  async function stagedImageUpload(event: FormEvent) {
+    event.preventDefault();
+    if (!stagedImage) {
+      return;
+    }
+    const body = new FormData();
+    body.append("file", stagedImage);
+    const endpoint =
+      "/api/groups/instance/uploadImage?groupId=" + groupForm._id;
+    const options = {
+      method: "POST",
+      body,
+    };
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      setStagedImage(undefined);
+      showUploadImageModal();
+      mutateGroup();
+      return;
+    }
+    const result = await response.json();
+    console.error(result.error);
+  }
+
   useEffect(() => {
     scrollToBottom();
   }, [group]);
@@ -152,7 +201,6 @@ export default function ChatGroup(props: ChatGroupProps) {
         _id: group._id.toString(),
         name: group.name,
         about: group.about,
-        imgsrc: group.imgsrc,
       });
     }
   }, [group, groupSettingsModal, groupForm]);
@@ -213,6 +261,7 @@ export default function ChatGroup(props: ChatGroupProps) {
                 groupForm={groupForm}
                 groupFormChange={groupFormChange}
                 groupFormSubmit={groupFormSubmit}
+                mutateGroup={mutateGroup}
               />
             </div>
           )}
@@ -230,25 +279,18 @@ export default function ChatGroup(props: ChatGroupProps) {
           )}
         </div>
       </div>
-      <div className="overflow-y-scroll">
+      <div className="overflow-y-scroll overflow-x-hidden">
         {group &&
           group.messages &&
           group.messages.map((message: IMessage) => {
             return (
               <div className="bg-slate-300" key={message._id.toString()}>
                 <div className="flex px-4 py-3">
-                  <div className="h-10 w-10 md:h-20 md:w-20 rounded-lg flex-shrink-0">
+                  <div className="h-24 w-24 md:h-24 md:w-24 rounded-lg flex-shrink-0">
                     {message.user.imgsrc && (
-                      <Image
-                        onClick={() => {
-                          router.push("/app/user/" + message.user.username);
-                        }}
-                        src={message.user.imgsrc}
+                      <S3Image
+                        KEY={message.user.imgsrc}
                         alt={message.user.username}
-                        width={100}
-                        height={100}
-                        layout="responsive"
-                        className="rounded-lg hover:opacity-70"
                       />
                     )}
                     {!message.user.imgsrc && (
@@ -277,17 +319,28 @@ export default function ChatGroup(props: ChatGroupProps) {
                         ]}
                       />
                     )}
-                    {message.isImage && !message.content.match(".mp4") && (
-                      <Image
-                        quality={100}
-                        priority={true}
-                        src={message.content}
-                        width={480}
-                        height={480}
-                        layout="intrinsic"
-                        alt={"shared by " + message.user.username.toString()}
-                      />
-                    )}
+                    {message.isImage &&
+                      !message.content.match(".mp4") &&
+                      message.content.match("https://") && (
+                        <Image
+                          quality={100}
+                          priority={true}
+                          src={message.content}
+                          width={480}
+                          height={480}
+                          layout="intrinsic"
+                          className="rounded-lg shadow-md"
+                          alt={"shared by " + message.user.username.toString()}
+                        />
+                      )}
+                    {message.isImage &&
+                      !message.content.match(".mp4") &&
+                      !message.content.match("https://") && (
+                        <S3Image
+                          KEY={message.content}
+                          alt={message.user.username.toString()}
+                        />
+                      )}
                   </div>
                 </div>
                 <div className="flex flex-col items-center mt-2">
@@ -399,6 +452,13 @@ export default function ChatGroup(props: ChatGroupProps) {
           </div>
           <button
             type="button"
+            onClick={() => {
+              showUploadImageModal();
+              setTimeout(() => {
+                uploadImageRef.current!.className =
+                  "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+              });
+            }}
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
           >
             <svg
@@ -414,6 +474,19 @@ export default function ChatGroup(props: ChatGroupProps) {
               />
             </svg>
           </button>
+          {uploadImageModal && (
+            <div
+              ref={uploadImageRef}
+              className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+            >
+              <UploadImage
+                stagedImage={stagedImage}
+                stagedImageChange={stagedImageChange}
+                stagedImageUpload={stagedImageUpload}
+                inputImageRef={inputImageRef}
+              />
+            </div>
+          )}
           <button
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
             type="submit"

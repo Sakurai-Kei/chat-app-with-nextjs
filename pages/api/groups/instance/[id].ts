@@ -15,14 +15,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         path: "messages",
         populate: {
           path: "user",
-          select: "-password -email -about -groups -contactList",
+          select: "-password -email -about",
         },
       })
       .populate({
         path: "members",
-        select: "-password -email -groups -contactList",
+        select: "-password -email",
       })
       .exec();
+
     res.status(200).json(group);
   } catch (error) {}
 }

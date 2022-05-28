@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MemberListProps } from "../interfaces/Components";
 import { IUser } from "../interfaces/models";
 import { useRouter } from "next/router";
+import S3Image from "./S3Image";
 
 export default function MemberList(props: MemberListProps) {
   const { group, mutateGroup } = props;
@@ -213,19 +214,11 @@ export default function MemberList(props: MemberListProps) {
                   key={member._id!.toString()}
                   className="flex px-4 py-4 border-b border-gray-300"
                 >
-                  <div className="h-10 w-10 md:h-20 md:w-20 rounded flex-shrink-0">
+                  <div className="h-24 w-24 rounded flex-shrink-0">
                     {member.imgsrc && (
-                      <Image
-                        onClick={() => {
-                          router.push("/app/user/" + member.username);
-                        }}
-                        src={member.imgsrc}
-                        alt={member.username}
-                        width={100}
-                        height={100}
-                        layout="responsive"
-                        className="rounded-lg hover:opacity-70"
-                      />
+                      <div>
+                        <S3Image KEY={member.imgsrc} alt={member.username!} />
+                      </div>
                     )}
                     {!member.imgsrc && (
                       <div className="animate-pulse w-10 h-10 md:w-20 md:h-20 flex-shrink-0 bg-slate-500 rounded-lg"></div>

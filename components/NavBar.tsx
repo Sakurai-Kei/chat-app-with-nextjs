@@ -6,6 +6,7 @@ import { IGroup, IRoomInstance, IUser } from "../interfaces/models";
 import { useRouter } from "next/router";
 import CreateInstanceModal from "./CreateInstanceModal";
 import { NavBarProps } from "../interfaces/Components";
+import S3Image from "./S3Image";
 
 export default function NavBar(props: NavBarProps) {
   const router = useRouter();
@@ -190,7 +191,10 @@ export default function NavBar(props: NavBarProps) {
             navBar.roomInstances.map((instance: IRoomInstance) => {
               return (
                 <div
-                  className="w-10 h-10 rounded-lg"
+                  onClick={() => {
+                    router.push("/app/instance/" + instance._id.toString());
+                  }}
+                  className="w-10 h-10 rounded-lg hover:opacity-50"
                   key={instance._id.toString()}
                 >
                   {instance &&
@@ -199,13 +203,8 @@ export default function NavBar(props: NavBarProps) {
                       (otherUser) =>
                         otherUser.username !== navBar.user?.username
                     )[0].imgsrc && (
-                      <Image
-                        onClick={() => {
-                          router.push(
-                            "/app/instance/" + instance._id.toString()
-                          );
-                        }}
-                        src={
+                      <S3Image
+                        KEY={
                           instance.members.filter(
                             (otherUser) =>
                               otherUser.username !== navBar.user?.username
@@ -219,10 +218,6 @@ export default function NavBar(props: NavBarProps) {
                             ) as unknown as IUser
                           ).username
                         }
-                        width={40}
-                        height={40}
-                        layout="responsive"
-                        className="rounded lg hover:opacity-50"
                       />
                     )}
                   {!instance.members.filter(
@@ -241,22 +236,15 @@ export default function NavBar(props: NavBarProps) {
           {navBar.groups &&
             navBar.groups.map((group: IGroup) => {
               return (
-                <>
+                <div key={group._id.toString()}>
                   {group.imgsrc && (
                     <div
-                      className="w-10 h-10 rounded-lg"
-                      key={group._id.toString()}
+                      onClick={() => {
+                        router.push("/app/group/" + group._id.toString());
+                      }}
+                      className="w-10 h-10 rounded-lg hover:opacity-50"
                     >
-                      <Image
-                        onClick={() => {
-                          router.push("/app/group/" + group._id.toString());
-                        }}
-                        src={group.imgsrc}
-                        alt={group.name}
-                        width={40}
-                        height={40}
-                        className="rounded-lg hover:opacity-50"
-                      />
+                      <S3Image KEY={group.imgsrc} alt={group.name} />
                     </div>
                   )}
                   {!group.imgsrc && (
@@ -267,7 +255,7 @@ export default function NavBar(props: NavBarProps) {
                       className="animate-pulse w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500"
                     ></div>
                   )}
-                </>
+                </div>
               );
             })}
         </div>
@@ -314,17 +302,14 @@ export default function NavBar(props: NavBarProps) {
         </button>
         <div className="mt-auto w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500">
           {navBar.user && navBar.user.imgsrc && (
-            <Image
+            <div
               onClick={() => {
                 router.push("/app/user/" + navBar.user?.username);
               }}
-              src={navBar.user?.imgsrc}
-              alt={navBar.user?.username}
-              width={40}
-              height={40}
-              layout="responsive"
-              className="rounded-lg hover:opacity-50"
-            />
+              className="hover:opacity-50"
+            >
+              <S3Image KEY={navBar.user.imgsrc} alt={navBar.user.username} />
+            </div>
           )}
           {(!navBar.user || !navBar.user.imgsrc) && (
             <div

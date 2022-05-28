@@ -1,4 +1,5 @@
 import { FormEvent, useRef, useState, useEffect } from "react";
+import UploadImage from "./UploadImage";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +7,7 @@ import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
 import { ChatInstanceProps } from "../interfaces/Components";
 import { useRouter } from "next/router";
+import S3Image from "./S3Image";
 
 const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
   ssr: false,
@@ -16,10 +18,14 @@ export default function ChatInstance(props: ChatInstanceProps) {
   const { userId, instance, mutateInstance } = props;
   const router = useRouter();
   const messageEndRef = useRef<HTMLDivElement>(null);
+  const uploadImageRef = useRef<HTMLDivElement>(null);
+  const inputImageRef = useRef<HTMLInputElement>(null);
   const [chatForm, setChatForm] = useState({
     content: "",
   });
+  const [stagedImage, setStagedImage] = useState<File>();
   const [emojiModal, setEmojiModal] = useState(false);
+  const [uploadImageModal, setUploadImageModal] = useState(false);
 
   function scrollToBottom() {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -36,12 +42,31 @@ export default function ChatInstance(props: ChatInstanceProps) {
     }, 100);
   }
 
+  function showUploadImageModal() {
+    if (uploadImageModal) {
+      setUploadImageModal(false);
+      return;
+    }
+    setUploadImageModal(true);
+  }
+
   function chatFormChange(event: FormEvent<HTMLTextAreaElement>) {
     const value = event.currentTarget.value;
     setChatForm({
       ...chatForm,
       [event.currentTarget.name]: value,
     });
+  }
+
+  function stagedImageChange(event: FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    //@ts-expect-error
+    if (!inputImageRef.current || !inputImageRef.current.files[0]) {
+      return;
+    }
+    //@ts-expect-error
+    const value = inputImageRef.current.files[0];
+    setStagedImage(value);
   }
 
   async function chatFormSubmit(event: FormEvent) {
@@ -83,6 +108,31 @@ export default function ChatInstance(props: ChatInstanceProps) {
       const result = await response.json();
       console.error(`Status Code: ${response.status}(${result.error})`);
     }
+  }
+
+  async function stagedImageUpload(event: FormEvent) {
+    event.preventDefault();
+    if (!stagedImage) {
+      return;
+    }
+    const body = new FormData();
+    body.append("file", stagedImage);
+    const endpoint =
+      "/api/room-instances/instance/uploadImage?instanceId=" +
+      instance._id.toString();
+    const options = {
+      method: "POST",
+      body,
+    };
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      setStagedImage(undefined);
+      showUploadImageModal();
+      mutateInstance();
+      return;
+    }
+    const result = await response.json();
+    console.error(result.error);
   }
 
   useEffect(() => {
@@ -136,16 +186,9 @@ export default function ChatInstance(props: ChatInstanceProps) {
                 <div className="flex px-4 py-3">
                   <div className="h-10 w-10 md:h-20 md:w-20 rounded flex-shrink-0">
                     {message.user.imgsrc && (
-                      <Image
-                        onClick={() => {
-                          router.push("/app/user/" + message.user.username);
-                        }}
-                        src={message.user.imgsrc}
+                      <S3Image
+                        KEY={message.user.imgsrc}
                         alt={message.user.username}
-                        width={100}
-                        height={100}
-                        layout="responsive"
-                        className="rounded-lg hover:opacity-70"
                       />
                     )}
                     {!message.user.imgsrc && (
@@ -174,17 +217,27 @@ export default function ChatInstance(props: ChatInstanceProps) {
                         ]}
                       />
                     )}
-                    {message.isImage && !message.content.match(".mp4") && (
-                      <Image
-                        quality={100}
-                        priority={true}
-                        src={message.content}
-                        width={480}
-                        height={480}
-                        layout="responsive"
-                        alt={"shared by " + message.user.username.toString()}
-                      />
-                    )}
+                    {message.isImage &&
+                      !message.content.match(".mp4") &&
+                      message.content.match("https://") && (
+                        <Image
+                          quality={100}
+                          priority={true}
+                          src={message.content}
+                          width={480}
+                          height={480}
+                          layout="responsive"
+                          alt={"shared by " + message.user.username.toString()}
+                        />
+                      )}
+                    {message.isImage &&
+                      !message.content.match(".mp4") &&
+                      !message.content.match("https://") && (
+                        <S3Image
+                          KEY={message.content}
+                          alt={message.user.username.toString()}
+                        />
+                      )}
                   </div>
                 </div>
                 <div className="flex flex-col items-center mt-2">
@@ -296,6 +349,13 @@ export default function ChatInstance(props: ChatInstanceProps) {
           </div>
           <button
             type="button"
+            onClick={() => {
+              showUploadImageModal();
+              setTimeout(() => {
+                uploadImageRef.current!.className =
+                  "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+              });
+            }}
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
           >
             <svg
@@ -311,6 +371,19 @@ export default function ChatInstance(props: ChatInstanceProps) {
               />
             </svg>
           </button>
+          {uploadImageModal && (
+            <div
+              ref={uploadImageRef}
+              className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+            >
+              <UploadImage
+                stagedImage={stagedImage}
+                stagedImageChange={stagedImageChange}
+                stagedImageUpload={stagedImageUpload}
+                inputImageRef={inputImageRef}
+              />
+            </div>
+          )}
           <button
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
             type="submit"

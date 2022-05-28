@@ -18,12 +18,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       .json({ error: "Bad request, no auth or necessary body is empty" });
     return;
   }
-  const { _id, name, about, imgsrc } = req.body;
+  const { _id, name, about } = req.body;
 
   await Group.findOneAndUpdate(
     { _id: new Types.ObjectId(_id) },
-    { name, about, imgsrc }
-  ).exec();
+    { name, about }
+  )
+    .lean()
+    .exec();
   res.status(200).end();
   return;
 }

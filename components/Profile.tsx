@@ -2,11 +2,13 @@ import { IGroup, IUser } from "../interfaces/models";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import { FormEvent, SyntheticEvent, useEffect, useState, useRef } from "react";
 import ErrorAlert from "./ErrorAlert";
 import ProcessingForm from "./ProcessingForm";
 import { KeyedMutator } from "swr";
 import DeleteModal from "./DeleteModal";
+import UploadImage from "./UploadImage";
+import S3Image from "./S3Image";
 
 export default function Profile(props: {
   user: IUser | undefined;
@@ -15,6 +17,8 @@ export default function Profile(props: {
 }) {
   const { user, mutateUser, groups } = props;
   const router = useRouter();
+  const uploadImageRef = useRef<HTMLDivElement>(null);
+  const inputImageRef = useRef<HTMLInputElement>(null);
   const [userForm, setUserForm] = useState({
     username: user?.username,
     about: user?.about,
@@ -24,8 +28,10 @@ export default function Profile(props: {
   const [errors, setErrors] = useState({
     error: "",
   });
+  const [stagedImage, setStagedImage] = useState<File>();
   const [editProfile, setEditProfile] = useState(false);
   const [deleteAccount, setDeleteAccount] = useState(false);
+  const [uploadImageModal, setUploadImageModal] = useState(false);
 
   function editModal() {
     if (!editProfile) {
@@ -51,6 +57,14 @@ export default function Profile(props: {
     });
   }
 
+  function showUploadImageModal() {
+    if (uploadImageModal) {
+      setUploadImageModal(false);
+      return;
+    }
+    setUploadImageModal(true);
+  }
+
   function userFormChange(
     event: FormEvent<HTMLTextAreaElement | HTMLInputElement>
   ) {
@@ -59,6 +73,17 @@ export default function Profile(props: {
       ...userForm,
       [event.currentTarget.name]: value,
     });
+  }
+
+  function stagedImageChange(event: FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    //@ts-expect-error
+    if (!inputImageRef.current || !inputImageRef.current.files[0]) {
+      return;
+    }
+    //@ts-expect-error
+    const value = inputImageRef.current.files[0];
+    setStagedImage(value);
   }
 
   async function userFormSubmit(event: FormEvent) {
@@ -126,6 +151,29 @@ export default function Profile(props: {
         });
       }, 5000);
     }
+  }
+
+  async function stagedImageUpload(event: FormEvent) {
+    event.preventDefault();
+    if (!stagedImage) {
+      return;
+    }
+    const body = new FormData();
+    body.append("file", stagedImage);
+    const endpoint = "/api/user/updateImage?username=" + user?.username;
+    const options = {
+      method: "POST",
+      body,
+    };
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      setStagedImage(undefined);
+      showUploadImageModal();
+      mutateUser();
+      return;
+    }
+    const result = await response.json();
+    console.error(result.error);
   }
 
   useEffect(() => {
@@ -198,14 +246,7 @@ export default function Profile(props: {
                 <div className="w-16 h-16 rounded-lg shadow-sm">
                   {user && user.imgsrc && (
                     <div className="w-20 h-20 rounded-lg shadow-sm">
-                      <Image
-                        src={user.imgsrc}
-                        alt={user.username}
-                        width={100}
-                        height={100}
-                        layout="responsive"
-                        className="rounded-lg"
-                      />
+                      <S3Image KEY={user.imgsrc} alt={user.username} />
                     </div>
                   )}
                   {(!user || !user.imgsrc) && (
@@ -250,27 +291,44 @@ export default function Profile(props: {
 
               <div className="flex-shrink-0 flex flex-col items-end ml-3 gap-2">
                 {user && user.imgsrc && (
-                  <div className="w-20 h-20 rounded-lg shadow-sm">
-                    <Image
-                      src={user.imgsrc}
-                      alt={user.username}
-                      width={100}
-                      height={100}
-                      layout="responsive"
-                    />
+                  <div
+                    onClick={() => {
+                      showUploadImageModal();
+                      setTimeout(() => {
+                        uploadImageRef.current!.className =
+                          "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+                      });
+                    }}
+                    className="w-20 h-20 rounded-lg shadow-md hover:opacity-50"
+                  >
+                    <S3Image KEY={user.imgsrc} alt={user.username} />
                   </div>
                 )}
                 {(!user || !user.imgsrc) && (
-                  <div className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600" />
+                  <div
+                    onClick={() => {
+                      showUploadImageModal();
+                      setTimeout(() => {
+                        uploadImageRef.current!.className =
+                          "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+                      });
+                    }}
+                    className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600"
+                  />
                 )}
-                <input
-                  onChange={userFormChange}
-                  type="string"
-                  name="imgsrc"
-                  value={userForm.imgsrc}
-                  placeholder="Image Link"
-                  className="rounded-md shadow-md pl-1"
-                />
+                {uploadImageModal && (
+                  <div
+                    ref={uploadImageRef}
+                    className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+                  >
+                    <UploadImage
+                      stagedImage={stagedImage}
+                      stagedImageChange={stagedImageChange}
+                      stagedImageUpload={stagedImageUpload}
+                      inputImageRef={inputImageRef}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -320,21 +378,16 @@ export default function Profile(props: {
                       <div className="flex-col  flex justify-center items-center">
                         <div className="flex-shrink-0">
                           <div className="block relative">
-                            <div className="w-20 h-20 rounded-lg shadow-md">
+                            <div
+                              onClick={() => {
+                                router.push(
+                                  "/app/group/" + group._id.toString()
+                                );
+                              }}
+                              className="w-20 h-20 rounded-lg shadow-md hover:opacity-50"
+                            >
                               {group.imgsrc && (
-                                <Image
-                                  onClick={() => {
-                                    router.push(
-                                      "/app/group/" + group._id.toString()
-                                    );
-                                  }}
-                                  src={group.imgsrc}
-                                  alt={group.name}
-                                  width={80}
-                                  height={80}
-                                  layout="responsive"
-                                  className="rounded-lg hover:opacity-50"
-                                />
+                                <S3Image KEY={group.imgsrc} alt={group.name} />
                               )}
                               {!group.imgsrc && (
                                 <div className="w-20 h-20 bg-slate-600 rounded-lg shadow-md"></div>
