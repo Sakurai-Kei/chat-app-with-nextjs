@@ -27,12 +27,30 @@ export const getServerSideProps = withSessionSsr(
 );
 
 export default function App(props: IronSessionData) {
-  const { _id, username } = props.user!;
-  const { navBar, mutateNavBar } = useNavBar(_id);
+  const { _id } = props.user!;
+  const { navBar, mutateNavBar } = useNavBar(_id.toString());
 
   return (
     <>
       <Head>
+        <link
+          rel="preload"
+          href={"/api/users/" + _id.toString()}
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href={"/api/room-instances/" + _id.toString()}
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href={"/api/groups/" + _id.toString()}
+          as="fetch"
+          crossOrigin="anonymous"
+        />
         <title>SKCA Chat App</title>
         <meta name="description" content="SKCA Chat Web App" />
       </Head>

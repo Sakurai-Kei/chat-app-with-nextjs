@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useState, useRef, FormEvent } from "react";
 import { GroupSettingsModalProps } from "../interfaces/Components";
 import S3Image from "./S3Image";

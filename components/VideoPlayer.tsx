@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
+import { useCallback, useEffect, useState } from "react";
+import videojs, { VideoJsPlayerOptions } from "video.js";
 import "video.js/dist/video-js.css";
 
 export default function VideoPlayer(props: VideoJsPlayerOptions) {
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
-  const videoRef = useRef(null);
-  const playerRef = useRef<VideoJsPlayer>();
   const onVideo = useCallback((el: HTMLVideoElement) => {
     setVideoEl(el);
   }, []);

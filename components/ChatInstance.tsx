@@ -6,7 +6,6 @@ import Link from "next/link";
 import format from "date-fns/format";
 import { IMessage } from "../interfaces/models";
 import { ChatInstanceProps } from "../interfaces/Components";
-import { useRouter } from "next/router";
 import S3Image from "./S3Image";
 
 const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
@@ -16,7 +15,6 @@ const DynamicComponentVideoPlayer = dynamic(() => import("./VideoPlayer"));
 
 export default function ChatInstance(props: ChatInstanceProps) {
   const { userId, instance, mutateInstance } = props;
-  const router = useRouter();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const uploadImageRef = useRef<HTMLDivElement>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);

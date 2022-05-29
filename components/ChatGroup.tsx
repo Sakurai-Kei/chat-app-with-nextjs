@@ -5,7 +5,6 @@ import { IMessage } from "../interfaces/models";
 import { ChatGroupProps } from "../interfaces/Components";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import GroupSettingModal from "./GroupSettingsModal";
 import UploadImage from "./UploadImage";
 import S3Image from "./S3Image";
@@ -17,7 +16,6 @@ const DynamicComponentVideoPlayer = dynamic(() => import("./VideoPlayer"));
 
 export default function ChatGroup(props: ChatGroupProps) {
   const { group, mutateGroup, userId } = props;
-  const router = useRouter();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const groupSettingsRef = useRef<HTMLDivElement>(null);
   const uploadImageRef = useRef<HTMLDivElement>(null);

@@ -1,4 +1,3 @@
-import { FormEvent } from "react";
 import { InstanceModalProps } from "../interfaces/Components";
 
 export default function CreateInstanceModal(props: InstanceModalProps) {

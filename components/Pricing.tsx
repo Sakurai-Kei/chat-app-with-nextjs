@@ -3,7 +3,7 @@ import useUser from "../lib/useUser";
 
 export default function Pricing() {
   const router = useRouter();
-  const { user, mutateUser } = useUser();
+  const { user } = useUser();
 
   return (
     <div className="bg-gray-900">

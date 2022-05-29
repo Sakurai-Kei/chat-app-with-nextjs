@@ -1,5 +1,4 @@
 import { FormEvent, useRef, useState } from "react";
-import Image from "next/image";
 import { MemberListProps } from "../interfaces/Components";
 import { IUser } from "../interfaces/models";
 import { useRouter } from "next/router";

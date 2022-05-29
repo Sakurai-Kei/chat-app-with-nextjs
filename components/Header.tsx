@@ -3,7 +3,7 @@ import { useState } from "react";
 import useUser from "../lib/useUser";
 
 export default function Header() {
-  const { user, mutateUser } = useUser();
+  const { user } = useUser();
   const [show, setShow] = useState(false);
 
   function showMenu() {

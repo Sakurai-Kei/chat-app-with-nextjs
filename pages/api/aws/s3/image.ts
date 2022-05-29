@@ -1,7 +1,5 @@
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import downloadS3 from "../../../../lib/s3Download";
 import { NextApiRequest, NextApiResponse } from "next";
-import { s3Client } from "../../../../lib/s3ClientObject";
 import { withSessionRoute } from "../../../../lib/withSession";
 
 export default withSessionRoute(handler);
@@ -23,21 +21,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   res.status(500).json({ error: "Error has occured" });
   return;
-}
-
-async function downloadS3(Key: string) {
-  const bucketParams = {
-    Bucket: process.env.AWS_SDK_BUCKET_NAME,
-    Key,
-  };
-  try {
-    const url = await getSignedUrl(
-      s3Client,
-      new GetObjectCommand(bucketParams),
-      { expiresIn: 3600 }
-    );
-    return url;
-  } catch (err) {
-    console.log("Error", err);
-  }
 }

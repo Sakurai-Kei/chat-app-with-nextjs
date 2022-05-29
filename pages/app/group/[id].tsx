@@ -41,6 +41,12 @@ export default function GroupChatRoom(props: GroupChatRoomPage) {
   return (
     <>
       <Head>
+        <link
+          rel="preload"
+          href={"/api/groups/instance/" + groupId}
+          as="fetch"
+          crossOrigin="anonymous"
+        />
         {group && group.name && <title>Group Instance: {group.name}</title>}
       </Head>
       <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">

@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import Head from "next/head";
 import { withSessionSsr } from "../../../lib/withSession";
 import { useChatInstance } from "../../../lib/useChat";
@@ -6,7 +5,6 @@ import useNavBar from "../../../lib/useNavBar";
 import NavBar from "../../../components/NavBar";
 import ChatInstance from "../../../components/ChatInstance";
 import { InstanceChatRoomPage } from "../../../interfaces/pages";
-import { useEffect } from "react";
 import { IUser } from "../../../interfaces/models";
 
 export const getServerSideProps = withSessionSsr(
@@ -33,15 +31,20 @@ export const getServerSideProps = withSessionSsr(
 );
 
 export default function InstanceChatRoom(props: InstanceChatRoomPage) {
-  const router = useRouter();
   const { user, instanceId } = props;
-  const { _id, username } = user!;
+  const { _id } = user!;
   const { navBar, mutateNavBar } = useNavBar(_id);
   const { instance, mutateInstance } = useChatInstance(instanceId);
 
   return (
     <>
       <Head>
+        <link
+          rel="preload"
+          href={"/api/room-instances/instance/" + instanceId}
+          as="fetch"
+          crossOrigin="anonymous"
+        ></link>
         {instance && instance.members && (
           <title>
             Private Instance:{" "}
