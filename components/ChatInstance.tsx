@@ -165,9 +165,11 @@ export default function ChatInstance(props: ChatInstanceProps) {
         <div>
           {instance && (
             <>
-              <h1 className="text-sm font-bold leading-none">
-                {instance.members[0].username},{instance.members[1].username}
-              </h1>
+              {instance && instance.members && (
+                <h1 className="text-sm font-bold leading-none">
+                  {instance.members[0].username},{instance.members[1].username}
+                </h1>
+              )}
               <span className="text-xs leading-none text-gray-300">
                 Private Instance
               </span>

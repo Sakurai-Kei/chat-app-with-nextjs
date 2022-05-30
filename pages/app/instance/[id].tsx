@@ -6,11 +6,14 @@ import NavBar from "../../../components/NavBar";
 import ChatInstance from "../../../components/ChatInstance";
 import { InstanceChatRoomPage } from "../../../interfaces/pages";
 import { IUser } from "../../../interfaces/models";
+import dbConnect from "../../../lib/mongoDB";
+import RoomInstance from "../../../models/RoomInstance";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
     const user = req.session.user;
-    const { id } = query;
+    const { id } = query as { id: string };
+    await dbConnect();
 
     if (!user) {
       return {
@@ -21,9 +24,24 @@ export const getServerSideProps = withSessionSsr(
       };
     }
 
+    const roomInstance = await RoomInstance.findById(id, {
+      messages: { $slice: -15 },
+    })
+      .lean()
+      .populate({
+        path: "messages",
+        populate: {
+          path: "user",
+          select: "-password -email -about",
+        },
+      })
+      .populate({ path: "members", select: "-password -email" })
+      .exec();
+
     return {
       props: {
         user: req.session.user,
+        roomInstance: JSON.stringify(roomInstance),
         instanceId: id,
       },
     };
@@ -34,17 +52,12 @@ export default function InstanceChatRoom(props: InstanceChatRoomPage) {
   const { user, instanceId } = props;
   const { _id } = user!;
   const { navBar, mutateNavBar } = useNavBar(_id);
-  const { instance, mutateInstance } = useChatInstance(instanceId);
+  const { instance = props.roomInstance, mutateInstance } =
+    useChatInstance(instanceId);
 
   return (
     <>
       <Head>
-        <link
-          rel="preload"
-          href={"/api/room-instances/instance/" + instanceId}
-          as="fetch"
-          crossOrigin="anonymous"
-        ></link>
         {instance && instance.members && (
           <title>
             Private Instance:{" "}

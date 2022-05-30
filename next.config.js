@@ -14,8 +14,10 @@ const nextConfig = withPWA({
   swcMinify: true,
   images: {
     domains: ['i.imgur.com', 'chat-app-with-nextjs.s3.ap-southeast-1.amazonaws.com'],
-    formats: ['image/avif', 'image/webp']
   },
+  experimental: {
+    runtime: 'edge'
+  }
 })
 
   

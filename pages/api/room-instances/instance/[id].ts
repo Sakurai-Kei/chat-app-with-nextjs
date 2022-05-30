@@ -16,7 +16,7 @@ export default async function handler(
       path: "messages",
       populate: {
         path: "user",
-        select: "-password -email -about -groups -contactList",
+        select: "-password -email -about",
       },
     })
     .populate({ path: "members", select: "-password -email" })
