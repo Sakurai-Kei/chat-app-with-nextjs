@@ -1,9 +1,12 @@
 import { Types } from "mongoose";
 
+type MessageInstance = "private" | "group";
+
 export interface IMessage {
   content: string;
   isImage: boolean;
-  user: IUser;
+  instance: MessageInstance;
+  user: Types.ObjectId;
   timestamp: Date;
   _id: Types.ObjectId;
 }
@@ -15,6 +18,8 @@ export interface IUser {
   email: string;
   about: string;
   imgsrc: string;
+  groups: Types.DocumentArray<IGroup> | IGroup[];
+  roomInstances: Types.DocumentArray<IRoomInstance> | IRoomInstance[];
 }
 
 export interface IGroup {
@@ -22,18 +27,12 @@ export interface IGroup {
   name: string;
   about: string;
   members: Types.DocumentArray<IUser> | IUser[];
-  messages: IMessage[];
+  messages: Types.DocumentArray<IMessage> | IMessage[];
   imgsrc: string;
 }
 
 export interface IRoomInstance {
   _id: Types.ObjectId;
   members: Types.DocumentArray<IUser>;
-  messages: IMessage[];
-}
-
-export interface IGroupInstance {
-  _id: Types.ObjectId;
-  member: Types.ObjectId | number;
-  messages: IMessage[];
+  messages: Types.DocumentArray<IMessage> | IMessage[];
 }

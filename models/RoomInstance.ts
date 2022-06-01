@@ -21,10 +21,8 @@ const roomInstanceSchema = new Schema<IRoomInstance>(
     ],
     messages: [
       {
-        content: { type: String },
-        isImage: { type: Boolean },
-        user: { type: Schema.Types.ObjectId, ref: "User" },
-        timestamp: { type: Date },
+        type: Schema.Types.ObjectId,
+        ref: "Message",
       },
     ],
   },

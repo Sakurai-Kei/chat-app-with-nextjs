@@ -32,6 +32,18 @@ const userSchema = new Schema<IUser>(
     imgsrc: {
       type: String,
     },
+    groups: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Group",
+      },
+    ],
+    roomInstances: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "RoomInstance",
+      },
+    ],
   },
   options
 );

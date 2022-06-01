@@ -28,13 +28,8 @@ const groupSchema = new Schema<IGroup>(
     ],
     messages: [
       {
-        content: {
-          type: String,
-          required: [true, "Message must have content"],
-        },
-        isImage: { type: Boolean },
-        user: { type: Schema.Types.ObjectId, ref: "User" },
-        timestamp: { type: Date },
+        type: Schema.Types.ObjectId,
+        ref: "Message",
       },
     ],
     imgsrc: { type: String },
