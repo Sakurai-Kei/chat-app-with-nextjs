@@ -1,10 +1,5 @@
 import { IronSessionData } from "iron-session";
-import { IGroup, IRoomInstance } from "./models";
-
-// export interface InstanceChatRoomPage {
-//     user: IronSessionData;
-//     instanceId: string
-// }
+import { IGroup, IRoomInstance, IUser } from "./models";
 
 export type InstanceChatRoomPage = IronSessionData & {
   roomInstance: IRoomInstance;
@@ -14,4 +9,12 @@ export type InstanceChatRoomPage = IronSessionData & {
 export type GroupChatRoomPage = IronSessionData & {
   group: IGroup;
   groupId: string;
+};
+
+export type AppPage = IronSessionData & {
+  navBar: {
+    user: IUser;
+    groups: IGroup[];
+    roomInstances: IRoomInstance[];
+  };
 };

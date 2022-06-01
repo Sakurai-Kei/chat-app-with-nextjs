@@ -4,8 +4,6 @@ import path from "path";
 import fs from "fs";
 import { withSessionRoute } from "../../../../lib/withSession";
 import uploadS3 from "../../../../lib/s3Upload";
-import { Types } from "mongoose";
-import Group from "../../../../models/Group";
 import RoomInstance from "../../../../models/RoomInstance";
 
 export const config = {
@@ -40,12 +38,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const message = {
         content: Key,
         isImage: true,
-        user: new Types.ObjectId(_id),
+        user: _id,
         timestamp: new Date(),
       };
 
       await RoomInstance.findOneAndUpdate(
-        { _id: new Types.ObjectId(instanceId as string) },
+        { _id: instanceId },
         { $push: { messages: message } }
       )
         .lean()

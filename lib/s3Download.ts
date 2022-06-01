@@ -1,5 +1,6 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { formatISO } from "date-fns";
 import { s3Client } from "./s3ClientObject";
 
 export default async function downloadS3(Key: string) {
@@ -11,8 +12,9 @@ export default async function downloadS3(Key: string) {
     const url = await getSignedUrl(
       s3Client,
       new GetObjectCommand(bucketParams),
-      { expiresIn: 3600 }
+      { expiresIn: 604800 }
     );
+
     return url;
   } catch (err) {
     console.log("Error", err);

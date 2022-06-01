@@ -3,11 +3,16 @@ import Head from "next/head";
 import { withSessionSsr } from "../lib/withSession";
 import useNavBar from "../lib/useNavBar";
 import AppHome from "../components/AppHome";
-import { IronSessionData } from "iron-session";
+import type { AppPage } from "../interfaces/pages";
+import User from "../models/User";
+import dbConnect from "../lib/mongoDB";
+import RoomInstance from "../models/RoomInstance";
+import Group from "../models/Group";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req }) {
     const user = req.session.user;
+    await dbConnect();
 
     if (!user) {
       return {
@@ -18,17 +23,43 @@ export const getServerSideProps = withSessionSsr(
       };
     }
 
+    const userExist = await User.findById(user._id).lean().exec();
+    if (!userExist) {
+      return {
+        redirect: {
+          destination: "/log-in",
+          permanent: false,
+        },
+      };
+    }
+
+    const roomInstance = await RoomInstance.find({
+      members: user._id,
+    })
+      .lean()
+      .populate({ path: "members", select: "-password -email" })
+      .exec();
+
+    const group = await Group.find({ members: user._id }).lean().exec();
+
+    const navBar = {
+      user: userExist,
+      roomInstances: roomInstance,
+      groups: group,
+    };
+
     return {
       props: {
         user: req.session.user,
+        navBar: JSON.parse(JSON.stringify(navBar)),
       },
     };
   }
 );
 
-export default function App(props: IronSessionData) {
+export default function App(props: AppPage) {
   const { _id } = props.user!;
-  const { navBar, mutateNavBar } = useNavBar(_id.toString());
+  const { navBar = props.navBar, mutateNavBar } = useNavBar(_id);
 
   return (
     <>

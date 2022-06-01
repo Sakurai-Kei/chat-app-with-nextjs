@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/mongoDB";
 import { withSessionRoute } from "../../../lib/withSession";
@@ -14,7 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
   const roomInstance = await RoomInstance.find({
-    members: new Types.ObjectId(_id),
+    members: _id,
   })
     .lean()
     .populate({ path: "members", select: "-password -email" })

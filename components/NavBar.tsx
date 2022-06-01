@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, memo } from "react";
 import CreateGroupModal from "./CreateGroupModal";
 import { FormEvent } from "react";
 import { IGroup, IRoomInstance, IUser } from "../interfaces/models";
@@ -6,8 +6,20 @@ import { useRouter } from "next/router";
 import CreateInstanceModal from "./CreateInstanceModal";
 import { NavBarProps } from "../interfaces/Components";
 import S3Image from "./S3Image";
+import isEqual from "lodash/isEqual";
 
-export default function NavBar(props: NavBarProps) {
+export default memo(NavBar, (prevProps, nextProps) => {
+  if (
+    isEqual(prevProps._id, nextProps._id) &&
+    isEqual(prevProps.navBar.groups, nextProps.navBar.groups) &&
+    isEqual(prevProps.navBar.roomInstances, nextProps.navBar.roomInstances)
+  ) {
+    return true;
+  }
+  return false;
+});
+
+function NavBar(props: NavBarProps) {
   const router = useRouter();
   const { _id, navBar, mutateNavBar } = props;
   const openNavBar = useRef<HTMLDivElement>(null);

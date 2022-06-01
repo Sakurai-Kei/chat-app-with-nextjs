@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import { withSessionRoute } from "../../../lib/withSession";
 import Group from "../../../models/Group";
@@ -20,12 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   const { _id, name, about } = req.body;
 
-  await Group.findOneAndUpdate(
-    { _id: new Types.ObjectId(_id) },
-    { name, about }
-  )
-    .lean()
-    .exec();
+  await Group.findOneAndUpdate({ _id: _id }, { name, about }).lean().exec();
   res.status(200).end();
   return;
 }

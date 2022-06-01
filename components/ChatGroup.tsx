@@ -298,7 +298,7 @@ export default function ChatGroup(props: ChatGroupProps) {
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">
-                        {message.user.username.toString()}
+                        {message.user.username}
                       </span>
                       <span className="ml-1 text-xs text-gray-500">
                         {format(new Date(message.timestamp), "KK.mm a, PPP")}
@@ -328,7 +328,7 @@ export default function ChatGroup(props: ChatGroupProps) {
                           height={480}
                           layout="intrinsic"
                           className="rounded-lg shadow-md"
-                          alt={"shared by " + message.user.username.toString()}
+                          alt={"shared by " + message.user.username}
                         />
                       )}
                     {message.isImage &&
@@ -336,7 +336,7 @@ export default function ChatGroup(props: ChatGroupProps) {
                       !message.content.match("https://") && (
                         <S3Image
                           KEY={message.content}
-                          alt={message.user.username.toString()}
+                          alt={message.user.username}
                         />
                       )}
                   </div>

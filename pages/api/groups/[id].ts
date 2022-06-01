@@ -14,9 +14,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       res.status(400).json(false);
       return;
     }
-    const group = await Group.find({ members: new Types.ObjectId(_id) })
-      .lean()
-      .exec();
+    const group = await Group.find({ members: _id }).lean().exec();
     res.status(200).json(group);
   } catch (error) {}
 }

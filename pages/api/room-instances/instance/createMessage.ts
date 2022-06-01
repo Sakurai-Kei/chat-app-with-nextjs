@@ -22,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const message = {
     content,
     isImage,
-    user: new Types.ObjectId(userId),
+    user: userId,
     timestamp: new Date(),
   };
 

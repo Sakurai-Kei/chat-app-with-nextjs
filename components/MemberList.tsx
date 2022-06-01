@@ -1,10 +1,18 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, memo, useRef, useState } from "react";
 import { MemberListProps } from "../interfaces/Components";
 import { IUser } from "../interfaces/models";
 import { useRouter } from "next/router";
 import S3Image from "./S3Image";
+import isEqual from "lodash/isEqual";
 
-export default function MemberList(props: MemberListProps) {
+export default memo(MemberList, (prevProp, nextProp) => {
+  if (isEqual(prevProp.group.members, nextProp.group.members)) {
+    return true;
+  }
+  return false;
+});
+
+function MemberList(props: MemberListProps) {
   const { group, mutateGroup } = props;
   const router = useRouter();
   const closeMemberList = useRef<HTMLDivElement>(null);

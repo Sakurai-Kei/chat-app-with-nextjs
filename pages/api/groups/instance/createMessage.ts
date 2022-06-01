@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import { withSessionRoute } from "../../../../lib/withSession";
 import Group from "../../../../models/Group";
@@ -21,7 +20,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const message = {
     content,
     isImage,
-    user: new Types.ObjectId(userId),
+    user: userId,
     timestamp: new Date(),
   };
 

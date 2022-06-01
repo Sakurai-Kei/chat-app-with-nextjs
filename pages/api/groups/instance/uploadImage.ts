@@ -39,12 +39,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const message = {
         content: Key,
         isImage: true,
-        user: new Types.ObjectId(_id),
+        user: _id,
         timestamp: new Date(),
       };
 
       await Group.findOneAndUpdate(
-        { _id: new Types.ObjectId(groupId as string) },
+        { _id: groupId },
         { $push: { messages: message } }
       )
         .lean()

@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { withSessionRoute } from "../../../lib/withSession";
-import { Types } from "mongoose";
 import RoomInstance from "../../../models/RoomInstance";
 import User from "../../../models/User";
 
@@ -12,10 +11,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     username: targetMemberUsername,
   }).exec();
   const instanceExist = await RoomInstance.findOne({
-    $and: [
-      { members: targetUser._id },
-      { members: new Types.ObjectId(userId) },
-    ],
+    $and: [{ members: targetUser._id }, { members: userId }],
   });
   if (!targetUser) {
     res.status(404).json({ error: "No user found" });
@@ -32,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
   const roomInstance = new RoomInstance({
-    members: [new Types.ObjectId(userId), targetUser._id],
+    members: [userId, targetUser._id],
     messages: [],
   });
   await roomInstance.save();
