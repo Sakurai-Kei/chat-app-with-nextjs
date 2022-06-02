@@ -1,3 +1,6 @@
+import path from "path";
+import fs from "fs";
+import formidable from "formidable";
 import { NextApiRequest, NextApiResponse } from "next";
 import { IUser } from "../../../../interfaces/models";
 import dbConnect from "../../../../lib/mongoDB";
@@ -7,17 +10,19 @@ import bcrypt from "bcryptjs";
 import Group from "../../../../models/Group";
 import RoomInstance from "../../../../models/RoomInstance";
 import Message from "../../../../models/Message";
+import { HydratedDocument } from "mongoose";
+import uploadS3 from "../../../../lib/s3Upload";
 
 export default withSessionRoute(userController);
 
 async function userController(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
-  const { _id } = req.query;
+  const { userId, task = "" } = req.query;
 
   await dbConnect();
 
   if (method === "GET") {
-    const user = await User.findById(_id)
+    const user = await User.findById(userId)
       .lean()
       .populate({
         path: "groups",
@@ -60,7 +65,7 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 15);
-    const newUser = new User<Partial<IUser>>({
+    const newUser: HydratedDocument<IUser> = new User({
       username,
       password: hashedPassword,
       email,
@@ -82,19 +87,51 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
         .json({ error: "Body username does not match cookie username" });
       return;
     }
-    const { username, about, imgsrc } = req.body;
-    const updatingUser = await User.findOneAndUpdate(
-      { username },
-      { about, imgsrc }
-    )
-      .lean()
-      .exec();
-    if (!updatingUser) {
-      res.status(404).json({ error: "Could not find user" });
+
+    if (task === "update-user-bio") {
+      const { username, about } = req.body;
+      const updatingUser = await User.findOneAndUpdate({ username }, { about })
+        .lean()
+        .exec();
+
+      if (!updatingUser) {
+        res.status(404).json({ error: "Could not find user" });
+        return;
+      }
+      res.status(200).end();
       return;
     }
-    res.status(200).end();
-    return;
+
+    if (task === "update-user-image") {
+      // CODE TO UPDATE PICTURE, AWS S3
+      const form = new formidable.IncomingForm();
+      //@ts-expect-error
+      const { _id, username } = req.session.user;
+      form.parse(req, async function (err, fields, files) {
+        const { file } = files;
+        //@ts-expect-error
+        const filePath = file.filepath;
+        //@ts-expect-error
+        const Key =
+          path.basename(filePath) + "." + /[^/]*$/g.exec(file.mimetype);
+        const fileStream = fs.createReadStream(filePath);
+        //@ts-expect-error
+        const result = await uploadS3(Key, file.mimetype, fileStream);
+        if (result?.$metadata.httpStatusCode === 200) {
+          // SAVE KEY TO MONGODB
+          const objectURL = `https://${process.env.AWS_SDK_BUCKET_NAME}.s3.${process.env.AWS_SDK_REGION}.amazonaws.com/${Key}`;
+          await User.findOneAndUpdate({ username }, { imgsrc: objectURL })
+            .lean()
+            .exec();
+          res.status(200).end();
+          return;
+        }
+        return res
+          .status(result?.$metadata.httpStatusCode || 500)
+          .json({ error: "Something happen and request failed" });
+      });
+      return;
+    }
   }
 
   if (method === "DELETE") {
@@ -102,11 +139,14 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
       res.status(403).json({ error: "Please log in to proceed " });
       return;
     }
+
     const { username } = req.body;
+
     if (username !== req.session.user?.username) {
       res.status(409).json({ error: "Please retype your username correctly" });
       return;
     }
+
     const deletingUser = await User.findOneAndDelete({ username })
       .lean()
       .exec();
