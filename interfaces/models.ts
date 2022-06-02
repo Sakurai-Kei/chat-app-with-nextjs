@@ -3,7 +3,8 @@ import { Types } from "mongoose";
 export interface IMessage {
   content: string;
   isImage: boolean;
-  instance: "private" | "group";
+  instance: "RoomInstance" | "Group";
+  refId: Types.ObjectId;
   user: Types.ObjectId;
   timestamp: Date;
   _id: Types.ObjectId;
@@ -16,24 +17,21 @@ export interface IUser {
   email: string;
   about: string;
   imgsrc: string;
-  groups: Types.DocumentArray<IGroup> | Types.ObjectId[] | IGroup[];
-  roomInstances:
-    | Types.DocumentArray<IRoomInstance>
-    | Types.ObjectId[]
-    | IRoomInstance[];
+  groups: Types.DocumentArray<IGroup> | IGroup[];
+  roomInstances: Types.DocumentArray<IRoomInstance> | IRoomInstance[];
 }
 
 export interface IGroup {
   _id: Types.ObjectId | string;
   name: string;
   about: string;
-  members: Types.DocumentArray<IUser> | Types.ObjectId[] | IUser[];
-  messages: Types.DocumentArray<IMessage> | Types.ObjectId[] | IMessage[];
+  members: Types.DocumentArray<IUser> | IUser[];
+  messages: Types.DocumentArray<IMessage> | IMessage[];
   imgsrc: string;
 }
 
 export interface IRoomInstance {
   _id: Types.ObjectId;
-  members: Types.DocumentArray<IUser>;
-  messages: Types.DocumentArray<IMessage> | Types.ObjectId[] | IMessage[];
+  members: Types.DocumentArray<IUser> | IUser[];
+  messages: Types.DocumentArray<IMessage> | IMessage[];
 }

@@ -1,27 +1,17 @@
 import { useState, useRef, memo } from "react";
 import CreateGroupModal from "./CreateGroupModal";
 import { FormEvent } from "react";
-import { IGroup, IRoomInstance, IUser } from "../interfaces/models";
 import { useRouter } from "next/router";
 import CreateInstanceModal from "./CreateInstanceModal";
 import { NavBarProps } from "../interfaces/Components";
-import S3Image from "./S3Image";
-import isEqual from "lodash/isEqual";
 
-export default memo(NavBar, (prevProps, nextProps) => {
-  if (
-    isEqual(prevProps._id, nextProps._id) &&
-    isEqual(prevProps.navBar.groups, nextProps.navBar.groups) &&
-    isEqual(prevProps.navBar.roomInstances, nextProps.navBar.roomInstances)
-  ) {
-    return true;
-  }
-  return false;
-});
+import Image from "next/image";
+
+export default memo(NavBar);
 
 function NavBar(props: NavBarProps) {
   const router = useRouter();
-  const { _id, navBar, mutateNavBar } = props;
+  const { _id, user, mutateUser } = props;
   const openNavBar = useRef<HTMLDivElement>(null);
   const closeNavBar = useRef<HTMLDivElement>(null);
   const [groupForm, setGroupForm] = useState({
@@ -57,7 +47,7 @@ function NavBar(props: NavBarProps) {
     }
 
     const JSONdata = JSON.stringify(groupForm);
-    const endpoint = "/api/groups/createGroup";
+    const endpoint = "/api/v2/groups";
     const options = {
       method: "POST",
       headers: {
@@ -69,7 +59,7 @@ function NavBar(props: NavBarProps) {
     const response = await fetch(endpoint, options);
     if (response.status === 200) {
       chatModal();
-      mutateNavBar.mutateGroups();
+      mutateUser();
     } else {
       const result = await response.json();
       setErrors({
@@ -94,7 +84,7 @@ function NavBar(props: NavBarProps) {
     }
 
     const JSONdata = JSON.stringify(instanceForm);
-    const endpoint = "/api/room-instances/createInstance";
+    const endpoint = "/api/v2/room-instances";
     const options = {
       method: "POST",
       headers: {
@@ -106,7 +96,7 @@ function NavBar(props: NavBarProps) {
     const response = await fetch(endpoint, options);
     if (response.status === 200) {
       instanceModal();
-      mutateNavBar.mutateRoomInstances();
+      mutateUser();
     } else {
       const result = await response.json();
       setErrors({
@@ -197,8 +187,8 @@ function NavBar(props: NavBarProps) {
             </svg>
           </button>
           <div className="flex flex-col gap-4">
-            {navBar.roomInstances &&
-              navBar.roomInstances.map((instance: IRoomInstance) => {
+            {user.roomInstances &&
+              user.roomInstances.map((instance) => {
                 return (
                   <div
                     onClick={() => {
@@ -210,29 +200,37 @@ function NavBar(props: NavBarProps) {
                     {instance &&
                       instance.members &&
                       instance.members.filter(
-                        (otherUser) =>
-                          otherUser.username !== navBar.user?.username
+                        (otherUser) => otherUser.username !== user.username
                       )[0].imgsrc && (
-                        <S3Image
-                          KEY={
+                        <Image
+                          src={
                             instance.members.filter(
                               (otherUser) =>
-                                otherUser.username !== navBar.user?.username
+                                otherUser.username !== user.username
                             )[0].imgsrc
                           }
-                          alt={
-                            (
-                              instance.members.filter(
-                                (otherUser) =>
-                                  otherUser.username !== navBar.user?.username
-                              ) as unknown as IUser
-                            ).username
+                          placeholder="blur"
+                          blurDataURL={
+                            instance.members.filter(
+                              (otherUser) =>
+                                otherUser.username !== user.username
+                            )[0].imgsrc
                           }
+                          width={40}
+                          height={40}
+                          layout="intrinsic"
+                          alt={
+                            "shared by " +
+                            instance.members.filter(
+                              (otherUser) =>
+                                otherUser.username !== user.username
+                            )[0].username
+                          }
+                          className="rounded-lg shadow-md"
                         />
                       )}
                     {!instance.members.filter(
-                      (otherUser) =>
-                        otherUser.username !== navBar.user?.username
+                      (otherUser) => otherUser.username !== user.username
                     )[0].imgsrc && (
                       <div
                         onClick={() => {
@@ -246,8 +244,8 @@ function NavBar(props: NavBarProps) {
                   </div>
                 );
               })}
-            {navBar.groups &&
-              navBar.groups.map((group: IGroup) => {
+            {user.groups &&
+              user.groups.map((group) => {
                 return (
                   <div key={group._id.toString()}>
                     {group.imgsrc && (
@@ -257,7 +255,16 @@ function NavBar(props: NavBarProps) {
                         }}
                         className="w-10 h-10 rounded-lg hover:opacity-50"
                       >
-                        <S3Image KEY={group.imgsrc} alt={group.name} />
+                        <Image
+                          src={group.imgsrc}
+                          placeholder="blur"
+                          blurDataURL={group.imgsrc}
+                          width={40}
+                          height={40}
+                          layout="intrinsic"
+                          alt={"shared by " + group.about}
+                          className="rounded-lg shadow-md"
+                        />
                       </div>
                     )}
                     {!group.imgsrc && (
@@ -314,20 +321,29 @@ function NavBar(props: NavBarProps) {
             </svg>
           </button>
           <div className="mt-auto w-10 h-10 rounded-lg bg-gray-400 hover:bg-gray-500">
-            {navBar.user && navBar.user.imgsrc && (
+            {user && user.imgsrc && (
               <div
                 onClick={() => {
-                  router.push("/app/user/" + navBar.user?.username);
+                  router.push("/app/user/" + user.username);
                 }}
                 className="hover:opacity-50"
               >
-                <S3Image KEY={navBar.user.imgsrc} alt={navBar.user.username} />
+                <Image
+                  src={user.imgsrc}
+                  placeholder="blur"
+                  blurDataURL={user.imgsrc}
+                  width={40}
+                  height={40}
+                  layout="intrinsic"
+                  alt={"shared by " + user.username}
+                  className="rounded-lg shadow-md"
+                />
               </div>
             )}
-            {(!navBar.user || !navBar.user.imgsrc) && (
+            {(!user || !user.imgsrc) && (
               <div
                 onClick={() => {
-                  router.push("/app/user/" + navBar.user?.username);
+                  router.push("/app/user/" + user.username);
                 }}
                 className="animate-pulse w-10 h-10 rounded-lg shadow-sm bg-slate-600"
               />

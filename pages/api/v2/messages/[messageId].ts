@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { IUser } from "../../../../interfaces/models";
+import { IMessage, IUser } from "../../../../interfaces/models";
 import dbConnect from "../../../../lib/mongoDB";
 import { withSessionRoute } from "../../../../lib/withSession";
 import User from "../../../../models/User";
@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 import Group from "../../../../models/Group";
 import RoomInstance from "../../../../models/RoomInstance";
 import Message from "../../../../models/Message";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 
 export default withSessionRoute(messageController);
 
@@ -42,14 +42,58 @@ async function messageController(req: NextApiRequest, res: NextApiResponse) {
       res.status(400).json({ error: "Bad Request" });
       return;
     }
-    if (req.body.instance === "private") {
-      // FOR PRIVATE INSTANCE
+    if (req.body.instance === "RoomInstance") {
+      const { content, isImage, instance, roomId, userId } = req.body;
+
+      const newMessage: HydratedDocument<IMessage> = new Message({
+        content,
+        isImage,
+        instance,
+        refId: new Types.ObjectId(roomId),
+        user: new Types.ObjectId(userId),
+        timestamp: new Date(),
+      });
+      const savedMessage = await newMessage.save();
+
+      const updatingRoomInstance = await RoomInstance.updateOne(
+        { _id: new Types.ObjectId(roomId) },
+        { $push: { messages: savedMessage._id } }
+      )
+        .lean()
+        .exec();
+
+      res.status(200).end();
       return;
     }
-    if (req.body.instance === "group") {
-      // FOR GROUP
+    if (req.body.instance === "Group") {
+      const { content, isImage, instance, groupId, userId } = req.body;
+
+      const newMessage: HydratedDocument<IMessage> = new Message({
+        content,
+        isImage,
+        instance,
+        refId: new Types.ObjectId(groupId),
+        user: new Types.ObjectId(userId),
+        timestamp: new Date(),
+      });
+      const savedMessage = await newMessage.save();
+
+      const updatingGroup = await Group.updateOne(
+        { _id: new Types.ObjectId(groupId) },
+        { $push: { messages: savedMessage._id } }
+      )
+        .lean()
+        .exec();
+
+      res.status(200).end();
       return;
     }
+    res.status(400).json({ error: "Please define instance enum" });
+    return;
+  }
+
+  if (method !== "GET" && method !== "POST") {
+    res.status(405).json({ error: "Method not allowed" });
     return;
   }
 

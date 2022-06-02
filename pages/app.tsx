@@ -8,6 +8,7 @@ import User from "../models/User";
 import dbConnect from "../lib/mongoDB";
 import RoomInstance from "../models/RoomInstance";
 import Group from "../models/Group";
+import { IUser } from "../interfaces/models";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req }) {
@@ -23,7 +24,7 @@ export const getServerSideProps = withSessionSsr(
       };
     }
 
-    const userExist = await User.findById(user._id).lean().exec();
+    const userExist: IUser = await User.findById(user._id).lean().exec();
     if (!userExist) {
       return {
         redirect: {
@@ -33,25 +34,10 @@ export const getServerSideProps = withSessionSsr(
       };
     }
 
-    const roomInstance = await RoomInstance.find({
-      members: user._id,
-    })
-      .lean()
-      .populate({ path: "members", select: "-password -email" })
-      .exec();
-
-    const group = await Group.find({ members: user._id }).lean().exec();
-
-    const navBar = {
-      user: userExist,
-      roomInstances: roomInstance,
-      groups: group,
-    };
-
     return {
       props: {
         user: req.session.user,
-        navBar: JSON.parse(JSON.stringify(navBar)),
+        userExist: JSON.stringify(userExist),
       },
     };
   }
@@ -59,7 +45,7 @@ export const getServerSideProps = withSessionSsr(
 
 export default function App(props: AppPage) {
   const { _id } = props.user!;
-  const { navBar = props.navBar, mutateNavBar } = useNavBar(_id);
+  const { user = props.userExist, mutateUser } = useNavBar(_id);
 
   return (
     <>
@@ -68,7 +54,7 @@ export default function App(props: AppPage) {
         <meta name="description" content="SKCA Chat Web App" />
       </Head>
       <div className="flex min-w-screen min-h-screen md:w-screen md:h-screen text-gray-700">
-        <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
+        <NavBar _id={_id} user={user} mutateUser={mutateUser} />
         <AppHome />
       </div>
     </>

@@ -12,9 +12,5 @@ export type GroupChatRoomPage = IronSessionData & {
 };
 
 export type AppPage = IronSessionData & {
-  navBar: {
-    user: IUser;
-    groups: IGroup[];
-    roomInstances: IRoomInstance[];
-  };
+  userExist: IUser;
 };

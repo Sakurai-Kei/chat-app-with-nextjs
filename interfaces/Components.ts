@@ -33,16 +33,8 @@ export interface ErrorAlertProps {
 
 export interface NavBarProps {
   _id: string;
-  navBar: {
-    user?: IUser;
-    roomInstances?: IRoomInstance[];
-    groups?: IGroup[];
-  };
-  mutateNavBar: {
-    mutateUser: KeyedMutator<IUser>;
-    mutateRoomInstances: KeyedMutator<IRoomInstance[]>;
-    mutateGroups: KeyedMutator<IGroup[]>;
-  };
+  user: IUser;
+  mutateUser: KeyedMutator<IUser>;
 }
 
 export interface ChatInstanceProps {

@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import formidable from "formidable";
+import formidable, { File } from "formidable";
 import { NextApiRequest, NextApiResponse } from "next";
 import { IUser } from "../../../../interfaces/models";
 import dbConnect from "../../../../lib/mongoDB";
@@ -12,6 +12,12 @@ import RoomInstance from "../../../../models/RoomInstance";
 import Message from "../../../../models/Message";
 import { HydratedDocument } from "mongoose";
 import uploadS3 from "../../../../lib/s3Upload";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default withSessionRoute(userController);
 
@@ -81,14 +87,13 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (method === "PATCH") {
-    if (req.body.username !== req.session.user?.username) {
-      res
-        .status(409)
-        .json({ error: "Body username does not match cookie username" });
-      return;
-    }
-
     if (task === "update-user-bio") {
+      if (req.body.username !== req.session.user?.username) {
+        res
+          .status(409)
+          .json({ error: "Body username does not match cookie username" });
+        return;
+      }
       const { username, about } = req.body;
       const updatingUser = await User.findOneAndUpdate({ username }, { about })
         .lean()
@@ -103,24 +108,31 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (task === "update-user-image") {
+      if (!req.session.user) {
+        res
+          .status(400)
+          .json({ error: "Bad request. Please log in to continue" });
+        return;
+      }
+      const { _id, username } = req.session.user;
+
       // CODE TO UPDATE PICTURE, AWS S3
       const form = new formidable.IncomingForm();
-      //@ts-expect-error
-      const { _id, username } = req.session.user;
-      form.parse(req, async function (err, fields, files) {
+      // Typescript error can go out the door
+      form.parse(req, async function (err, fields, files: any) {
         const { file } = files;
-        //@ts-expect-error
         const filePath = file.filepath;
-        //@ts-expect-error
         const Key =
           path.basename(filePath) + "." + /[^/]*$/g.exec(file.mimetype);
         const fileStream = fs.createReadStream(filePath);
-        //@ts-expect-error
         const result = await uploadS3(Key, file.mimetype, fileStream);
         if (result?.$metadata.httpStatusCode === 200) {
           // SAVE KEY TO MONGODB
           const objectURL = `https://${process.env.AWS_SDK_BUCKET_NAME}.s3.${process.env.AWS_SDK_REGION}.amazonaws.com/${Key}`;
-          await User.findOneAndUpdate({ username }, { imgsrc: objectURL })
+          const updatingUser = await User.findOneAndUpdate(
+            { username },
+            { imgsrc: objectURL }
+          )
             .lean()
             .exec();
           res.status(200).end();
@@ -130,6 +142,7 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
           .status(result?.$metadata.httpStatusCode || 500)
           .json({ error: "Something happen and request failed" });
       });
+      res.status(500).json({ error: "Something went wrong. Please try again" });
       return;
     }
   }
@@ -147,15 +160,14 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
       return;
     }
 
-    const deletingUser = await User.findOneAndDelete({ username })
-      .lean()
-      .exec();
+    const deletedUser = await User.findOneAndDelete({ username }).lean().exec();
+
     const deleteFromGroups = await Group.updateMany(
-      { members: deletingUser._id },
+      { members: deletedUser._id },
       {
         $pull: {
-          members: deletingUser._id,
-          messages: { user: deletingUser._id },
+          members: deletedUser._id,
+          messages: { user: deletedUser._id },
         },
       }
     )
@@ -163,14 +175,13 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
       .populate({ path: "messages", select: "user" })
       .exec();
     const deletePrivateInstances = await RoomInstance.deleteMany({
-      members: deletingUser._id,
+      members: deletedUser._id,
     })
       .lean()
       .exec();
-    const deleteMessages = await Message.deleteMany({ user: deletingUser._id })
+    const deleteMessages = await Message.deleteMany({ user: deletedUser._id })
       .lean()
       .exec();
-
     req.session.destroy();
     res.status(200).redirect("/");
     return;

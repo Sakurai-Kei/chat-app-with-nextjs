@@ -58,7 +58,7 @@ export default function Register() {
     }
 
     const JSONdata = JSON.stringify(formData);
-    const endpoint = "/api/register";
+    const endpoint = "/api/users";
     const options = {
       method: "POST",
       headers: {
