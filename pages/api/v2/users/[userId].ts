@@ -71,6 +71,11 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
       return;
     }
 
+    if (!req.body || !req.body.username) {
+      res.status(400).json({ error: "Body content is empty " });
+      return;
+    }
+
     const { username } = req.body;
 
     if (username !== req.session.user?.username) {

@@ -7,7 +7,7 @@ import ProcessingForm from "./ProcessingForm";
 import { KeyedMutator } from "swr";
 import DeleteModal from "./DeleteModal";
 import UploadImage from "./UploadImage";
-import S3Image from "./S3Image";
+import Image from "next/image";
 
 export default function Profile(props: {
   user: IUser | undefined;
@@ -21,7 +21,6 @@ export default function Profile(props: {
   const [userForm, setUserForm] = useState({
     username: user?.username,
     about: user?.about,
-    imgsrc: user?.imgsrc,
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState({
@@ -75,14 +74,14 @@ export default function Profile(props: {
   }
 
   function stagedImageChange(event: FormEvent<HTMLInputElement>) {
-    event.preventDefault();
-    //@ts-expect-error
-    if (!inputImageRef.current || !inputImageRef.current.files[0]) {
+    const files = event.currentTarget.files;
+    console.log(files);
+
+    if (files && files.length > 0) {
+      setStagedImage(files[0]);
       return;
     }
-    //@ts-expect-error
-    const value = inputImageRef.current.files[0];
-    setStagedImage(value);
+    return;
   }
 
   async function userFormSubmit(event: FormEvent) {
@@ -98,7 +97,7 @@ export default function Profile(props: {
     }
 
     const JSONdata = JSON.stringify(userForm);
-    const endpoint = "/api/user/update";
+    const endpoint = "/api/v2/users/" + user!._id.toString();
     const options = {
       method: "PATCH",
       headers: {
@@ -154,12 +153,13 @@ export default function Profile(props: {
 
   async function stagedImageUpload(event: FormEvent) {
     event.preventDefault();
+    console.log(stagedImage);
     if (!stagedImage) {
       return;
     }
     const body = new FormData();
-    body.append("file", stagedImage);
-    const endpoint = "/api/user/updateImage?username=" + user?.username;
+    body.append("picture", stagedImage);
+    const endpoint = "/api/v2/users/uploadImage";
     const options = {
       method: "POST",
       body,
@@ -169,6 +169,7 @@ export default function Profile(props: {
       setStagedImage(undefined);
       showUploadImageModal();
       mutateUser();
+      console.log("f");
       return;
     }
     const result = await response.json();
@@ -180,7 +181,6 @@ export default function Profile(props: {
       setUserForm({
         username: user.username,
         about: user.about,
-        imgsrc: user.imgsrc,
       });
       setErrors({
         error: "",
@@ -233,23 +233,32 @@ export default function Profile(props: {
           </div>
         )}
         {!editProfile && (
-          <div className="w-96 h-fit flex flex-col justify-center items-center m-16 overflow-hidden border border-gray-900 shadow-md rounded-lg">
-            <div className="p-4 flex w-full justify-around">
+          <div className="w-96 h-fit flex flex-col justify-center items-center my-16 mx-4 overflow-hidden border border-gray-900 shadow-md rounded-lg">
+            <div className="p-4 flex w-full justify-around gap-2">
               <div>
                 <h5 className="text-xl font-bold text-gray-900">
                   {user?.username}
                 </h5>
               </div>
 
-              <div className="flex-shrink-0 flex ml-3">
-                <div className="w-16 h-16 rounded-lg shadow-sm">
+              <div className="flex-shrink-0 flex">
+                <div className="w-24 h-24 rounded-lg shadow-sm">
                   {user && user.imgsrc && (
-                    <div className="w-20 h-20 rounded-lg shadow-sm">
-                      <S3Image KEY={user.imgsrc} alt={user.username} />
+                    <div className="w-24 h-24 rounded-lg shadow-sm">
+                      <Image
+                        src={user.imgsrc}
+                        alt={user.username}
+                        placeholder="blur"
+                        blurDataURL={user.imgsrc}
+                        width={96}
+                        height={96}
+                        layout="intrinsic"
+                        className="rounded-lg shadow-sm"
+                      />
                     </div>
                   )}
                   {(!user || !user.imgsrc) && (
-                    <div className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600" />
+                    <div className="animate-pulse w-24 h-24 rounded-lg shadow-sm bg-slate-600" />
                   )}
                 </div>
               </div>
@@ -277,91 +286,101 @@ export default function Profile(props: {
           </div>
         )}
         {editProfile && (
-          <form
-            onSubmit={userFormSubmit}
-            className="w-96 h-fit flex flex-col justify-center items-center m-16 border border-gray-900 shadow-md rounded-lg"
-          >
-            <div className="p-4 flex w-full justify-around">
-              <div>
-                <h5 className="w-full text-xl font-bold text-gray-900">
-                  {user?.username}
-                </h5>
-              </div>
+          <>
+            <form
+              onSubmit={userFormSubmit}
+              className="w-96 h-fit flex flex-col justify-center items-center m-16 border border-gray-900 shadow-md rounded-lg"
+            >
+              <div className="p-4 flex w-full justify-around">
+                <div>
+                  <h5 className="w-full text-xl font-bold text-gray-900">
+                    {user?.username}
+                  </h5>
+                </div>
 
-              <div className="flex-shrink-0 flex flex-col items-end ml-3 gap-2">
-                {user && user.imgsrc && (
-                  <div
-                    onClick={() => {
-                      showUploadImageModal();
-                      setTimeout(() => {
-                        uploadImageRef.current!.className =
-                          "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
-                      });
-                    }}
-                    className="w-20 h-20 rounded-lg shadow-md hover:opacity-50"
-                  >
-                    <S3Image KEY={user.imgsrc} alt={user.username} />
-                  </div>
-                )}
-                {(!user || !user.imgsrc) && (
-                  <div
-                    onClick={() => {
-                      showUploadImageModal();
-                      setTimeout(() => {
-                        uploadImageRef.current!.className =
-                          "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
-                      });
-                    }}
-                    className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600"
-                  />
-                )}
-                {uploadImageModal && (
-                  <div
-                    ref={uploadImageRef}
-                    className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
-                  >
-                    <UploadImage
-                      stagedImage={stagedImage}
-                      stagedImageChange={stagedImageChange}
-                      stagedImageUpload={stagedImageUpload}
-                      inputImageRef={inputImageRef}
+                <div className="flex-shrink-0 flex flex-col items-end ml-3 gap-2">
+                  {user && user.imgsrc && (
+                    <div
+                      onClick={() => {
+                        showUploadImageModal();
+                        setTimeout(() => {
+                          uploadImageRef.current!.className =
+                            "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+                        });
+                      }}
+                      className="w-24 h-24 rounded-lg shadow-md hover:opacity-50"
+                    >
+                      <Image
+                        src={user.imgsrc}
+                        alt={user.username}
+                        placeholder="blur"
+                        blurDataURL={user.imgsrc}
+                        width={96}
+                        height={96}
+                        layout="intrinsic"
+                      />
+                    </div>
+                  )}
+                  {(!user || !user.imgsrc) && (
+                    <div
+                      onClick={() => {
+                        showUploadImageModal();
+                        setTimeout(() => {
+                          uploadImageRef.current!.className =
+                            "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+                        });
+                      }}
+                      className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600"
                     />
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="p-4">
-              <textarea
-                onChange={userFormChange}
-                name="about"
-                value={userForm.about}
-                placeholder="Write something about yourself"
-                className="rounded-md h-20 shadow-md resize-none pl-1"
-              />
-              {isProcessing && <ProcessingForm />}
-              {errors && errors.error && <ErrorAlert errors={errors} />}
-            </div>
+              <div className="p-4">
+                <textarea
+                  onChange={userFormChange}
+                  name="about"
+                  value={userForm.about}
+                  placeholder="Write something about yourself"
+                  className="rounded-md h-20 shadow-md resize-none pl-1"
+                />
+                {isProcessing && <ProcessingForm />}
+                {errors && errors.error && <ErrorAlert errors={errors} />}
+              </div>
 
-            <div className="flex px-4 pb-4 gap-2">
-              <button
-                type="button"
-                onClick={editModal}
-                className="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+              <div className="flex px-4 pb-4 gap-2">
+                <button
+                  type="button"
+                  onClick={editModal}
+                  className="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+            {uploadImageModal && (
+              <div
+                ref={uploadImageRef}
+                className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
-              >
-                Save
-              </button>
-            </div>
-          </form>
+                <UploadImage
+                  stagedImage={stagedImage}
+                  stagedImageChange={stagedImageChange}
+                  stagedImageUpload={stagedImageUpload}
+                  inputImageRef={inputImageRef}
+                />
+              </div>
+            )}
+          </>
         )}
 
-        {groups && groups.length !== 0 && (
+        {user && user.groups && user.groups.length !== 0 && (
           <div className="h-fit relative flex flex-col p-8 m-16 overflow-hidden border border-gray-900 shadow-md rounded-lg">
             <p className="text-center text-3xl font-bold text-gray-800">
               {user?.username}
@@ -370,7 +389,7 @@ export default function Profile(props: {
               is part of
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {groups.map((group) => {
+              {user.groups.map((group) => {
                 return (
                   <div key={group._id.toString()}>
                     <div className="p-4">
@@ -383,10 +402,18 @@ export default function Profile(props: {
                                   "/app/group/" + group._id.toString()
                                 );
                               }}
-                              className="w-20 h-20 rounded-lg shadow-md hover:opacity-50"
+                              className="w-24 h-24 rounded-lg shadow-md hover:opacity-50"
                             >
                               {group.imgsrc && (
-                                <S3Image KEY={group.imgsrc} alt={group.name} />
+                                <Image
+                                  src={group.imgsrc}
+                                  alt={group.name}
+                                  placeholder="blur"
+                                  blurDataURL={group.imgsrc}
+                                  width={96}
+                                  height={96}
+                                  layout="intrinsic"
+                                />
                               )}
                               {!group.imgsrc && (
                                 <div className="w-20 h-20 bg-slate-600 rounded-lg shadow-md"></div>

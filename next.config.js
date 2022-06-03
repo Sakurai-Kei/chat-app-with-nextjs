@@ -15,9 +15,6 @@ const nextConfig = withPWA({
   images: {
     domains: ['i.imgur.com', 'chat-app-with-nextjs.s3.ap-southeast-1.amazonaws.com'],
   },
-  experimental: {
-    runtime: 'edge'
-  }
 })
 
   

@@ -5,6 +5,7 @@ import formidable, { File } from "formidable";
 import Group from "../../../../models/Group";
 import uploadS3 from "../../../../lib/s3Upload";
 import { withSessionRoute } from "../../../../lib/withSession";
+import dbConnect from "../../../../lib/mongoDB";
 
 export const config = {
   api: {
@@ -19,6 +20,7 @@ async function uploadGroupPicture(req: NextApiRequest, res: NextApiResponse) {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
+  await dbConnect();
   if (!req.session.user) {
     res.status(400).json({ error: "Bad request. Please log in to continue" });
     return;

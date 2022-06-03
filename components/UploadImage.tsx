@@ -21,7 +21,7 @@ export default function UploadImage(props: UploadImageProps) {
     <section className="w-full h-full flex justify-center items-center bg-slate-500 bg-opacity-50 z-10">
       <form className="w-fit h-fit p-4 flex flex-col gap-4 justify-center items-center rounded-lg shadow-md bg-white">
         <div className="w-full h-full flex justify-center rounded-lg hover:bg-slate-400">
-          <label htmlFor="image_uploads">
+          <label htmlFor="picture">
             {!imagePreview && (
               <svg
                 width="64"
@@ -51,11 +51,11 @@ export default function UploadImage(props: UploadImageProps) {
           </label>
           <input
             hidden
-            id="image_uploads"
             ref={inputImageRef}
             onChange={stagedImageChange}
             type="file"
-            name="image_uploads"
+            id="picture"
+            name="picture"
             accept=".jpg, .jpeg, .png"
             multiple={false}
           />
