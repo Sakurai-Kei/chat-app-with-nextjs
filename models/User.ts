@@ -1,5 +1,7 @@
 import { Schema, model, models } from "mongoose";
 import { IUser } from "../interfaces/models";
+import dbConnect from "../lib/mongoDB";
+import Message from "./Message";
 
 const options = {
   toJSON: {

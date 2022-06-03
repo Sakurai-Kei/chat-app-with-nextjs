@@ -48,7 +48,7 @@ export default function LogIn() {
     }
 
     const JSONdata = JSON.stringify(formData);
-    const endpoint = "/api/log-in";
+    const endpoint = "/api/v2/auth";
     const options = {
       method: "POST",
       headers: {
@@ -60,7 +60,7 @@ export default function LogIn() {
     const response = await fetch(endpoint, options);
     setIsProcessing(false);
     if (response.status === 200) {
-      router.push("/");
+      router.push("/app");
     } else {
       const result = await response.json();
       setErrors({

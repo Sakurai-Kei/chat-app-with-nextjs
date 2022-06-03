@@ -6,8 +6,6 @@ import AppHome from "../components/AppHome";
 import type { AppPage } from "../interfaces/pages";
 import User from "../models/User";
 import dbConnect from "../lib/mongoDB";
-import RoomInstance from "../models/RoomInstance";
-import Group from "../models/Group";
 import { IUser } from "../interfaces/models";
 
 export const getServerSideProps = withSessionSsr(

@@ -40,9 +40,4 @@ const messageSchema = new Schema<IMessage>(
   options
 );
 
-// messageSchema.pre('deleteMany', function(next) {
-//   //@ts-expect-error
-//   this.model('Group').updateOne({ messages: this._id }, { $pull: { messages: this._id } }, next)
-// })
-
 export default models.Message || model("Message", messageSchema);

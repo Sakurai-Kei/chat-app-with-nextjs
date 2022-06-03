@@ -2,8 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { IMessage, IUser } from "../../../../interfaces/models";
 import dbConnect from "../../../../lib/mongoDB";
 import { withSessionRoute } from "../../../../lib/withSession";
-import User from "../../../../models/User";
-import bcrypt from "bcryptjs";
 import Group from "../../../../models/Group";
 import RoomInstance from "../../../../models/RoomInstance";
 import Message from "../../../../models/Message";
@@ -14,6 +12,8 @@ export default withSessionRoute(messageController);
 async function messageController(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
   const { messageId } = req.query;
+
+  await dbConnect();
 
   if (method === "GET") {
     const message = await Message.findById(messageId)

@@ -2,26 +2,32 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { withSessionRoute } from "../../../lib/withSession";
 import Group from "../../../models/Group";
 import { HydratedDocument, Types } from "mongoose";
-import { IGroup } from "../../../interfaces/models";
+import { IGroup, IUser } from "../../../interfaces/models";
+import dbConnect from "../../../lib/mongoDB";
+import User from "../../../models/User";
 
 export default withSessionRoute(groupsController);
 
 async function groupsController(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
+
+  await dbConnect();
+
+  if (!req.session.user) {
+    res.status(403).json({ error: "Forbidden. Please log in first" });
+    return;
+  }
   const { user } = req.session;
 
   if (method === "GET") {
-    if (!user) {
-      res.status(403).json({ error: "Forbidden. Please log in first" });
-      return;
-    }
     // Code to get lists of group?
+    res.status(501).json({ error: "NOT IMPLEMENTED" });
     return;
   }
 
   if (method === "POST") {
-    if (!user) {
-      res.status(403).json({ error: "Forbidden. Please log in first" });
+    if (!req.body || !req.body.name || !req.body.about) {
+      res.status(400).json({ error: "Body content cannot be empty" });
       return;
     }
     const { name, about } = req.body;
@@ -32,7 +38,14 @@ async function groupsController(req: NextApiRequest, res: NextApiResponse) {
       messages: [],
       imgsrc: "",
     });
+
     await newGroup.save();
+
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      { $push: { groups: newGroup } }
+    ).exec();
+
     res.status(200).end();
     return;
   }

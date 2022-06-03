@@ -22,7 +22,7 @@ export interface IUser {
 }
 
 export interface IGroup {
-  _id: Types.ObjectId | string;
+  _id: Types.ObjectId;
   name: string;
   about: string;
   members: Types.DocumentArray<IUser> | IUser[];

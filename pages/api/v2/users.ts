@@ -12,11 +12,6 @@ async function usersController(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
   const { user } = req.session;
 
-  if (!user) {
-    res.status(403).json({ error: "Forbidden. Please log in first" });
-    return;
-  }
-
   await dbConnect();
 
   if (method === "GET") {
@@ -54,7 +49,14 @@ async function usersController(req: NextApiRequest, res: NextApiResponse) {
       imgsrc: "",
     });
     await user.save();
-    res.status(200).end();
+
+    const userCookie = {
+      _id: user._id.toString(),
+      username: user.username,
+    };
+    req.session.user = userCookie;
+    await req.session.save();
+    res.status(200).redirect("/");
     return;
   }
 

@@ -125,7 +125,7 @@ export default function Profile(props: {
     event.preventDefault();
 
     const JSONdata = JSON.stringify(userForm);
-    const endpoint = "/api/user/delete";
+    const endpoint = "/api/v2/users/" + user!._id.toString();
     const options = {
       method: "DELETE",
       headers: {
