@@ -1,6 +1,6 @@
 import { useState, useRef, FormEvent } from "react";
 import { GroupSettingsModalProps } from "../interfaces/Components";
-import S3Image from "./S3Image";
+import Image from "next/image";
 import UploadImage from "./UploadImage";
 
 export default function GroupSettingModal(props: GroupSettingsModalProps) {
@@ -27,25 +27,24 @@ export default function GroupSettingModal(props: GroupSettingsModalProps) {
   }
 
   function stagedImageChange(event: FormEvent<HTMLInputElement>) {
-    event.preventDefault();
-    //@ts-expect-error
-    if (!inputImageRef.current || !inputImageRef.current.files[0]) {
+    const files = event.currentTarget.files;
+
+    if (files && files.length > 0) {
+      setStagedImage(files[0]);
       return;
     }
-    //@ts-expect-error
-    const value = inputImageRef.current.files[0];
-    setStagedImage(value);
+    return;
   }
-
+  // THIS IS TO EDIT GROUP IMAGE
   async function stagedImageUpload(event: FormEvent) {
     event.preventDefault();
     if (!stagedImage) {
       return;
     }
     const body = new FormData();
-    body.append("file", stagedImage);
+    body.append("picture", stagedImage);
     const endpoint =
-      "/api/groups/instance/updateImage?groupId=" + groupForm._id;
+      "/api/v2/groups/uploadImage?groupId=" + group._id!.toString();
     const options = {
       method: "POST",
       body,
@@ -81,28 +80,24 @@ export default function GroupSettingModal(props: GroupSettingsModalProps) {
                 }}
                 className="block relative"
               >
-                <div className="w-20 h-20 rounded-lg">
+                <div className="w-24 h-24 rounded-lg">
                   {group && group.imgsrc && (
-                    <S3Image KEY={group.imgsrc} alt={group.name!} />
+                    <Image
+                      quality={100}
+                      priority={true}
+                      src={group.imgsrc}
+                      width={96}
+                      height={96}
+                      layout="intrinsic"
+                      className="rounded-lg shadow-md"
+                      alt={group.imgsrc}
+                    />
                   )}
                   {(!group || !group.imgsrc) && (
                     <div className="animate-pulse w-20 h-20 rounded-lg bg-slate-500"></div>
                   )}
                 </div>
               </button>
-              {uploadImageModal && (
-                <div
-                  ref={uploadImageRef}
-                  className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
-                >
-                  <UploadImage
-                    stagedImage={stagedImage}
-                    stagedImageChange={stagedImageChange}
-                    stagedImageUpload={stagedImageUpload}
-                    inputImageRef={inputImageRef}
-                  />
-                </div>
-              )}
               <h1 className="text-white">{group.name}</h1>
             </div>
           </div>
@@ -156,6 +151,19 @@ export default function GroupSettingModal(props: GroupSettingsModalProps) {
           </div>
         </div>
       </form>
+      {uploadImageModal && (
+        <div
+          ref={uploadImageRef}
+          className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+        >
+          <UploadImage
+            stagedImage={stagedImage}
+            stagedImageChange={stagedImageChange}
+            stagedImageUpload={stagedImageUpload}
+            inputImageRef={inputImageRef}
+          />
+        </div>
+      )}
     </section>
   );
 }

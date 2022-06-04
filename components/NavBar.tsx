@@ -203,6 +203,8 @@ function NavBar(props: NavBarProps) {
                         (otherUser) => otherUser.username !== user.username
                       )[0].imgsrc && (
                         <Image
+                          quality={100}
+                          priority={true}
                           src={
                             instance.members.filter(
                               (otherUser) =>
@@ -256,6 +258,8 @@ function NavBar(props: NavBarProps) {
                         className="w-10 h-10 rounded-lg hover:opacity-50"
                       >
                         <Image
+                          quality={100}
+                          priority={true}
                           src={group.imgsrc}
                           placeholder="blur"
                           blurDataURL={group.imgsrc}
@@ -329,6 +333,8 @@ function NavBar(props: NavBarProps) {
                 className="hover:opacity-50"
               >
                 <Image
+                  quality={100}
+                  priority={true}
                   src={user.imgsrc}
                   placeholder="blur"
                   blurDataURL={user.imgsrc}

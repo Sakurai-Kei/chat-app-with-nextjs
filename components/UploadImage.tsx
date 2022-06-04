@@ -45,6 +45,7 @@ export default function UploadImage(props: UploadImageProps) {
                   width={64}
                   height={64}
                   layout="responsive"
+                  className="rounded-lg shadow-md"
                 />
               </div>
             )}

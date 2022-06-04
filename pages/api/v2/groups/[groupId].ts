@@ -13,7 +13,11 @@ async function groupDetailController(
 ) {
   const { method } = req;
   const { groupId } = req.query;
-  const { user } = req.session;
+
+  if (!req.session.user) {
+    res.status(403).json({ error: "Forbidden. Please log in" });
+    return;
+  }
 
   await dbConnect();
 

@@ -4,6 +4,7 @@ import { IUser } from "../interfaces/models";
 import { useRouter } from "next/router";
 import S3Image from "./S3Image";
 import isEqual from "lodash/isEqual";
+import Image from "next/image";
 
 export default memo(MemberList, (prevProp, nextProp) => {
   if (isEqual(prevProp.group.members, nextProp.group.members)) {
@@ -224,7 +225,17 @@ function MemberList(props: MemberListProps) {
                     <div className="h-24 w-24 rounded flex-shrink-0">
                       {member.imgsrc && (
                         <div>
-                          <S3Image KEY={member.imgsrc} alt={member.username!} />
+                          <Image
+                            quality={100}
+                            priority={true}
+                            src={member.imgsrc}
+                            alt={member.username}
+                            placeholder="blur"
+                            blurDataURL={member.imgsrc}
+                            width={96}
+                            height={96}
+                            className="rounded-lg shadow-sm"
+                          />
                         </div>
                       )}
                       {!member.imgsrc && (

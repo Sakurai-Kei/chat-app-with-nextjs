@@ -1,13 +1,14 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import format from "date-fns/format";
-import { IMessage } from "../interfaces/models";
+import { IGroup, IMessage, IUser } from "../interfaces/models";
 import { ChatGroupProps } from "../interfaces/Components";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import GroupSettingModal from "./GroupSettingsModal";
 import UploadImage from "./UploadImage";
 import S3Image from "./S3Image";
+import { useRouter } from "next/router";
 
 const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
   ssr: false,
@@ -16,6 +17,7 @@ const DynamicComponentVideoPlayer = dynamic(() => import("./VideoPlayer"));
 
 export default function ChatGroup(props: ChatGroupProps) {
   const { group, mutateGroup, userId } = props;
+  const router = useRouter();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const groupSettingsRef = useRef<HTMLDivElement>(null);
   const uploadImageRef = useRef<HTMLDivElement>(null);
@@ -24,7 +26,7 @@ export default function ChatGroup(props: ChatGroupProps) {
     content: "",
   });
   const [stagedImage, setStagedImage] = useState<File>();
-  const [groupForm, setGroupForm] = useState({
+  const [groupForm, setGroupForm] = useState<Partial<IGroup>>({
     _id: "",
     name: "",
     about: "",
@@ -85,14 +87,13 @@ export default function ChatGroup(props: ChatGroupProps) {
   }
 
   function stagedImageChange(event: FormEvent<HTMLInputElement>) {
-    event.preventDefault();
-    //@ts-expect-error
-    if (!inputImageRef.current || !inputImageRef.current.files[0]) {
+    const files = event.currentTarget.files;
+
+    if (files && files.length > 0) {
+      setStagedImage(files[0]);
       return;
     }
-    //@ts-expect-error
-    const value = inputImageRef.current.files[0];
-    setStagedImage(value);
+    return;
   }
 
   async function chatFormSubmit(event: FormEvent) {
@@ -114,7 +115,7 @@ export default function ChatGroup(props: ChatGroupProps) {
     }
 
     const JSONdata = JSON.stringify(data);
-    const endpoint = "/api/groups/instance/createMessage";
+    const endpoint = `/api/v2/messages?refId=${group._id.toString()}&instance=Group`;
     const options = {
       method: "POST",
       headers: {
@@ -138,11 +139,11 @@ export default function ChatGroup(props: ChatGroupProps) {
 
   async function groupFormSubmit(event: FormEvent) {
     event.preventDefault();
-    if (groupForm.name.trim().length === 0) {
+    if (!groupForm.name || groupForm.name.trim().length === 0) {
       return;
     }
     const JSONdata = JSON.stringify(groupForm);
-    const endpoint = "/api/groups/update";
+    const endpoint = "/api/v2/groups/" + group._id.toString();
     const options = {
       method: "PATCH",
       headers: {
@@ -160,16 +161,15 @@ export default function ChatGroup(props: ChatGroupProps) {
       console.error(`Status Code: ${response.status}(${result.error})`);
     }
   }
-
+  // THIS IS FOR CHAT
   async function stagedImageUpload(event: FormEvent) {
     event.preventDefault();
     if (!stagedImage) {
       return;
     }
     const body = new FormData();
-    body.append("file", stagedImage);
-    const endpoint =
-      "/api/groups/instance/uploadImage?groupId=" + groupForm._id;
+    body.append("picture", stagedImage);
+    const endpoint = `/api/v2/messages/uploadImage?groupId=${group._id.toString()}`;
     const options = {
       method: "POST",
       body,
@@ -285,20 +285,28 @@ export default function ChatGroup(props: ChatGroupProps) {
               <div className="bg-slate-300" key={message._id.toString()}>
                 <div className="flex px-4 py-3">
                   <div className="h-24 w-24 md:h-24 md:w-24 rounded-lg flex-shrink-0">
-                    {message.user.imgsrc && (
-                      <S3Image
-                        KEY={message.user.imgsrc}
-                        alt={message.user.username}
+                    {(message.user as IUser).imgsrc && (
+                      <Image
+                        quality={100}
+                        priority={true}
+                        src={(message.user as IUser).imgsrc}
+                        alt={(message.user as IUser).username}
+                        placeholder="blur"
+                        blurDataURL={(message.user as IUser).imgsrc}
+                        width={96}
+                        height={96}
+                        layout="intrinsic"
+                        className="rounded-lg shadow-sm"
                       />
                     )}
-                    {!message.user.imgsrc && (
+                    {!(message.user as IUser).imgsrc && (
                       <div className="animate-pulse w-10 h-10 md:w-20 md:h-20 flex-shrink-0 bg-slate-500 rounded-lg"></div>
                     )}
                   </div>
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">
-                        {message.user.username}
+                        {(message.user as IUser).username}
                       </span>
                       <span className="ml-1 text-xs text-gray-500">
                         {format(new Date(message.timestamp), "KK.mm a, PPP")}
@@ -328,15 +336,21 @@ export default function ChatGroup(props: ChatGroupProps) {
                           height={480}
                           layout="intrinsic"
                           className="rounded-lg shadow-md"
-                          alt={"shared by " + message.user.username}
+                          alt={"shared by " + (message.user as IUser).username}
                         />
                       )}
                     {message.isImage &&
                       !message.content.match(".mp4") &&
                       !message.content.match("https://") && (
-                        <S3Image
-                          KEY={message.content}
-                          alt={message.user.username}
+                        <Image
+                          quality={100}
+                          priority={true}
+                          src={message.content}
+                          width={480}
+                          height={480}
+                          layout="intrinsic"
+                          className="rounded-lg shadow-md"
+                          alt={"shared by " + (message.user as IUser).username}
                         />
                       )}
                   </div>

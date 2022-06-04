@@ -75,7 +75,6 @@ export default function Profile(props: {
 
   function stagedImageChange(event: FormEvent<HTMLInputElement>) {
     const files = event.currentTarget.files;
-    console.log(files);
 
     if (files && files.length > 0) {
       setStagedImage(files[0]);
@@ -153,7 +152,6 @@ export default function Profile(props: {
 
   async function stagedImageUpload(event: FormEvent) {
     event.preventDefault();
-    console.log(stagedImage);
     if (!stagedImage) {
       return;
     }
@@ -169,7 +167,6 @@ export default function Profile(props: {
       setStagedImage(undefined);
       showUploadImageModal();
       mutateUser();
-      console.log("f");
       return;
     }
     const result = await response.json();
@@ -246,6 +243,8 @@ export default function Profile(props: {
                   {user && user.imgsrc && (
                     <div className="w-24 h-24 rounded-lg shadow-sm">
                       <Image
+                        quality={100}
+                        priority={true}
                         src={user.imgsrc}
                         alt={user.username}
                         placeholder="blur"
@@ -311,6 +310,8 @@ export default function Profile(props: {
                       className="w-24 h-24 rounded-lg shadow-md hover:opacity-50"
                     >
                       <Image
+                        quality={100}
+                        priority={true}
                         src={user.imgsrc}
                         alt={user.username}
                         placeholder="blur"
@@ -381,7 +382,7 @@ export default function Profile(props: {
         )}
 
         {user && user.groups && user.groups.length !== 0 && (
-          <div className="h-fit relative flex flex-col p-8 m-16 overflow-hidden border border-gray-900 shadow-md rounded-lg">
+          <div className="h-fit relative flex flex-col items-center justify-center p-8 m-16 overflow-hidden border border-gray-900 shadow-md rounded-lg">
             <p className="text-center text-3xl font-bold text-gray-800">
               {user?.username}
             </p>
@@ -406,6 +407,8 @@ export default function Profile(props: {
                             >
                               {group.imgsrc && (
                                 <Image
+                                  quality={100}
+                                  priority={true}
                                   src={group.imgsrc}
                                   alt={group.name}
                                   placeholder="blur"
@@ -413,6 +416,7 @@ export default function Profile(props: {
                                   width={96}
                                   height={96}
                                   layout="intrinsic"
+                                  className="rounded-lg shadow-md"
                                 />
                               )}
                               {!group.imgsrc && (

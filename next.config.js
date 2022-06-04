@@ -1,4 +1,4 @@
-// /** @type {import('next').NextConfig} */
+//  /** @type {import('next').NextConfig} */
 
 const withPWA = require('next-pwa')
 
@@ -14,6 +14,7 @@ const nextConfig = withPWA({
   swcMinify: true,
   images: {
     domains: ['i.imgur.com', 'chat-app-with-nextjs.s3.ap-southeast-1.amazonaws.com'],
+    formats: ['image/webp'],
   },
 })
 

@@ -4,7 +4,7 @@ import fetchJson from "./fetchJson";
 
 export function useChatGroup(_id: string) {
   const { data: group, mutate: mutateGroup } = useSWR<IGroup>(
-    "/api/groups/instance/" + _id,
+    "/api/v2/groups/" + _id,
     fetchJson,
     { refreshInterval: 1000 }
   );
@@ -14,7 +14,7 @@ export function useChatGroup(_id: string) {
 
 export function useChatInstance(_id: string) {
   const { data: instance, mutate: mutateInstance } = useSWR<IRoomInstance>(
-    "/api/room-instances/instance/" + _id,
+    "/api/v2/room-instances/" + _id,
     fetchJson,
     { refreshInterval: 1000 }
   );

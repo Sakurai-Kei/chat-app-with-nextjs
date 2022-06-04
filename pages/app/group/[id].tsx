@@ -50,9 +50,9 @@ export const getServerSideProps = withSessionSsr(
 );
 
 export default function GroupChatRoom(props: GroupChatRoomPage) {
-  const { user, groupId } = props;
-  const { _id } = user!;
-  const { navBar, mutateNavBar } = useNavBar(_id);
+  const { groupId } = props;
+  const { _id } = props.user!;
+  const { user, mutateUser } = useNavBar(_id);
   const { group = props.group, mutateGroup } = useChatGroup(groupId);
 
   return (
@@ -61,7 +61,7 @@ export default function GroupChatRoom(props: GroupChatRoomPage) {
         {group && group.name && <title>Group Instance: {group.name}</title>}
       </Head>
       <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
-        <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
+        <NavBar _id={_id} user={user!} mutateUser={mutateUser} />
         <ChatGroup userId={_id} group={group} mutateGroup={mutateGroup} />
         <MemberList group={group} mutateGroup={mutateGroup} />
       </div>

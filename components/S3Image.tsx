@@ -33,6 +33,8 @@ function S3Image(props: { KEY: string; alt: string }) {
       )}
       {url && memoizedUrl && (
         <Image
+          quality={100}
+          priority={true}
           src={memoizedUrl}
           placeholder="blur"
           blurDataURL={memoizedUrl}
