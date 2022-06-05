@@ -34,12 +34,12 @@ async function uploadPictureMessage(req: NextApiRequest, res: NextApiResponse) {
   let refId = "";
   let model: Model<IGroup | IRoomInstance, {}, {}, {}>;
 
-  if (Object.hasOwn(req.query, "groupId")) {
+  if (req.query.groupId) {
     instance = "Group";
     refId = req.query.groupId as string;
     model = Group;
   }
-  if (Object.hasOwn(req.query, "instanceId")) {
+  if (req.query.instanceId) {
     instance = "RoomInstance";
     refId = req.query.instanceId as string;
     model = RoomInstance;
