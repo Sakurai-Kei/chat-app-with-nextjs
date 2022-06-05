@@ -153,7 +153,7 @@ Things to have before cloning the repo
   - [✔️] Emoji Support
   - [✔️] Image Support
 - [ ] Refactor API routes into RESTful API
-- [ ] Change how Images from AWS S3 are fetched for more efficiency
+- [✔️] Change how Images from AWS S3 are fetched for more efficiency
 - [ ] Cleaner UI
 - [ ] Cleaner Code
 
