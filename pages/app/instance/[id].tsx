@@ -1,4 +1,5 @@
 import Head from "next/head";
+import useUser from "../../../lib/useUser";
 import { withSessionSsr } from "../../../lib/withSession";
 import { useChatInstance } from "../../../lib/useChat";
 import useNavBar from "../../../lib/useNavBar";
@@ -49,9 +50,13 @@ export const getServerSideProps = withSessionSsr(
 );
 
 export default function InstanceChatRoom(props: InstanceChatRoomPage) {
-  const { user, instanceId } = props;
-  const { _id } = user!;
-  const { navBar, mutateNavBar } = useNavBar(_id);
+  const { instanceId } = props;
+  useUser({
+    redirectTo: "/log-in",
+    redirectIfFound: false,
+  });
+  const { _id, username } = props.user!;
+  const { user, mutateUser } = useNavBar(_id);
   const { instance = props.roomInstance, mutateInstance } =
     useChatInstance(instanceId);
 
@@ -61,16 +66,16 @@ export default function InstanceChatRoom(props: InstanceChatRoomPage) {
         {instance && instance.members && (
           <title>
             Private Instance:{" "}
-            {
+            {instance &&
+              instance.members &&
               instance.members.filter(
-                (member: Partial<IUser>) => member.username !== user?.username
-              )[0].username
-            }
+                (member: Partial<IUser>) => member.username !== username
+              )[0].username}
           </title>
         )}
       </Head>
       <div className="flex w-screen h-screen md:w-screen md:h-screen text-gray-700">
-        <NavBar _id={_id} navBar={navBar} mutateNavBar={mutateNavBar} />
+        <NavBar _id={_id} user={user!} mutateUser={mutateUser} />
         <ChatInstance
           userId={_id}
           instance={instance}

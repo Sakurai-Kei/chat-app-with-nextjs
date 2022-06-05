@@ -2,7 +2,6 @@ import { FormEvent, memo, useRef, useState } from "react";
 import { MemberListProps } from "../interfaces/Components";
 import { IUser } from "../interfaces/models";
 import { useRouter } from "next/router";
-import S3Image from "./S3Image";
 import isEqual from "lodash/isEqual";
 import Image from "next/image";
 
@@ -52,9 +51,9 @@ function MemberList(props: MemberListProps) {
       groupId: group._id.toString(),
     };
     const JSONdata = JSON.stringify(data);
-    const endpoint = "/api/groups/addMember";
+    const endpoint = `/api/v2/groups/${group._id.toString()}`;
     const options = {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

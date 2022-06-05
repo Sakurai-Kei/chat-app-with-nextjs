@@ -10,7 +10,7 @@ import { ReactElement } from "react";
 export default function Register() {
   const router = useRouter();
   const { user, mutateUser } = useUser({
-    redirectTo: "/",
+    redirectTo: "/app",
     redirectIfFound: true,
   });
   const [formData, setFormData] = useState({

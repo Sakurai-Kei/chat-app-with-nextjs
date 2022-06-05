@@ -14,7 +14,7 @@ export function useChatGroup(_id: string) {
 
 export function useChatInstance(_id: string) {
   const { data: instance, mutate: mutateInstance } = useSWR<IRoomInstance>(
-    "/api/v2/room-instances/" + _id,
+    "/api/v2/room-instances?instanceId=" + _id,
     fetchJson,
     { refreshInterval: 1000 }
   );

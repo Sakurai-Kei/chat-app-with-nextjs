@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../../lib/mongoDB";
 import { withSessionRoute } from "../../../../lib/withSession";
 import Group from "../../../../models/Group";
-import { IGroup } from "../../../../interfaces/models";
+import User from "../../../../models/User";
+import { IGroup, IUser } from "../../../../interfaces/models";
 import { HydratedDocument, Types } from "mongoose";
 
 export default withSessionRoute(groupDetailController);
@@ -45,17 +46,45 @@ async function groupDetailController(
   }
 
   if (method === "PATCH") {
-    if (!req.body || !req.body._id || !req.body.name || !req.body.about) {
+    if (!req.body) {
       res.status(400).json({ error: "Bad request" });
       return;
     }
-    const { _id, name, about } = req.body;
-    const updatingGroup = Group.findOneAndUpdate({ _id }, { name, about })
-      .lean()
-      .exec();
+    if (Object.hasOwn(req.body, "name")) {
+      const { _id, name, about } = req.body;
+      const updatingGroup = Group.findOneAndUpdate({ _id }, { name, about })
+        .lean()
+        .exec();
 
-    res.status(200).end();
-    return;
+      res.status(200).end();
+      return;
+    }
+    if (Object.hasOwn(req.body, "memberId")) {
+      const { memberId, groupId } = req.body;
+      const user: HydratedDocument<IUser> = await User.findOne({
+        username: memberId,
+      })
+        .populate({ path: "groups" })
+        .exec();
+      const alreadyAdded = await Group.findOne({ members: user._id }).exec();
+
+      if (!user || alreadyAdded) {
+        res.status(404).json({ error: "No user found / already added " });
+        return;
+      }
+
+      const group: HydratedDocument<IGroup> = await Group.findOneAndUpdate(
+        { _id: groupId },
+        { $push: { members: user } },
+        { new: true }
+      ).exec();
+
+      user.groups.push(group);
+      await user.save();
+
+      res.status(200).end();
+      return;
+    }
   }
   if (method === "DELETE") {
     res.status(501).json({ error: "NOT IMPLEMENTED YET" });

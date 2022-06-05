@@ -10,7 +10,7 @@ import Layout from "../components/Layout";
 export default function LogIn() {
   const router = useRouter();
   const { user, mutateUser } = useUser({
-    redirectTo: "/",
+    redirectTo: "/app",
     redirectIfFound: true,
   });
 

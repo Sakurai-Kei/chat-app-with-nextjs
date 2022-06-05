@@ -28,7 +28,7 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
         select: "members",
         populate: {
           path: "members",
-          select: "name about imgsrc",
+          select: "username about imgsrc",
         },
       })
       .exec();

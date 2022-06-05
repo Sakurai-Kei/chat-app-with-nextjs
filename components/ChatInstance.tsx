@@ -4,9 +4,8 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import format from "date-fns/format";
-import { IMessage } from "../interfaces/models";
+import { IMessage, IUser } from "../interfaces/models";
 import { ChatInstanceProps } from "../interfaces/Components";
-import S3Image from "./S3Image";
 
 const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
   ssr: false,
@@ -57,14 +56,13 @@ export default function ChatInstance(props: ChatInstanceProps) {
   }
 
   function stagedImageChange(event: FormEvent<HTMLInputElement>) {
-    event.preventDefault();
-    //@ts-expect-error
-    if (!inputImageRef.current || !inputImageRef.current.files[0]) {
+    const files = event.currentTarget.files;
+
+    if (files && files.length > 0) {
+      setStagedImage(files[0]);
       return;
     }
-    //@ts-expect-error
-    const value = inputImageRef.current.files[0];
-    setStagedImage(value);
+    return;
   }
 
   async function chatFormSubmit(event: FormEvent) {
@@ -86,7 +84,7 @@ export default function ChatInstance(props: ChatInstanceProps) {
     }
 
     const JSONdata = JSON.stringify(data);
-    const endpoint = "/api/room-instances/instance/createMessage";
+    const endpoint = `/api/v2/messages?refId=${instance._id.toString()}&instance=RoomInstance`;
     const options = {
       method: "POST",
       headers: {
@@ -114,10 +112,8 @@ export default function ChatInstance(props: ChatInstanceProps) {
       return;
     }
     const body = new FormData();
-    body.append("file", stagedImage);
-    const endpoint =
-      "/api/room-instances/instance/uploadImage?instanceId=" +
-      instance._id.toString();
+    body.append("picture", stagedImage);
+    const endpoint = `/api/v2/messages/uploadImage?instanceId=${instance._id.toString()}`;
     const options = {
       method: "POST",
       body,
@@ -184,21 +180,29 @@ export default function ChatInstance(props: ChatInstanceProps) {
             return (
               <div className="bg-slate-300" key={message._id.toString()}>
                 <div className="flex px-4 py-3">
-                  <div className="h-10 w-10 md:h-20 md:w-20 rounded flex-shrink-0">
-                    {message.user.imgsrc && (
-                      <S3Image
-                        KEY={message.user.imgsrc}
-                        alt={message.user.username}
+                  <div className="h-24 w-24 rounded flex-shrink-0">
+                    {(message.user as IUser).imgsrc && (
+                      <Image
+                        quality={100}
+                        priority={true}
+                        src={(message.user as IUser).imgsrc}
+                        alt={(message.user as IUser).username}
+                        placeholder="blur"
+                        blurDataURL={(message.user as IUser).imgsrc}
+                        width={96}
+                        height={96}
+                        layout="intrinsic"
+                        className="rounded-lg shadow-sm"
                       />
                     )}
-                    {!message.user.imgsrc && (
+                    {!(message.user as IUser).imgsrc && (
                       <div className="animate-pulse w-10 h-10 md:w-20 md:h-20 flex-shrink-0 bg-slate-500 rounded-lg"></div>
                     )}
                   </div>
                   <div className="ml-2">
                     <div className="-mt-1">
                       <span className="text-sm font-semibold">
-                        {message.user.username}
+                        {(message.user as IUser).username}
                       </span>
                       <span className="ml-1 text-xs text-gray-500">
                         {format(new Date(message.timestamp), "KK.mm a, PPP")}
@@ -226,16 +230,8 @@ export default function ChatInstance(props: ChatInstanceProps) {
                           src={message.content}
                           width={480}
                           height={480}
-                          layout="responsive"
-                          alt={"shared by " + message.user.username}
-                        />
-                      )}
-                    {message.isImage &&
-                      !message.content.match(".mp4") &&
-                      !message.content.match("https://") && (
-                        <S3Image
-                          KEY={message.content}
-                          alt={message.user.username}
+                          layout="intrinsic"
+                          alt={"shared by " + (message.user as IUser).username}
                         />
                       )}
                   </div>
@@ -371,19 +367,6 @@ export default function ChatInstance(props: ChatInstanceProps) {
               />
             </svg>
           </button>
-          {uploadImageModal && (
-            <div
-              ref={uploadImageRef}
-              className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
-            >
-              <UploadImage
-                stagedImage={stagedImage}
-                stagedImageChange={stagedImageChange}
-                stagedImageUpload={stagedImageUpload}
-                inputImageRef={inputImageRef}
-              />
-            </div>
-          )}
           <button
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
             type="submit"
@@ -398,6 +381,19 @@ export default function ChatInstance(props: ChatInstanceProps) {
             </svg>
           </button>
         </form>
+        {uploadImageModal && (
+          <div
+            ref={uploadImageRef}
+            className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+          >
+            <UploadImage
+              stagedImage={stagedImage}
+              stagedImageChange={stagedImageChange}
+              stagedImageUpload={stagedImageUpload}
+              inputImageRef={inputImageRef}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

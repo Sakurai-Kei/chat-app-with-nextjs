@@ -18,7 +18,12 @@ async function messagesController(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  if (!req.body || !req.body.content || !req.body.groupId || !req.body.userId) {
+  if (!instance) {
+    res.status(400).json({ error: "Instance is not specified" });
+    return;
+  }
+
+  if (!req.body || !req.body.content || !req.body.userId) {
     res.status(400).json({ error: "Bad request due to empty body" });
     return;
   }

@@ -21,6 +21,6 @@ export default async function uploadS3(
     const results = await s3Client.send(new PutObjectCommand(params));
     return results; // For unit tests.
   } catch (err) {
-    console.log("Error", err);
+    console.error("Error", err);
   }
 }

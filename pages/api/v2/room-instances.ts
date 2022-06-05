@@ -14,6 +14,7 @@ async function roomInstancesController(
 ) {
   const { method } = req;
   const { user } = req.session;
+  const { instanceId } = req.query;
 
   if (!user) {
     res.status(403).json({ error: "Forbidden. Please log in first" });
@@ -23,20 +24,41 @@ async function roomInstancesController(
   await dbConnect();
 
   if (method === "GET") {
-    // Code to get lists of roomInstances?
+    const roomInstance: IRoomInstance = await RoomInstance.findById(
+      instanceId,
+      { messages: { $slice: -15 } }
+    )
+      .lean()
+      .populate({
+        path: "messages",
+        populate: {
+          path: "user",
+          select: "username about imgsrc",
+        },
+      })
+      .populate({
+        path: "members",
+        select: "username about imgsrc",
+      })
+      .exec();
+
+    res.status(200).json(roomInstance);
+
     return;
   }
 
   if (method === "POST") {
     const { userId, targetMemberUsername } = req.body;
-    const targetUser: IUser = await User.findOne({
+
+    const currentUser: HydratedDocument<IUser> = await User.findById(
+      userId
+    ).exec();
+    const targetUser: HydratedDocument<IUser> = await User.findOne({
       username: targetMemberUsername,
-    })
-      .lean()
-      .exec();
+    }).exec();
 
     if (!targetUser) {
-      res.status(409).json({ error: "No such user found" });
+      res.status(404).json({ error: "No such user found" });
       return;
     }
 
@@ -52,11 +74,18 @@ async function roomInstancesController(
     }
 
     const newInstance: HydratedDocument<IRoomInstance> = new RoomInstance({
-      members: [new Types.ObjectId(userId), targetUser._id],
+      members: [new Types.ObjectId(userId), targetUser],
       messages: [],
     });
 
     await newInstance.save();
+
+    currentUser.roomInstances.push(newInstance);
+    targetUser.roomInstances.push(newInstance);
+
+    await currentUser.save();
+    await targetUser.save();
+
     res.status(200).end();
     return;
   }

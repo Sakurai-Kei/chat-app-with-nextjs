@@ -189,6 +189,9 @@ function NavBar(props: NavBarProps) {
           <div className="flex flex-col gap-4">
             {user.roomInstances &&
               user.roomInstances.map((instance) => {
+                const otherUser = instance.members.filter((instanceMember) => {
+                  return instanceMember.username !== user.username;
+                })[0];
                 return (
                   <div
                     onClick={() => {
@@ -197,43 +200,21 @@ function NavBar(props: NavBarProps) {
                     className="w-10 h-10 rounded-lg hover:opacity-50"
                     key={instance._id.toString()}
                   >
-                    {instance &&
-                      instance.members &&
-                      instance.members.filter(
-                        (otherUser) => otherUser.username !== user.username
-                      )[0].imgsrc && (
-                        <Image
-                          quality={100}
-                          priority={true}
-                          src={
-                            instance.members.filter(
-                              (otherUser) =>
-                                otherUser.username !== user.username
-                            )[0].imgsrc
-                          }
-                          placeholder="blur"
-                          blurDataURL={
-                            instance.members.filter(
-                              (otherUser) =>
-                                otherUser.username !== user.username
-                            )[0].imgsrc
-                          }
-                          width={40}
-                          height={40}
-                          layout="intrinsic"
-                          alt={
-                            "shared by " +
-                            instance.members.filter(
-                              (otherUser) =>
-                                otherUser.username !== user.username
-                            )[0].username
-                          }
-                          className="rounded-lg shadow-md"
-                        />
-                      )}
-                    {!instance.members.filter(
-                      (otherUser) => otherUser.username !== user.username
-                    )[0].imgsrc && (
+                    {instance && instance.members && otherUser.imgsrc && (
+                      <Image
+                        quality={100}
+                        priority={true}
+                        src={otherUser.imgsrc}
+                        placeholder="blur"
+                        blurDataURL={otherUser.imgsrc}
+                        width={40}
+                        height={40}
+                        layout="intrinsic"
+                        alt={otherUser.username}
+                        className="rounded-lg shadow-md"
+                      />
+                    )}
+                    {!otherUser.imgsrc && (
                       <div
                         onClick={() => {
                           router.push(

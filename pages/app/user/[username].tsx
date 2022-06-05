@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { withSessionSsr } from "../../../lib/withSession";
 import NavBar from "../../../components/NavBar";
 import useNavBar from "../../../lib/useNavBar";
@@ -52,7 +51,6 @@ export const getServerSideProps = withSessionSsr(
 export default function ProfilePage(
   props: IronSessionData & { userExist: IUser }
 ) {
-  const router = useRouter();
   const { _id, username } = props.user!;
   const { user = props.userExist, mutateUser } = useNavBar(_id);
   return (
@@ -62,7 +60,7 @@ export default function ProfilePage(
       </Head>
       <div className="flex w-screen h-screen bg-slate-300">
         <NavBar _id={_id} user={user} mutateUser={mutateUser} />
-        <Profile user={user} mutateUser={mutateUser} groups={user.groups} />
+        <Profile user={user} mutateUser={mutateUser} />
       </div>
     </>
   );

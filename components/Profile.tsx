@@ -12,9 +12,8 @@ import Image from "next/image";
 export default function Profile(props: {
   user: IUser | undefined;
   mutateUser: KeyedMutator<IUser>;
-  groups: IGroup[] | undefined;
 }) {
-  const { user, mutateUser, groups } = props;
+  const { user, mutateUser } = props;
   const router = useRouter();
   const uploadImageRef = useRef<HTMLDivElement>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);
@@ -319,6 +318,7 @@ export default function Profile(props: {
                         width={96}
                         height={96}
                         layout="intrinsic"
+                        className="rounded-lg shadow-md"
                       />
                     </div>
                   )}

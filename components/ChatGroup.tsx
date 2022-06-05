@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import GroupSettingModal from "./GroupSettingsModal";
 import UploadImage from "./UploadImage";
-import S3Image from "./S3Image";
 import { useRouter } from "next/router";
 
 const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
@@ -17,7 +16,6 @@ const DynamicComponentVideoPlayer = dynamic(() => import("./VideoPlayer"));
 
 export default function ChatGroup(props: ChatGroupProps) {
   const { group, mutateGroup, userId } = props;
-  const router = useRouter();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const groupSettingsRef = useRef<HTMLDivElement>(null);
   const uploadImageRef = useRef<HTMLDivElement>(null);
@@ -339,20 +337,6 @@ export default function ChatGroup(props: ChatGroupProps) {
                           alt={"shared by " + (message.user as IUser).username}
                         />
                       )}
-                    {message.isImage &&
-                      !message.content.match(".mp4") &&
-                      !message.content.match("https://") && (
-                        <Image
-                          quality={100}
-                          priority={true}
-                          src={message.content}
-                          width={480}
-                          height={480}
-                          layout="intrinsic"
-                          className="rounded-lg shadow-md"
-                          alt={"shared by " + (message.user as IUser).username}
-                        />
-                      )}
                   </div>
                 </div>
                 <div className="flex flex-col items-center mt-2">
@@ -486,19 +470,6 @@ export default function ChatGroup(props: ChatGroupProps) {
               />
             </svg>
           </button>
-          {uploadImageModal && (
-            <div
-              ref={uploadImageRef}
-              className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
-            >
-              <UploadImage
-                stagedImage={stagedImage}
-                stagedImageChange={stagedImageChange}
-                stagedImageUpload={stagedImageUpload}
-                inputImageRef={inputImageRef}
-              />
-            </div>
-          )}
           <button
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
             type="submit"
@@ -513,6 +484,19 @@ export default function ChatGroup(props: ChatGroupProps) {
             </svg>
           </button>
         </form>
+        {uploadImageModal && (
+          <div
+            ref={uploadImageRef}
+            className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+          >
+            <UploadImage
+              stagedImage={stagedImage}
+              stagedImageChange={stagedImageChange}
+              stagedImageUpload={stagedImageUpload}
+              inputImageRef={inputImageRef}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

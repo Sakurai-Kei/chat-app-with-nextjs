@@ -22,7 +22,10 @@ export const getServerSideProps = withSessionSsr(
       };
     }
 
-    const userExist: IUser = await User.findById(user._id).lean().exec();
+    const userExist: IUser = await User.findById(user._id)
+      .lean()
+      .select("-password -email")
+      .exec();
     if (!userExist) {
       return {
         redirect: {
