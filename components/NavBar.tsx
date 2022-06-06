@@ -8,56 +8,13 @@ import { useCycle } from "framer-motion";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useDimensions } from "../lib/useDimension";
+import {
+  sidebar,
+  navItem,
+  listVariant,
+} from "../lib/framer-motion-util/sidebar";
 
 export default memo(NavBar);
-
-const sidebar = {
-  open: (height = 1000) => ({
-    clipPath: `circle(${height * 2 + 200}px at 40px 40px)`,
-    backgroundColor: "#1e293b",
-    transition: {
-      type: "spring",
-      stiffness: 20,
-      restDelta: 2,
-    },
-  }),
-  closed: {
-    clipPath: "circle(30px at 40px 40px)",
-    backgroundColor: "#cbd5e1",
-    transition: {
-      delay: 0.25,
-      type: "spring",
-      stiffness: 400,
-      damping: 40,
-    },
-  },
-};
-
-const navItem = {
-  open: {
-    transition: { staggerChildren: 0.07, delayChildren: 0.5 },
-  },
-  closed: {
-    transition: { staggerChildren: 0.05, staggerDirection: -1 },
-  },
-};
-
-const listVariant = {
-  open: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      y: { stiffness: 1000, velocity: -100 },
-    },
-  },
-  closed: {
-    y: 50,
-    opacity: 0,
-    transition: {
-      y: { stiffness: 1000 },
-    },
-  },
-};
 
 function NavBar(props: NavBarProps) {
   const router = useRouter();
@@ -75,7 +32,6 @@ function NavBar(props: NavBarProps) {
   });
   const [showChatModal, setShowChatModal] = useState(false);
   const [showInstanceModal, setShowInstanceModal] = useState(false);
-  const [showNavBarComponent, setShowNavBarComponent] = useState(false);
   const [isOpen, toggleOpen] = useCycle(false, true);
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -172,14 +128,6 @@ function NavBar(props: NavBarProps) {
     }
   }
 
-  function navBarComponent() {
-    if (!showNavBarComponent) {
-      setShowNavBarComponent(true);
-    } else {
-      setShowNavBarComponent(false);
-    }
-  }
-
   return (
     <>
       <motion.nav
@@ -190,7 +138,7 @@ function NavBar(props: NavBarProps) {
         className="flex flex-col bg-slate-800 overflow-hidden"
       >
         <motion.div
-          className="flex h-screen w-20 bg-slate-300"
+          className="flex h-screen w-28 md:w-20 bg-slate-300"
           variants={sidebar}
           onClick={() => toggleOpen()}
         >

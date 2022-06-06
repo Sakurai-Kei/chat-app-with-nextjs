@@ -50,7 +50,7 @@ async function groupDetailController(
       res.status(400).json({ error: "Bad request" });
       return;
     }
-    if (Object.hasOwn(req.body, "name")) {
+    if (req.body.name) {
       const { _id, name, about } = req.body;
       const updatingGroup = Group.findOneAndUpdate({ _id }, { name, about })
         .lean()
@@ -59,14 +59,16 @@ async function groupDetailController(
       res.status(200).end();
       return;
     }
-    if (Object.hasOwn(req.body, "memberId")) {
+    if (req.body.memberId) {
       const { memberId, groupId } = req.body;
       const user: HydratedDocument<IUser> = await User.findOne({
         username: memberId,
       })
         .populate({ path: "groups" })
         .exec();
-      const alreadyAdded = await Group.findOne({ members: user._id }).exec();
+      const alreadyAdded = await Group.findOne({
+        $and: [{ _id: groupId }, { members: user._id }],
+      }).exec();
 
       if (!user || alreadyAdded) {
         res.status(404).json({ error: "No user found / already added " });
