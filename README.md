@@ -134,7 +134,7 @@ Things to have before cloning the repo
    `AWS_SDK_ACCESS_KEY_ID="YOUR_SECRET_ACCESS_KEY_ID" `\
    `AWS_SDK_SECRET_ACCESS_KEY="YOUR_SECRET_ACCESS_KEY" `\
    `AWS_SDK_BUCKET_NAME="YOUR_BUCKET_NAME" `\
-   `AWS_SDK_REGION="YOUR_REGION_NAME" `\
+   `AWS_SDK_REGION="YOUR_REGION_NAME" `
 
 4. Run the app in dev environment with
    ```sh
