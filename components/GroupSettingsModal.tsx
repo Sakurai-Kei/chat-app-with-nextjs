@@ -88,7 +88,7 @@ export default function GroupSettingModal(props: GroupSettingsModalProps) {
                       src={group.imgsrc}
                       width={96}
                       height={96}
-                      layout="intrinsic"
+                      layout="responsive"
                       className="rounded-lg shadow-md"
                       alt={group.imgsrc}
                     />

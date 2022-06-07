@@ -1,4 +1,4 @@
-import { IGroup, IUser } from "../interfaces/models";
+import { IUser } from "../interfaces/models";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, SyntheticEvent, useEffect, useState, useRef } from "react";
@@ -8,6 +8,7 @@ import { KeyedMutator } from "swr";
 import DeleteModal from "./DeleteModal";
 import UploadImage from "./UploadImage";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Profile(props: {
   user: IUser | undefined;
@@ -228,221 +229,275 @@ export default function Profile(props: {
             <ErrorAlert errors={errors} />
           </div>
         )}
-        {!editProfile && (
-          <div className="w-96 h-fit flex flex-col justify-center items-center my-16 mx-4 overflow-hidden border border-gray-900 shadow-md rounded-lg">
-            <div className="p-4 flex w-full justify-around gap-2">
-              <div>
-                <h5 className="text-xl font-bold text-gray-900">
-                  {user?.username}
-                </h5>
-              </div>
-
-              <div className="flex-shrink-0 flex">
-                <div className="w-24 h-24 rounded-lg shadow-sm">
-                  {user && user.imgsrc && (
-                    <div className="w-24 h-24 rounded-lg shadow-sm">
-                      <Image
-                        quality={100}
-                        priority={true}
-                        src={user.imgsrc}
-                        alt={user.username}
-                        placeholder="blur"
-                        blurDataURL={user.imgsrc}
-                        width={96}
-                        height={96}
-                        layout="intrinsic"
-                        className="rounded-lg shadow-sm"
-                      />
-                    </div>
-                  )}
-                  {(!user || !user.imgsrc) && (
-                    <div className="animate-pulse w-24 h-24 rounded-lg shadow-sm bg-slate-600" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4">
-              <p className="text-sm text-gray-700">{user?.about}</p>
-            </div>
-            <div className="flex px-4 pb-4 gap-2">
-              <button
-                type="button"
-                onClick={editModal}
-                className="py-2 px-4 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500 focus:ring-offset-yellow-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                onClick={deleteModal}
-                className="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
-              >
-                DELETE ACCOUNT
-              </button>
-            </div>
-          </div>
-        )}
-        {editProfile && (
-          <>
-            <form
-              onSubmit={userFormSubmit}
+        <AnimatePresence>
+          {!editProfile && (
+            <motion.div
+              initial={{ x: -1000, opacity: 0 }}
+              animate={{
+                x: [-1000, 0],
+                opacity: 1,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 10,
+              }}
+              exit={{ x: [0, -1000], opacity: 0 }}
               className="w-96 h-fit flex flex-col justify-center items-center my-16 mx-4 overflow-hidden border border-gray-900 shadow-md rounded-lg"
             >
-              <div className="p-4 flex w-full justify-around">
+              <div className="p-4 flex w-full justify-around gap-2">
                 <div>
-                  <h5 className="w-full text-xl font-bold text-gray-900">
+                  <h5 className="text-xl font-bold text-gray-900">
                     {user?.username}
                   </h5>
                 </div>
 
-                <div className="flex-shrink-0 flex flex-col items-end ml-3 gap-2">
-                  {user && user.imgsrc && (
-                    <div
-                      onClick={() => {
-                        showUploadImageModal();
-                        setTimeout(() => {
-                          uploadImageRef.current!.className =
-                            "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
-                        });
-                      }}
-                      className="w-24 h-24 rounded-lg shadow-md hover:opacity-50"
-                    >
-                      <Image
-                        quality={100}
-                        priority={true}
-                        src={user.imgsrc}
-                        alt={user.username}
-                        placeholder="blur"
-                        blurDataURL={user.imgsrc}
-                        width={96}
-                        height={96}
-                        layout="intrinsic"
-                        className="rounded-lg shadow-md"
-                      />
-                    </div>
-                  )}
-                  {(!user || !user.imgsrc) && (
-                    <div
-                      onClick={() => {
-                        showUploadImageModal();
-                        setTimeout(() => {
-                          uploadImageRef.current!.className =
-                            "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
-                        });
-                      }}
-                      className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600"
-                    />
-                  )}
+                <div className="flex-shrink-0 flex">
+                  <div className="w-24 h-24 rounded-lg shadow-sm">
+                    {user && user.imgsrc && (
+                      <div className="w-24 h-24 rounded-lg shadow-sm">
+                        <Image
+                          quality={100}
+                          priority={true}
+                          src={user.imgsrc}
+                          alt={user.username}
+                          placeholder="blur"
+                          blurDataURL={user.imgsrc}
+                          width={96}
+                          height={96}
+                          layout="responsive"
+                          className="rounded-lg shadow-sm"
+                        />
+                      </div>
+                    )}
+                    {(!user || !user.imgsrc) && (
+                      <div className="animate-pulse w-24 h-24 rounded-lg shadow-sm bg-slate-600" />
+                    )}
+                  </div>
                 </div>
               </div>
 
               <div className="p-4">
-                <textarea
-                  onChange={userFormChange}
-                  name="about"
-                  value={userForm.about}
-                  placeholder="Write something about yourself"
-                  className="rounded-md h-20 shadow-md resize-none pl-1"
-                />
-                {isProcessing && <ProcessingForm />}
-                {errors && errors.error && <ErrorAlert errors={errors} />}
+                <p className="text-sm text-gray-700">{user?.about}</p>
               </div>
-
               <div className="flex px-4 pb-4 gap-2">
                 <button
                   type="button"
                   onClick={editModal}
-                  className="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+                  className="py-2 px-4 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500 focus:ring-offset-yellow-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
                 >
-                  Cancel
+                  Edit
                 </button>
                 <button
-                  type="submit"
-                  className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+                  type="button"
+                  onClick={deleteModal}
+                  className="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
                 >
-                  Save
+                  DELETE ACCOUNT
                 </button>
               </div>
-            </form>
-            {uploadImageModal && (
-              <div
-                ref={uploadImageRef}
-                className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {editProfile && (
+            <>
+              <motion.form
+                initial={{ x: -1000, opacity: 0 }}
+                animate={{
+                  x: [-1000, 0],
+                  opacity: 1,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 10,
+                }}
+                exit={{ x: [0, -1000], opacity: 0 }}
+                onSubmit={userFormSubmit}
+                className="w-96 h-fit flex flex-col justify-center items-center my-16 mx-4 overflow-hidden border border-gray-900 shadow-md rounded-lg"
               >
-                <UploadImage
-                  stagedImage={stagedImage}
-                  stagedImageChange={stagedImageChange}
-                  stagedImageUpload={stagedImageUpload}
-                  inputImageRef={inputImageRef}
-                  showUploadImageModal={showUploadImageModal}
-                />
-              </div>
-            )}
-          </>
-        )}
+                <div className="p-4 flex w-full justify-around">
+                  <div>
+                    <h5 className="w-full text-xl font-bold text-gray-900">
+                      {user?.username}
+                    </h5>
+                  </div>
 
-        {user && user.groups && user.groups.length !== 0 && (
-          <div className="w-full flex flex-col items-center justify-center p-8 m-8 border border-gray-900 shadow-md rounded-lg">
-            <p className="text-center text-3xl font-bold text-gray-800">
-              {user?.username}
-            </p>
-            <p className="text-center mb-12 text-xl font-normal text-gray-500">
-              is part of
-            </p>
-            {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"> */}
-            <div className="w-full h-52 flex flex-wrap overflow-y-scroll overflow-x-hidden">
-              {user.groups.map((group) => {
-                return (
-                  <div key={group._id.toString()}>
-                    <div className="p-4">
-                      <div className="flex-col  flex justify-center items-center">
-                        <div className="flex-shrink-0">
-                          <div className="block relative">
-                            <div
-                              onClick={() => {
-                                router.push(
-                                  "/app/group/" + group._id.toString()
-                                );
-                              }}
-                              className="w-24 h-24 rounded-lg shadow-md hover:opacity-50"
-                            >
-                              {group.imgsrc && (
-                                <Image
-                                  quality={100}
-                                  priority={true}
-                                  src={group.imgsrc}
-                                  alt={group.name}
-                                  placeholder="blur"
-                                  blurDataURL={group.imgsrc}
-                                  width={96}
-                                  height={96}
-                                  layout="intrinsic"
-                                  className="rounded-lg shadow-md"
-                                />
-                              )}
-                              {!group.imgsrc && (
-                                <div className="w-20 h-20 bg-slate-600 rounded-lg shadow-md"></div>
-                              )}
+                  <div className="flex-shrink-0 flex flex-col items-end ml-3 gap-2">
+                    {user && user.imgsrc && (
+                      <div
+                        onClick={() => {
+                          showUploadImageModal();
+                          setTimeout(() => {
+                            uploadImageRef.current!.className =
+                              "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+                          });
+                        }}
+                        className="w-24 h-24 rounded-lg shadow-md hover:opacity-50"
+                      >
+                        <Image
+                          quality={100}
+                          priority={true}
+                          src={user.imgsrc}
+                          alt={user.username}
+                          placeholder="blur"
+                          blurDataURL={user.imgsrc}
+                          width={96}
+                          height={96}
+                          layout="responsive"
+                          className="rounded-lg shadow-md"
+                        />
+                      </div>
+                    )}
+                    {(!user || !user.imgsrc) && (
+                      <div
+                        onClick={() => {
+                          showUploadImageModal();
+                          setTimeout(() => {
+                            uploadImageRef.current!.className =
+                              "transition ease-in-out w-full h-full absolute top-full left-0 -translate-y-full bg-slate-500 bg-opacity-50 z-10";
+                          });
+                        }}
+                        className="animate-pulse w-16 h-16 rounded-lg shadow-sm bg-slate-600"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-4">
+                  <textarea
+                    onChange={userFormChange}
+                    name="about"
+                    value={userForm.about}
+                    placeholder="Write something about yourself"
+                    className="rounded-md h-20 shadow-md resize-none pl-1"
+                  />
+                  {isProcessing && <ProcessingForm />}
+                  {errors && errors.error && <ErrorAlert errors={errors} />}
+                </div>
+
+                <div className="flex px-4 pb-4 gap-2">
+                  <button
+                    type="button"
+                    onClick={editModal}
+                    className="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+                  >
+                    Save
+                  </button>
+                </div>
+              </motion.form>
+              {uploadImageModal && (
+                <div
+                  ref={uploadImageRef}
+                  className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
+                >
+                  <UploadImage
+                    stagedImage={stagedImage}
+                    stagedImageChange={stagedImageChange}
+                    stagedImageUpload={stagedImageUpload}
+                    inputImageRef={inputImageRef}
+                    showUploadImageModal={showUploadImageModal}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {user && user.groups && user.groups.length !== 0 && (
+            <motion.div
+              initial={{ x: 1000, opacity: 0 }}
+              animate={{
+                x: [1000, 0],
+                opacity: 1,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 10,
+              }}
+              exit={{ x: [0, 1000], opacity: 0 }}
+              className="w-full flex flex-col items-center justify-center p-8 m-8 border border-gray-900 shadow-md rounded-lg"
+            >
+              <p className="text-center text-3xl font-bold text-gray-800">
+                {user?.username}
+              </p>
+              <p className="text-center mb-12 text-xl font-normal text-gray-500">
+                is part of
+              </p>
+              {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"> */}
+              <div className="w-full h-52 flex flex-wrap overflow-y-scroll overflow-x-hidden">
+                {user.groups.map((group, duration: number = 1) => {
+                  duration = duration / 2;
+                  return (
+                    <motion.div
+                      initial={{ x: 1000, opacity: 0 }}
+                      animate={{ x: [1000, 0], opacity: 1 }}
+                      transition={{
+                        delay: duration,
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
+                      key={group._id.toString()}
+                    >
+                      <div className="p-4">
+                        <div className="flex-col  flex justify-center items-center">
+                          <div className="flex-shrink-0">
+                            <div className="block relative">
+                              <div
+                                onClick={() => {
+                                  router.push(
+                                    "/app/group/" + group._id.toString()
+                                  );
+                                }}
+                                className="w-24 h-24 rounded-lg shadow-md hover:opacity-50"
+                              >
+                                {group.imgsrc && (
+                                  <Image
+                                    quality={100}
+                                    priority={true}
+                                    src={group.imgsrc}
+                                    alt={group.name}
+                                    placeholder="blur"
+                                    blurDataURL={group.imgsrc}
+                                    width={96}
+                                    height={96}
+                                    layout="responsive"
+                                    className="rounded-lg shadow-md"
+                                  />
+                                )}
+                                {!group.imgsrc && (
+                                  <div className="w-20 h-20 bg-slate-600 rounded-lg shadow-md"></div>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="mt-2 text-center flex flex-col">
-                          <span className="text-black text-lg font-medium">
-                            {group.name}
-                          </span>
-                          <span className="text-gray-700 text-xs">
-                            {group.about}
-                          </span>
+                          <div className="mt-2 text-center flex flex-col">
+                            <span className="text-black text-lg font-medium">
+                              {group.name}
+                            </span>
+                            <span className="text-gray-700 text-xs">
+                              {group.about}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

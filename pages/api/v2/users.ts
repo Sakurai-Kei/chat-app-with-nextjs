@@ -15,7 +15,18 @@ async function usersController(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
 
   if (method === "GET") {
-    // Code to get lists of group?
+    const { name } = req.query;
+    const usersList = await User.find({
+      username: { $regex: new RegExp(name as string, "ig") },
+    })
+      .lean()
+      .select("username about imgsrc")
+      .exec();
+    if (!usersList) {
+      res.status(404).json({ error: "No users found with such username" });
+      return;
+    }
+    res.status(200).json(usersList);
     return;
   }
 
@@ -56,7 +67,7 @@ async function usersController(req: NextApiRequest, res: NextApiResponse) {
     };
     req.session.user = userCookie;
     await req.session.save();
-    res.status(200).redirect("/");
+    res.status(200).redirect("/app");
     return;
   }
 

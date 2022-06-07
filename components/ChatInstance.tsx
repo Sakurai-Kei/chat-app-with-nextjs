@@ -191,7 +191,7 @@ export default function ChatInstance(props: ChatInstanceProps) {
                         blurDataURL={(message.user as IUser).imgsrc}
                         width={96}
                         height={96}
-                        layout="intrinsic"
+                        layout="responsive"
                         className="rounded-lg shadow-sm"
                       />
                     )}
@@ -226,11 +226,12 @@ export default function ChatInstance(props: ChatInstanceProps) {
                       message.content.match("https://") && (
                         <Image
                           quality={100}
-                          priority={true}
                           src={message.content}
+                          placeholder="blur"
+                          blurDataURL={message.content}
                           width={480}
                           height={480}
-                          layout="intrinsic"
+                          layout="responsive"
                           alt={"shared by " + (message.user as IUser).username}
                         />
                       )}

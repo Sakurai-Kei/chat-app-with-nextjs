@@ -69,7 +69,7 @@ async function roomInstancesController(
       .exec();
 
     if (instanceExist) {
-      res.redirect("/app/instance/" + instanceExist._id.toString());
+      res.status(302).json(instanceExist._id.toString());
       return;
     }
 
@@ -86,7 +86,7 @@ async function roomInstancesController(
     await currentUser.save();
     await targetUser.save();
 
-    res.status(200).end();
+    res.status(200).json(newInstance._id.toString());
     return;
   }
 

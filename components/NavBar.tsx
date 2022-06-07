@@ -12,7 +12,7 @@ import {
   sidebar,
   navItem,
   listVariant,
-} from "../lib/framer-motion-util/sidebar";
+} from "../lib/framer-motion-util/constants";
 
 export default memo(NavBar);
 
@@ -101,15 +101,17 @@ function NavBar(props: NavBarProps) {
     };
 
     const response = await fetch(endpoint, options);
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 302) {
+      const result = await response.json();
       instanceModal();
       mutateUser();
-    } else {
-      const result = await response.json();
-      setErrors({
-        error: `Status Code: ${response.status}(${result.error})`,
-      });
+      router.push(`/app/instance/${result}`);
+      return;
     }
+    const result = await response.json();
+    setErrors({
+      error: `Status Code: ${response.status}(${result.error})`,
+    });
   }
 
   function chatModal() {
@@ -141,12 +143,18 @@ function NavBar(props: NavBarProps) {
           className="flex h-screen w-28 md:w-20 bg-slate-300"
           variants={sidebar}
           onClick={() => toggleOpen()}
+          whileHover={
+            isOpen
+              ? undefined
+              : { scaleX: 1.05, scaleY: 1.05, translateY: "2.25%" }
+          }
         >
           {!isOpen && user && user.imgsrc && (
             <motion.div
               initial={false}
               animate={isOpen ? { y: [0, 1000] } : { y: [1000, 0] }}
               variants={sidebar}
+              className="hover:opacity-50"
             >
               <Image
                 src={user.imgsrc}
@@ -171,7 +179,7 @@ function NavBar(props: NavBarProps) {
                     return (
                       <motion.li
                         variants={listVariant}
-                        animate={{ x: [-1000, 0] }}
+                        animate={{ y: [-1000, 0] }}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                         key={instance._id.toString()}
@@ -193,7 +201,7 @@ function NavBar(props: NavBarProps) {
                               blurDataURL={otherUser.imgsrc}
                               width={40}
                               height={40}
-                              layout="intrinsic"
+                              layout="responsive"
                               alt={otherUser.username}
                               className="rounded-lg shadow-md"
                             />
@@ -217,7 +225,7 @@ function NavBar(props: NavBarProps) {
                     return (
                       <motion.li
                         variants={listVariant}
-                        animate={{ x: [-1000, 0] }}
+                        animate={{ y: [-1000, 0] }}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                         key={group._id.toString()}
@@ -240,7 +248,7 @@ function NavBar(props: NavBarProps) {
                                 blurDataURL={group.imgsrc}
                                 width={40}
                                 height={40}
-                                layout="intrinsic"
+                                layout="responsive"
                                 alt={"shared by " + group.about}
                                 className="rounded-lg shadow-md"
                               />
@@ -310,6 +318,29 @@ function NavBar(props: NavBarProps) {
                   ></path>
                 </svg>
               </motion.button>
+              <motion.button
+                variants={listVariant}
+                animate={{ x: [-1000, 0] }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  router.push("/app/search");
+                }}
+                className="flex items-center justify-center w-10 h-10 rounded-lg bg-transparent mt-4 hover:bg-indigo-400"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M18.677 19.607L12.962 13.891C10.4196 15.6985 6.91642 15.2564 4.90285 12.8739C2.88929 10.4915 3.03714 6.96361 5.24298 4.75802C7.44824 2.55147 10.9765 2.40298 13.3594 4.41644C15.7422 6.42989 16.1846 9.93347 14.377 12.476L20.092 18.192L18.678 19.606L18.677 19.607ZM9.48498 5.00001C7.58868 4.99958 5.95267 6.3307 5.56745 8.18745C5.18224 10.0442 6.15369 11.9163 7.89366 12.6703C9.63362 13.4242 11.6639 12.8529 12.7552 11.3021C13.8466 9.75129 13.699 7.64734 12.402 6.26402L13.007 6.86402L12.325 6.18402L12.313 6.17202C11.5648 5.4192 10.5464 4.99715 9.48498 5.00001Z"
+                    fill="white"
+                  ></path>
+                </svg>
+              </motion.button>
               <motion.li
                 variants={listVariant}
                 animate={{ x: [-1000, 0] }}
@@ -335,7 +366,7 @@ function NavBar(props: NavBarProps) {
                         blurDataURL={user.imgsrc}
                         width={40}
                         height={40}
-                        layout="intrinsic"
+                        layout="responsive"
                         alt={"shared by " + user.username}
                         className="rounded-lg shadow-md"
                       />

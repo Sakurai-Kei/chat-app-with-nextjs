@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { withSessionRoute } from "../../../lib/withSession";
 import Group from "../../../models/Group";
 import { HydratedDocument, Types } from "mongoose";
-import { IGroup, IUser } from "../../../interfaces/models";
+import { IGroup } from "../../../interfaces/models";
 import dbConnect from "../../../lib/mongoDB";
 import User from "../../../models/User";
 
@@ -20,8 +20,18 @@ async function groupsController(req: NextApiRequest, res: NextApiResponse) {
   const { user } = req.session;
 
   if (method === "GET") {
-    // Code to get lists of group?
-    res.status(501).json({ error: "NOT IMPLEMENTED" });
+    const { name } = req.query;
+    const groupsList = await Group.find({
+      name: { $regex: new RegExp(name as string, "ig") },
+    })
+      .lean()
+      .select("name about imgsrc")
+      .exec();
+    if (!groupsList) {
+      res.status(404).json({ error: "No groups found with such name" });
+      return;
+    }
+    res.status(200).json(groupsList);
     return;
   }
 
