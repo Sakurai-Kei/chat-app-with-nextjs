@@ -72,6 +72,7 @@ export interface UploadImageProps {
   stagedImageChange: (event: FormEvent<HTMLInputElement>) => void;
   stagedImageUpload: (event: FormEvent) => Promise<void>;
   inputImageRef: RefObject<HTMLInputElement>;
+  showUploadImageModal: () => void;
 }
 
 export interface EmojiObject {

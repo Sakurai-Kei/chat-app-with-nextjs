@@ -92,7 +92,7 @@ function MemberList(props: MemberListProps) {
             custom={width}
             ref={containerRef}
             exit={{ opacity: 0, x: [0, 100], width: 0 }}
-            className="relative right-0 flex flex-col w-28 md:w-20 bg-slate-800 overflow-hidden"
+            className="relative right-0 flex flex-col w-32 md:w-20 bg-slate-800 overflow-hidden"
           >
             <motion.div
               className="relative top-[50%] flex h-screen w-full bg-slate-300"

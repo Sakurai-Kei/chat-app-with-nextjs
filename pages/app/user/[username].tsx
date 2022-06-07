@@ -58,7 +58,7 @@ export default function ProfilePage(
       <Head>
         <title>Profile: {username}</title>
       </Head>
-      <div className="flex w-screen h-screen bg-slate-300">
+      <div className="flex min-w-screen min-h-screen bg-slate-300">
         <NavBar _id={_id} user={user} mutateUser={mutateUser} />
         <Profile user={user} mutateUser={mutateUser} />
       </div>

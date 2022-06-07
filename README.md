@@ -79,7 +79,7 @@
 A full-stack app made with NextJs. The app features group creation and private chat instances with other user. As this is a prototype app, the app does not check if
 the provided email is legit. This app does hash user's password with bcryptjs to improve account security. Auth state across the app is possible using iron-session.
 
-The web app supports both image and video(mp4) sharing from i.imgur.com domain.Furthermore, the web app supports file hosting(image only) using AWS S3 storage. With it, user can share their pictures with other people and even use it to change their profile picture and group pictures! Do note, however, content of a message is not encrypted and as such, anyone with access to the database
+The web app supports both image and video(mp4) sharing from i.imgur.com domain. Furthermore, the web app supports file hosting(image only) using AWS S3 storage. With it, user can share their pictures with other people and even use it to change their profile picture and group pictures! Do note, however, content of a message is not encrypted and as such, anyone with access to the database
 can view the content of a message.
 
 Data fetching is made with SWR for efficient real-time data fetching.
@@ -98,6 +98,7 @@ More features to come!
 - [AWS-SDK](https://github.com/aws/aws-sdk-js-v3)
 - [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
 - [iron-session](https://github.com/vvo/iron-session)
+- [framer-motion](https://www.framer.com/motion/)
 - [date-fns](https://date-fns.org/)
 - [emoji-picker-react](https://github.com/ealush/emoji-picker-react)
 - [videojs](https://videojs.com/)

@@ -135,7 +135,7 @@ function NavBar(props: NavBarProps) {
         animate={isOpen ? "open" : "closed"}
         custom={height}
         ref={containerRef}
-        className="flex flex-col bg-slate-800 overflow-hidden"
+        className="w-32 md:w-20 flex flex-col bg-slate-800 overflow-hidden"
       >
         <motion.div
           className="flex h-screen w-28 md:w-20 bg-slate-300"

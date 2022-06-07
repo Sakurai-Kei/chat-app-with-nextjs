@@ -3,8 +3,13 @@ import { useState, useEffect } from "react";
 import { UploadImageProps } from "../interfaces/Components";
 
 export default function UploadImage(props: UploadImageProps) {
-  const { stagedImage, stagedImageChange, stagedImageUpload, inputImageRef } =
-    props;
+  const {
+    stagedImage,
+    stagedImageChange,
+    stagedImageUpload,
+    inputImageRef,
+    showUploadImageModal,
+  } = props;
 
   const [imagePreview, setImagePreview] = useState("");
 
@@ -18,8 +23,16 @@ export default function UploadImage(props: UploadImageProps) {
   }, [stagedImage]);
 
   return (
-    <section className="w-full h-full flex justify-center items-center bg-slate-500 bg-opacity-50 z-10">
-      <form className="w-fit h-fit p-4 flex flex-col gap-4 justify-center items-center rounded-lg shadow-md bg-white">
+    <section
+      onClick={showUploadImageModal}
+      className="w-full h-full flex justify-center items-center bg-slate-500 bg-opacity-50 z-10"
+    >
+      <form
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+        className="w-fit h-fit p-4 flex flex-col gap-4 justify-center items-center rounded-lg shadow-md bg-white"
+      >
         <div className="w-full h-full flex justify-center rounded-lg hover:bg-slate-400">
           <label htmlFor="picture">
             {!imagePreview && (

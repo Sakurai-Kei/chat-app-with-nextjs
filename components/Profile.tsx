@@ -185,7 +185,7 @@ export default function Profile(props: {
   }, [user, editProfile]);
 
   return (
-    <div className="w-full flex flex-col overflow-hidden">
+    <div className="w-full max-h-screen flex flex-col overflow-hidden">
       <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-slate-800 border-b border-gray-300 px-4">
         <div className="w-12 h-12 flex justify-center items-center hover:bg-slate-400 hover:rounded-md">
           <Link href={"/app"}>
@@ -287,7 +287,7 @@ export default function Profile(props: {
           <>
             <form
               onSubmit={userFormSubmit}
-              className="w-96 h-fit flex flex-col justify-center items-center m-16 border border-gray-900 shadow-md rounded-lg"
+              className="w-96 h-fit flex flex-col justify-center items-center my-16 mx-4 overflow-hidden border border-gray-900 shadow-md rounded-lg"
             >
               <div className="p-4 flex w-full justify-around">
                 <div>
@@ -375,6 +375,7 @@ export default function Profile(props: {
                   stagedImageChange={stagedImageChange}
                   stagedImageUpload={stagedImageUpload}
                   inputImageRef={inputImageRef}
+                  showUploadImageModal={showUploadImageModal}
                 />
               </div>
             )}
@@ -382,14 +383,15 @@ export default function Profile(props: {
         )}
 
         {user && user.groups && user.groups.length !== 0 && (
-          <div className="h-fit relative flex flex-col items-center justify-center p-8 m-16 overflow-hidden border border-gray-900 shadow-md rounded-lg">
+          <div className="w-full flex flex-col items-center justify-center p-8 m-8 border border-gray-900 shadow-md rounded-lg">
             <p className="text-center text-3xl font-bold text-gray-800">
               {user?.username}
             </p>
             <p className="text-center mb-12 text-xl font-normal text-gray-500">
               is part of
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"> */}
+            <div className="w-full h-52 flex flex-wrap overflow-y-scroll overflow-x-hidden">
               {user.groups.map((group) => {
                 return (
                   <div key={group._id.toString()}>

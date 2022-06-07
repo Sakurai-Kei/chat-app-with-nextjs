@@ -6,13 +6,12 @@ import { ChatGroupProps } from "../interfaces/Components";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import GroupSettingModal from "./GroupSettingsModal";
-import UploadImage from "./UploadImage";
-import { useRouter } from "next/router";
 
 const DynamicComponentEmojiModal = dynamic(() => import("./Emoji"), {
   ssr: false,
 });
 const DynamicComponentVideoPlayer = dynamic(() => import("./VideoPlayer"));
+const DynamicComponentUploadImageModal = dynamic(() => import("./UploadImage"));
 
 export default function ChatGroup(props: ChatGroupProps) {
   const { group, mutateGroup, userId } = props;
@@ -202,7 +201,7 @@ export default function ChatGroup(props: ChatGroupProps) {
   }, [group, groupSettingsModal, groupForm]);
 
   return (
-    <div className="flex flex-col flex-grow overflow-hidden">
+    <div className="w-full flex flex-col flex-grow overflow-hidden">
       <div className="flex items-center gap-4 flex-shrink-0 h-16 bg-slate-800 border-b border-gray-300 px-4">
         <div className="w-12 h-12 flex justify-center items-center rounded-lg hover:bg-slate-500">
           <Link href={"/app"}>
@@ -282,7 +281,7 @@ export default function ChatGroup(props: ChatGroupProps) {
             return (
               <div className="bg-slate-300" key={message._id.toString()}>
                 <div className="flex px-4 py-3">
-                  <div className="h-24 w-24 md:h-24 md:w-24 rounded-lg flex-shrink-0">
+                  <div className="h-16 w-16 md:h-24 md:w-24 rounded-lg flex-shrink-0">
                     {(message.user as IUser).imgsrc && (
                       <Image
                         quality={100}
@@ -395,29 +394,6 @@ export default function ChatGroup(props: ChatGroupProps) {
             value={chatForm.content}
             className="flex-grow align-middle resize-none text-sm px-3 border-l border-gray-300 ml-1"
           ></textarea>
-          <button
-            type="button"
-            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
-          >
-            <svg
-              className="h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
-          >
-            <span className="leading-none w-4 h-4 -mt-px">@</span>
-          </button>
           <div className="flex flex-col">
             <div className="absolute ml-20 md:mr-20 -translate-x-full -translate-y-full">
               {emojiModal && (
@@ -458,16 +434,16 @@ export default function ChatGroup(props: ChatGroupProps) {
             className="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-gray-200"
           >
             <svg
-              className="h-4 w-4"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
             >
               <path
-                fillRule="evenodd"
-                d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
-                clipRule="evenodd"
-              />
+                d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21ZM5 5V19H19V5H5ZM18 17H6L9 13L10 14L13 10L18 17ZM8.5 11C7.67157 11 7 10.3284 7 9.5C7 8.67157 7.67157 8 8.5 8C9.32843 8 10 8.67157 10 9.5C10 10.3284 9.32843 11 8.5 11Z"
+                fill="#2E3A59"
+              ></path>
             </svg>
           </button>
           <button
@@ -489,11 +465,12 @@ export default function ChatGroup(props: ChatGroupProps) {
             ref={uploadImageRef}
             className="transition ease-in-out w-full h-full absolute top-full left-0 bg-slate-500 bg-opacity-50 z-10"
           >
-            <UploadImage
+            <DynamicComponentUploadImageModal
               stagedImage={stagedImage}
               stagedImageChange={stagedImageChange}
               stagedImageUpload={stagedImageUpload}
               inputImageRef={inputImageRef}
+              showUploadImageModal={showUploadImageModal}
             />
           </div>
         )}

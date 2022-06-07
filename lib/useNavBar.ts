@@ -6,7 +6,7 @@ export default function useNavBar(userId: string) {
   const { data: user, mutate: mutateUser } = useSWR<IUser>(
     "/api/v2/users/" + userId,
     fetchJson,
-    { refreshInterval: 0 }
+    { refreshInterval: 10000 }
   );
 
   return { user, mutateUser };

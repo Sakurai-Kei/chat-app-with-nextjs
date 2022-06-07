@@ -161,6 +161,7 @@ export default function GroupSettingModal(props: GroupSettingsModalProps) {
             stagedImageChange={stagedImageChange}
             stagedImageUpload={stagedImageUpload}
             inputImageRef={inputImageRef}
+            showUploadImageModal={showUploadImageModal}
           />
         </div>
       )}
