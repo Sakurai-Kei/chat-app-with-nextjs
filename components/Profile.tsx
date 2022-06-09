@@ -15,6 +15,7 @@ export default function Profile(props: {
   mutateUser: KeyedMutator<IUser>;
 }) {
   const { user, mutateUser } = props;
+  console.log(user);
   const router = useRouter();
   const uploadImageRef = useRef<HTMLDivElement>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);

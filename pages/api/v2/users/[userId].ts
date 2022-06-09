@@ -31,7 +31,7 @@ async function userController(req: NextApiRequest, res: NextApiResponse) {
           select: "username about imgsrc",
         },
       })
-      .select("name about imgsrc")
+      .select("username about imgsrc")
       .exec();
     if (!user) {
       res.status(404).json({ error: "No such user found" });
