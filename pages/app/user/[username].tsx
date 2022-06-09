@@ -7,6 +7,7 @@ import Head from "next/head";
 import User from "../../../models/User";
 import dbConnect from "../../../lib/mongoDB";
 import { IUser } from "../../../interfaces/models";
+import Group from "../../../models/Group";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
@@ -32,6 +33,8 @@ export const getServerSideProps = withSessionSsr(
         },
       };
     }
+
+    const groupModel = Group;
 
     const userExist = await User.findById(user._id)
       .lean()

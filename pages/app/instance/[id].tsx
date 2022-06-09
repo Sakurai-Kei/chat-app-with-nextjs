@@ -9,6 +9,8 @@ import { InstanceChatRoomPage } from "../../../interfaces/pages";
 import { IUser } from "../../../interfaces/models";
 import dbConnect from "../../../lib/mongoDB";
 import RoomInstance from "../../../models/RoomInstance";
+import Message from "../../../models/Message";
+import User from "../../../models/User";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
@@ -24,6 +26,9 @@ export const getServerSideProps = withSessionSsr(
         },
       };
     }
+
+    const messageModel = Message;
+    const userModel = User;
 
     const roomInstance = await RoomInstance.findById(id, {
       messages: { $slice: -15 },

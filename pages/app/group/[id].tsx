@@ -8,6 +8,8 @@ import { useChatGroup } from "../../../lib/useChat";
 import { GroupChatRoomPage } from "../../../interfaces/pages";
 import dbConnect from "../../../lib/mongoDB";
 import Group from "../../../models/Group";
+import Message from "../../../models/Message";
+import User from "../../../models/User";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, query }) {
@@ -23,6 +25,9 @@ export const getServerSideProps = withSessionSsr(
         },
       };
     }
+
+    const messageModel = Message;
+    const userModel = User;
 
     const group = await Group.findById(id, { messages: { $slice: -15 } })
       .lean()

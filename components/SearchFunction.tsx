@@ -162,20 +162,18 @@ export default function SearchFunction() {
         </form>
       </div>
       <div>
-        <section className="w-full flex flex-col items-center px-8 gap-8 mx-auto bg-slate-300 dark:bg-gray-800">
-          <h2 className="text-xl font-medium text-gray-800 capitalize dark:text-white md:text-2xl">
+        <section className="w-full md:w-full flex-grow flex flex-col items-center px-8 gap-8 mx-auto bg-slate-300">
+          <h2 className="text-xl font-medium text-gray-800 capitalize md:text-2xl">
             Search Result
           </h2>
           <AnimatePresence>
-            <motion.ul className="flex flex-col md:flex-row">
+            <motion.ul className="w-1/2 md:w-full flex flex-wrap md:gap-10">
               {searchResult &&
                 searchResult.map((result: IUser | IGroup, delay = 0.5) => {
                   delay = delay / 25;
                   if ((result as IUser).username) {
                     return (
                       <motion.li
-                        drag
-                        dragSnapToOrigin
                         initial={{ opacity: 0 }}
                         animate={{ x: [1000, 0], opacity: 1 }}
                         transition={{
@@ -202,10 +200,10 @@ export default function SearchFunction() {
                             />
 
                             <div className="mt-2">
-                              <h3 className="text-lg font-medium text-gray-700 dark:text-gray-200">
+                              <h3 className="text-lg font-medium text-gray-700">
                                 {(result as IUser).username}
                               </h3>
-                              <span className="mt-1 font-medium text-gray-600 dark:text-gray-300">
+                              <span className="mt-1 font-medium text-gray-600">
                                 {result.about}
                               </span>
                             </div>
@@ -258,10 +256,10 @@ export default function SearchFunction() {
                           />
 
                           <div className="mt-2">
-                            <h3 className="text-lg font-medium text-gray-700 dark:text-gray-200">
+                            <h3 className="text-lg font-medium text-gray-700">
                               {(result as IGroup).name}
                             </h3>
-                            <span className="mt-1 font-medium text-gray-600 dark:text-gray-300">
+                            <span className="mt-1 font-medium text-gray-600">
                               {result.about}
                             </span>
                           </div>
