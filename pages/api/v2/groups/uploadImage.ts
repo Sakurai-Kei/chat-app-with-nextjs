@@ -43,7 +43,12 @@ async function uploadProfilePicture(req: NextApiRequest, res: NextApiResponse) {
   return promise.then(async ({ req, fields, files }) => {
     const file = files.picture;
     const filePath = file.filepath;
-    const mimetypeAllowed = ["image/jpeg", "image/png"];
+    const mimetypeAllowed = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/avif",
+    ];
     if (
       !mimetypeAllowed.some(function (mimetype) {
         return mimetype === file.mimetype!;
